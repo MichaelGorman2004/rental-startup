@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VenueLink - College Bar Rental Platform Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            padding: 40px 20px;
+        }
+
+        .mockup-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+        }
+
+        .screen {
+            background: #141414;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #222;
+        }
+
+        .screen-label {
+            text-align: center;
+            padding: 15px;
+            background: #0a0a0a;
+            color: #666;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            background: #141414;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -1.5px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 60px;
+            font-weight: 500;
+        }
+
+        .login-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            background: #141414;
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: #141414;
+            color: #fff;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3a3a3a;
+            background: #1a1a1a;
+        }
+
+        .input-field::placeholder {
+            color: #555;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 16px;
+            background: #fff;
+            color: #0a0a0a;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .primary-btn:hover {
+            background: #e6e6e6;
+        }
+
+        /* Org Dashboard */
+        .org-dashboard {
+            background: #0f0f0f;
+        }
+
+        .header {
+            background: #141414;
+            padding: 20px 30px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .org-badge {
+            background: #1f1f1f;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #2a2a2a;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .action-card {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-card:hover {
+            background: #1f1f1f;
+            border-color: #3a3a3a;
+            transform: translateY(-1px);
+        }
+
+        .action-icon {
+            font-size: 26px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .action-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        .upcoming-events {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .event-item {
+            padding: 16px;
+            background: #141414;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #222;
+        }
+
+        .event-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .event-venue {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* Venue Browse */
+        .venue-browse {
+            background: #0f0f0f;
+        }
+
+        .search-bar {
+            padding: 20px 30px;
+            background: #141414;
+            border-bottom: 1px solid #222;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #1a1a1a url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 16px center;
+            color: #fff;
+        }
+
+        .search-input::placeholder {
+            color: #555;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3a3a3a;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            padding: 15px 30px;
+            overflow-x: auto;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background: #1f1f1f;
+            border-color: #3a3a3a;
+        }
+
+        .filter-chip.active {
+            background: #fff;
+            color: #0a0a0a;
+            border-color: #fff;
+        }
+
+        .venue-grid {
+            padding: 20px 30px;
+            display: grid;
+            gap: 16px;
+            overflow-y: auto;
+        }
+
+        .venue-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #2a2a2a;
+        }
+
+        .venue-card:hover {
+            transform: translateY(-2px);
+            border-color: #3a3a3a;
+            background: #1f1f1f;
+        }
+
+        .venue-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            border-bottom: 1px solid #222;
+        }
+
+        .venue-info {
+            padding: 16px;
+        }
+
+        .venue-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .venue-type {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .venue-capacity {
+            font-size: 13px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .venue-price {
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* Venue Admin Dashboard */
+        .venue-admin {
+            background: #0f0f0f;
+        }
+
+        .admin-header {
+            background: #141414;
+            padding: 30px;
+            color: white;
+            border-bottom: 1px solid #222;
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .admin-subtitle {
+            font-size: 14px;
+            color: #888;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bookings-list {
+            padding: 0 30px 30px;
+        }
+
+        .booking-card {
+            background: #1a1a1a;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #2a2a2a;
+            transition: all 0.2s;
+        }
+
+        .booking-card:hover {
+            background: #1f1f1f;
+            border-color: #3a3a3a;
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .booking-org {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.confirmed {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .status-badge.pending {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .booking-details {
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-container">
+        <!-- Login Screen -->
+        <div class="screen">
+            <div class="screen-label">LOGIN / SIGN UP</div>
+            <div class="login-screen">
+                <div class="logo">VenueLink</div>
+                <div class="tagline">Connect. Book. Celebrate.</div>
+                
+                <div class="login-card">
+                    <div class="login-title">Welcome back</div>
+                    
+                    <div class="role-selector">
+                        <button class="role-btn active">🎓 Student Org</button>
+                        <button class="role-btn">🏢 Venue</button>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">University Email</label>
+                        <input type="email" class="input-field" placeholder="you@university.edu">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Password</label>
+                        <input type="password" class="input-field" placeholder="••••••••">
+                    </div>
+                    
+                    <button class="primary-btn">Sign In</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Org Dashboard -->
+        <div class="screen">
+            <div class="screen-label">STUDENT ORG DASHBOARD</div>
+            <div class="org-dashboard">
+                <div class="header">
+      lass="header-left">
+                        <div class="header-logo">VenueLink</div>
+                        <div class="org-badge">Beta Theta Pi</div>
+                    </div>
+                    <div style="font-size: 24px;">👤</div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <div class="section-title">Quick Actions</div>
+                    <div class="quick-actions">
+                        <div class="action-card">
+                            <div class="action-icon">🔍</div>
+                            <div class="action-title">Browse Venues</div>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-icon">📅</div>
+                            <div class="action-title">My Bookings</div>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-icon">💳</div>
+                            <s="action-title">Budget Tracker</div>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-icon">⚙️</div>
+                            <div class="action-title">Settings</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">Upcoming Events</div>
+                    <div class="upcoming-events">
+                        <div class="event-item">
+                            <div class="event-date">FRI, FEB 14 • 8:00 PM</div>
+                            <div class="event-name">Spring Rush Mixer</div>
+                            <div class="event-venue">📍 The Blue Dog Tavern</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">SAT, FEB 22 • 7:00 PM</div>
+                            <div class="event-name">Brotherhood Dinner</div>
+                            <div class="e">📍 Mario's Pizza & Pub</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">THU, MAR 6 • 9:00 PM</div>
+                            <div class="event-name">Alumni Reunion</div>
+                            <div class="event-venue">📍 Campus Sports Bar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Venue Browse -->
+        <div class="screen">
+            <div class="screen-label">BROWSE VENUES</div>
+            <div class="venue-browse">
+                <div class="header">
+                    <div class="header-left">
+                        <div class="header-logo">VenueLink</div>
+                    </div>
+                    <div style="font-size: 20px;">👤</div>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search ven
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-chip active">All</div>
+                    <div class="filter-chip">🍺 Bars</div>
+                    <div class="filter-chip">🍕 Restaurants</div>
+                    <div class="filter-chip">🎉 Event Spaces</div>
+                    <div class="filter-chip">☕ Cafes</div>
+                </div>
+                
+                <div class="venue-grid">
+                    <div class="venue-card">
+                        <div class="venue-image">🍺</div>
+                        <div class="venue-info">
+                            <div class="venue-name">The Blue Dog Tavern</div>
+                            <div class="venue-type">Bar & Grill • 0.3 mi from campus</div>
+                            <div class="venue-capacity">👥 Capacity: 80 people</div>
+                            <div class="venue-price">$450/event</div>
+                        </div>
+                    </div>
+      
+                    <div class="venue-card">
+                        <div class="venue-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">🍕</div>
+                        <div class="venue-info">
+                            <div class="venue-name">Mario's Pizza & Pub</div>
+                            <div class="venue-type">Restaurant • On campus</div>
+                            <div class="venue-capacity">👥 Capacity: 60 people</div>
+                            <div class="venue-price">$350/event</div>
+                        </div>
+                    </div>
+                    
+                    <div class="venue-card">
+                        <div class="venue-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">🎉</div>
+                        <div class="venue-info">
+                            <div class="venue-name">Campus Sports Bar</div>
+                            <div class="venue-type">Sports Bar • 0.5 mi from campus</div>
+                  <div class="venue-capacity">👥 Capacity: 120 people</div>
+                            <div class="venue-price">$600/event</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Venue Admin Dashboard -->
+        <div class="screen">
+            <div class="screen-label">VENUE ADMIN DASHBOARD</div>
+            <div class="venue-admin">
+                <div class="admin-header">
+                    <div class="admin-title">The Blue Dog Tavern</div>
+                    <div class="admin-subtitle">Venue Management Dashboard</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">THIS MONTH</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$5.4k</div>
+                      <div class="stat-label">REVENUE</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-label">AVG RATING</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">OCCUPANCY</div>
+                    </div>
+                </div>
+                
+                <div class="bookings-list">
+                    <div class="section-title">Recent Bookings</div>
+                    
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-org">Beta Theta Pi</div>
+                            <div class="status-badge confirmed">CONFIRMED</div>
+                        </div>
+                        <div class="booking-details">
+                            Feb 14, 2026 • 8:00  • 65 guests
+                        </div>
+                    </div>
+                    
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-org">Delta Gamma</div>
+                            <div class="status-badge pending">PENDING</div>
+                        </div>
+                        <div class="booking-details">
+                            Feb 18, 2026 • 7:30 PM • 40 guests
+                        </div>
+                    </div>
+                    
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-org">Sigma Chi</div>
+                            <div class="status-badge confirmed">CONFIRMED</div>
+                        </div>
+                        <div class="booking-details">
+                            Feb 21, 2026 • 9:00 PM • 75 guests
+                        </div>
+                                     
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-org">Alpha Phi</div>
+                            <div class="status-badge confirmed">CONFIRMED</div>
+                        </div>
+                        <div class="booking-details">
+                            Feb 28, 2026 • 8:00 PM • 50 guests
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
