@@ -1,0 +1,105 @@
+name: CI Pipeline
+
+# Trigger on pull requests to main and pushes to main
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel in-progress runs for the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Frontend linting and type checking
+  frontend-quality:
+    name: Frontend Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+        # Fail if any linting errors or warnings (max-warnings: 0)
+
+      - name: Run TypeScript type check
+        run: npm run type-check
+        # Fail if any type errors
+
+  # Backend linting and type checking
+  backend-quality:
+    name: Backend Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: '1.7.1'
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      - name: Run Ruff linter
+        run: poetry run ruff check .
+        # Fail if any linting violations
+
+      - name: Run Mypy type checker
+        run: poetry run mypy .
+        # Fail if any type errors
+
+      - name: Run Black formatter check
+        run: poetry run black --check .
+        # Fail if code is not formatted correctly
+
+  # Summary job (required for branch protection)
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [frontend-quality, backend-quality]
+    if: always()
+
+    steps:
+      - name: Check all jobs success
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
+
+      - name: Success
+        run: echo "All CI checks passed!"
