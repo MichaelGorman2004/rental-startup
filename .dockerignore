@@ -1,0 +1,43 @@
+# Version control
+.git/
+.gitignore
+
+# Dependencies (install fresh in container)
+node_modules/
+__pycache__/
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Development files
+.env.local
+.env.development.local
+*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Logs
+*.log
+coverage/
+.coverage
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Misc
+.DS_Store
+tmp/
+temp/
