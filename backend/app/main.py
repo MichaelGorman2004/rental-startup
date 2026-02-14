@@ -1,0 +1,52 @@
+"""FastAPI application entry point for VenueLink backend."""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# Create FastAPI application instance
+app = FastAPI(
+    title="VenueLink API",
+    description="API for connecting college organizations with local event venues",
+    version="0.1.0",
+    docs_url="/api/docs",  # Swagger UI at /api/docs
+    redoc_url="/api/redoc",  # ReDoc at /api/redoc
+)
+
+# CORS middleware configuration
+# Allows frontend (localhost:3000) to make API requests during development
+# TODO: Restrict origins in production to actual frontend domain
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  # Vite dev server
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
+
+@app.get("/api/health")
+async def health_check() -> dict[str, str]:
+    """
+    Health check endpoint for monitoring and deployment verification.
+
+    Returns:
+        dict: Status message indicating API is operational
+    """
+    return {"status": "healthy", "service": "venuelink-api"}
+
+
+@app.get("/")
+async def root() -> dict[str, str]:
+    """
+    Root endpoint with API information.
+
+    Returns:
+        dict: Welcome message and documentation link
+    """
+    return {
+        "message": "VenueLink API",
+        "docs": "/api/docs",
+    }

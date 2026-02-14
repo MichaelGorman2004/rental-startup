@@ -1,0 +1,93 @@
+# Ruff configuration for VenueLink backend
+# Ruff is 10-100x faster than Flake8 and catches the same issues
+# https://docs.astral.sh/ruff/
+
+# Target Python 3.11+
+target-version = "py311"
+
+# Line length matching Black's default
+line-length = 100
+
+# Directories to exclude from linting
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "alembic/versions",  # Exclude auto-generated migration files
+    "build",
+    "dist",
+]
+
+[lint]
+# Enable specific rule sets
+# See: https://docs.astral.sh/ruff/rules/
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort (import sorting)
+    "N",      # pep8-naming
+    "UP",     # pyupgrade (modernize Python code)
+    "ANN",    # flake8-annotations (require type hints)
+    "ASYNC",  # flake8-async
+    "S",      # flake8-bandit (security)
+    "B",      # flake8-bugbear (common bugs)
+    "A",      # flake8-builtins (shadowing builtins)
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez (timezone awareness)
+    "T10",    # flake8-debugger (no debugger statements)
+    "EM",     # flake8-errmsg (error message formatting)
+    "ISC",    # flake8-implicit-str-concat
+    "ICN",    # flake8-import-conventions
+    "PIE",    # flake8-pie
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "ERA",    # eradicate (commented-out code)
+    "PL",     # Pylint
+    "RUF",    # Ruff-specific rules
+]
+
+# Rules to ignore (with justification)
+ignore = [
+    "ANN101",  # Missing type annotation for self (not needed)
+    "ANN102",  # Missing type annotation for cls (not needed)
+    "D",       # pydocstring (not enforcing docstrings for MVP)
+    "COM812",  # Trailing comma (conflicts with Black)
+    "ISC001",  # Implicit string concatenation (conflicts with Black)
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables prefixed with underscore
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[lint.per-file-ignores]
+# Test files can use assertions and magic values
+"tests/**/*.py" = ["S101", "PLR2004"]
+# Alembic migrations can have any structure
+"alembic/versions/*.py" = ["ALL"]
+
+[lint.isort]
+# Import sorting to match project structure
+known-first-party = ["app"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[lint.mccabe]
+# Maximum cyclomatic complexity (functions should be simple)
+max-complexity = 10

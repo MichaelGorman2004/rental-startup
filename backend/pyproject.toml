@@ -1,0 +1,92 @@
+[tool.poetry]
+name = "venuelink-backend"
+version = "0.1.0"
+description = "VenueLink backend API - FastAPI application for college event venue booking"
+authors = ["VenueLink Team"]
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# FastAPI framework with async support
+fastapi = "^0.109.2"
+# ASGI server for production deployment
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+# PostgreSQL async driver
+asyncpg = "^0.29.0"
+# ORM with async support
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.25"}
+# Database migration tool
+alembic = "^1.13.1"
+# Data validation and settings management
+pydantic = {extras = ["email"], version = "^2.6.1"}
+pydantic-settings = "^2.1.0"
+# Password hashing
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+# JWT token generation
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+# HTTP client for external API calls
+httpx = "^0.26.0"
+# Python dotenv for environment variables
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+# Fast Python linter (replaces flake8, isort, pylint)
+ruff = "^0.2.1"
+# Static type checker
+mypy = "^1.8.0"
+# Code formatter
+black = "^24.1.1"
+# Testing framework
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.4"
+pytest-cov = "^4.1.0"
+# HTTP testing
+httpx = "^0.26.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Black configuration (deterministic code formatting)
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.ruff_cache
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+# Mypy configuration (strict type checking)
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = false
+
+# Pytest configuration
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers --cov=app --cov-report=term-missing"
+testpaths = ["tests"]
+asyncio_mode = "auto"
