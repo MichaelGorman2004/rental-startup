@@ -1,7 +1,71 @@
 # VenueLink 🎓🍺
 
-> **Connect. Book. Celebrate.**  
+> **Connect. Book. Celebrate.**
 > The premier platform connecting college organizations with local bars and event venues.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** >= 18.0.0
+- **npm** >= 9.0.0
+- **Python** >= 3.11
+- **Poetry** >= 1.7.0 ([Install Poetry](https://python-poetry.org/docs/#installation))
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd rental-startup
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Install root and frontend dependencies
+   npm install
+
+   # Install backend dependencies
+   cd backend
+   poetry install
+   cd ..
+   ```
+
+3. **Run the development servers**
+
+   ```bash
+   # Terminal 1: Frontend (Vite dev server on port 3000)
+   npm run dev:frontend
+
+   # Terminal 2: Backend (FastAPI on port 8000)
+   npm run dev:backend
+   ```
+
+4. **Verify the setup**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Documentation: http://localhost:8000/api/docs
+
+### Available Commands
+
+**Development:**
+- `npm run dev:frontend` - Start frontend dev server
+- `npm run dev:backend` - Start backend dev server
+
+**Code Quality:**
+- `npm run lint` - Lint frontend and backend
+- `npm run type-check` - Type check TypeScript and Python
+- `npm run format` - Format code with Prettier and Black
+
+**Testing:**
+- `npm run test` - Run all tests
+- `npm run test:frontend` - Run frontend tests
+- `npm run test:backend` - Run backend tests
+
+**Build:**
+- `npm run build:frontend` - Build frontend for production
+
+---
 
 ## 📋 Project Overview
 
