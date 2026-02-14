@@ -1,0 +1,71 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": [
+    "airbnb",
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "."
+  },
+  "plugins": [
+    "react-refresh",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    // React Refresh plugin for Vite HMR
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true }
+    ],
+
+    // Enforce React 17+ JSX transform (no need to import React)
+    "react/react-in-jsx-scope": "off",
+
+    // Allow .tsx extension for JSX
+    "react/jsx-filename-extension": [
+      "error",
+      { "extensions": [".tsx"] }
+    ],
+
+    // Require default props for optional props (prevents undefined bugs)
+    "react/require-default-props": "off",
+
+    // Allow spreading props (common pattern in component libraries)
+    "react/jsx-props-no-spreading": "off",
+
+    // Enforce named exports over default exports (better tree-shaking)
+    "import/prefer-default-export": "off",
+
+    // Allow devDependencies in config files
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.config.ts",
+          "**/*.config.js",
+          "**/vite.config.ts"
+        ]
+      }
+    ],
+
+    // Treat all warnings as errors (zero tolerance)
+    // This ensures CI fails on any linting issue
+    "max-warnings": 0
+  },
+  "ignorePatterns": [
+    "dist",
+    "node_modules",
+    "*.config.js",
+    "*.config.ts"
+  ]
+}
