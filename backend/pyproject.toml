@@ -5,6 +5,16 @@ description = "VenueLink backend API - FastAPI application for college event ven
 authors = ["VenueLink Team"]
 packages = [{include = "app"}]
 
+[tool.poetry.scripts]
+# Quality assurance commands
+qa = "scripts:qa"
+lint = "scripts:lint"
+lint-fix = "scripts:lint_fix"
+format = "scripts:format_code"
+typecheck = "scripts:typecheck"
+test = "scripts:test"
+dev = "scripts:dev"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 # FastAPI framework with async support

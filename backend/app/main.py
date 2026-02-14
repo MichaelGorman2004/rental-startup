@@ -1,15 +1,58 @@
 """FastAPI application entry point for VenueLink backend."""
 
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
-# Create FastAPI application instance
+from app.core.database import engine
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
+    """
+    Manage application lifecycle events.
+
+    Startup:
+    - Test database connection with a simple query
+    - Log connection status
+
+    Shutdown:
+    - Dispose database engine connection pool
+    - Clean up resources
+
+    Args:
+        app: FastAPI application instance
+
+    Yields:
+        None: Application runs during this yield
+    """
+    # Startup: Test database connection
+    try:
+        async with engine.begin() as conn:
+            await conn.execute(text("SELECT 1"))
+        print("✓ Database connection established")
+    except Exception as e:
+        print(f"✗ Database connection failed: {e}")
+        raise
+
+    yield  # Application runs here
+
+    # Shutdown: Clean up database connection pool
+    await engine.dispose()
+    print("✓ Database connection pool disposed")
+
+
+# Create FastAPI application instance with lifespan management
 app = FastAPI(
     title="VenueLink API",
     description="API for connecting college organizations with local event venues",
     version="0.1.0",
     docs_url="/api/docs",  # Swagger UI at /api/docs
     redoc_url="/api/redoc",  # ReDoc at /api/redoc
+    lifespan=lifespan,  # Database lifecycle management
 )
 
 # CORS middleware configuration
