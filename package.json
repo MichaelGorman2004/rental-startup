@@ -1,0 +1,46 @@
+{
+  "name": "venuelink-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VenueLink monorepo - College event venue booking platform",
+  "workspaces": [
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "build:frontend": "cd frontend && npm run build",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && poetry run ruff check .",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "type-check:frontend": "cd frontend && npm run type-check",
+    "type-check:backend": "cd backend && poetry run mypy .",
+    "type-check": "npm run type-check:frontend && npm run type-check:backend",
+    "format:frontend": "cd frontend && npm run format",
+    "format:backend": "cd backend && poetry run black .",
+    "format": "npm run format:frontend && npm run format:backend",
+    "test:frontend": "cd frontend && npm run test",
+    "test:backend": "cd backend && poetry run pytest",
+    "test": "npm run test:frontend && npm run test:backend",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx}": [
+      "cd frontend && npm run lint:fix",
+      "cd frontend && npm run format"
+    ],
+    "backend/**/*.py": [
+      "cd backend && poetry run ruff check --fix",
+      "cd backend && poetry run black"
+    ]
+  }
+}
