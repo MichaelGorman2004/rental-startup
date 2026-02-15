@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { loginSchema, signupSchema } from '../constants/auth.schemas';
+
 export type UserRole = 'student_org' | 'venue_admin';
 
 export interface User {
@@ -15,11 +18,5 @@ export interface AuthState {
   role: UserRole | null;
 }
 
-export interface LoginFormData {
-  email: string;
-}
-
-export interface SignupFormData {
-  email: string;
-  role: UserRole;
-}
+export type LoginFormData = z.infer<typeof loginSchema>;
+export type SignupFormData = z.infer<typeof signupSchema>;
