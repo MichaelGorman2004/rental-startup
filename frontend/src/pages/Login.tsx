@@ -1,22 +1,19 @@
-import { Container, Paper, Title, Text, Anchor, Center } from '@mantine/core';
+import { Text, Anchor } from '@mantine/core';
+import { Link } from 'react-router-dom';
+import { AuthLayout } from '../features/auth/components/AuthLayout';
 import { LoginForm } from '../features/auth/components/LoginForm';
 
-export const Login = () => {
+export function Login() {
   return (
-    <Container size={420} my={40}>
-      <Title ta="center" order={2}>
-        Welcome back to VenueLink
-      </Title>
-      <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Do not have an account yet?{' '}
-        <Anchor size="sm" component="button" onClick={() => window.location.href = '/signup'}>
-          Create account
+    <AuthLayout title="Sign in to your account">
+      <LoginForm />
+      <Text ta="center" mt="md" size="sm">
+        Don&apos;t have an account?
+        {' '}
+        <Anchor component={Link} to="/signup" size="sm">
+          Sign up
         </Anchor>
       </Text>
-
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <LoginForm />
-      </Paper>
-    </Container>
+    </AuthLayout>
   );
-};
+}
