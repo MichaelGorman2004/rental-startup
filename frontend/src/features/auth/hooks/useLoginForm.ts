@@ -21,9 +21,14 @@ export const useLoginForm = () => {
     setServerError(null);
     try {
       const result = await signIn.create({ identifier: data.email, password: data.password });
+      
+      console.log("Login result:", result); // Debugging log
+
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
         navigate('/');
+      } else {
+        setServerError(`Login incomplete. Status: ${result.status}`);
       }
     } catch (err: unknown) {
       const error = err as { errors?: { message: string }[] };
