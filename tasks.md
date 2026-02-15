@@ -359,19 +359,19 @@ features/auth/components/
 - **Debouncing**: Email availability check debounced 500ms
 
 ### Acceptance Criteria
-- [ ] Login/Signup UI matches mockup pixel-perfectly (colors, spacing, typography)
-- [ ] Role selector uses Mantine SegmentedControl (not custom implementation)
-- [ ] Email field shows real-time validation (format + .edu for students)
-- [ ] Password field has strength indicator (weak/medium/strong)
-- [ ] Submit button disabled during API request (loading state)
-- [ ] Error messages pulled from constants (no inline strings)
-- [ ] Success redirects to appropriate dashboard (org vs venue)
-- [ ] Form inputs use controlled components (React Hook Form)
-- [ ] Validation schema defined in types file (not inline)
-- [ ] All form logic in custom hooks (useLogin, useSignup)
-- [ ] Components use Mantine Input/Button components (not custom)
-- [ ] Loading states use Mantine Loader component
-- [ ] Error boundaries catch form submission failures
+- [x] Login/Signup UI matches mockup pixel-perfectly (colors, spacing, typography)
+- [x] Role selector uses Mantine SegmentedControl (not custom implementation)
+- [x] Email field shows real-time validation (format + .edu for students)
+- [x] Password field has strength indicator (weak/medium/strong)
+- [x] Submit button disabled during API request (loading state)
+- [x] Error messages pulled from constants (no inline strings)
+- [x] Success redirects to appropriate dashboard (org vs venue)
+- [x] Form inputs use controlled components (React Hook Form)
+- [x] Validation schema defined in types file (not inline)
+- [x] All form logic in custom hooks (useLogin, useSignup)
+- [x] Components use Mantine Input/Button components (not custom)
+- [x] Loading states use Mantine Loader component
+- [x] Error boundaries catch form submission failures
 
 ### Code Quality Checkpoints
 - ✅ LoginForm.tsx < 15 lines (all logic in useLogin hook)
@@ -382,6 +382,8 @@ features/auth/components/
 - ✅ Error messages in constants file
 - ✅ No magic strings (field names, error codes)
 - ✅ Form submission uses optimistic updates
+
+**Status**: ✅ COMPLETED - Date: 2026-02-15
 
 ---
 
