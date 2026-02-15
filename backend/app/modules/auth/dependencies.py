@@ -59,7 +59,7 @@ async def get_current_user(
                 ROLE_CLAIM_KEY
             )
 
-        if not email:
+        if not sub or not email:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=AuthError.EMAIL_REQUIRED,
