@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
 > **Last Updated**: 2026-02-15
-> **Status**: Phase 1 - Foundation Complete
+> **Status**: Phase 1 & 2 - Foundation & Venue APIs (In Progress)
 
 ---
 
@@ -13,11 +13,12 @@
 - ✅ **VL-003**: Authentication Service Integration
 - ✅ **VL-004**: Frontend Foundation & Mantine Setup
 - ✅ **VL-005**: Authentication UI Implementation
+- ✅ **VL-007**: Venue Management Backend API
 
 ### Current Phase
-**Phase 1: Foundation & Auth** (Weeks 1-2)
-- Progress: 100% complete (5/5 tasks done)
-- Next Up: VL-006 - Student Org Dashboard Foundation
+**Phase 1: Foundation & Auth** (Weeks 1-2) + **Phase 2: Venue APIs** (Week 3)
+- Progress: 6/16 tasks done (~38%)
+- Next Up: VL-006 - Student Org Dashboard Foundation / VL-008 - Venue Discovery Frontend
 
 ---
 
@@ -86,8 +87,18 @@ rental-startup/
 │   │   │   │   └── models.py         # ✅ User model
 │   │   │   ├── organizations/
 │   │   │   │   └── models.py         # ✅ Organization model
-│   │   │   ├── venues/
-│   │   │   │   └── models.py         # ✅ Venue model
+│   │   │   ├── venues/                # ✅ Venue Management Module (VL-007)
+│   │   │   │   ├── models.py         # ✅ Venue SQLAlchemy model
+│   │   │   │   ├── schemas.py        # ✅ Pydantic schemas (Create, Update, Response)
+│   │   │   │   ├── services.py       # ✅ Business logic (CRUD, RBAC)
+│   │   │   │   ├── repository.py     # ✅ Data access layer (queries)
+│   │   │   │   ├── router.py         # ✅ 5 RESTful endpoints
+│   │   │   │   ├── dependencies.py   # ✅ FastAPI dependencies
+│   │   │   │   ├── constants/
+│   │   │   │   │   ├── validation.py # ✅ Min/max constraints
+│   │   │   │   │   └── errors.py     # ✅ Error messages
+│   │   │   │   └── utils/
+│   │   │   │       └── __init__.py   # Utility functions
 │   │   │   └── bookings/
 │   │   │       └── models.py         # ✅ Booking model
 │   │   └── main.py                   # ✅ FastAPI app with DB lifecycle
@@ -162,6 +173,62 @@ rental-startup/
 - bookings.event_date
 - bookings.status
 - bookings(venue_id, event_date, event_time) (composite, unique)
+
+---
+
+## 🎯 Venue Management API (VL-007)
+
+### Implemented Endpoints
+**Base Path**: `/api/v1/venues`
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/venues` | venue_admin | Create new venue |
+| GET | `/venues/{id}` | public | Get single venue |
+| GET | `/venues` | public | List with filters & pagination |
+| PATCH | `/venues/{id}` | owner | Update venue (partial) |
+| DELETE | `/venues/{id}` | owner | Soft delete venue |
+
+### Architecture
+**Strict Separation of Concerns**:
+- **Router** (`router.py`): Thin controllers (5-10 lines each)
+- **Service** (`services.py`): Business logic, authorization, pagination
+- **Repository** (`repository.py`): Data access layer, SQL queries
+- **Schemas** (`schemas.py`): Pydantic validation (VenueBase, Create, Update, Response)
+- **Dependencies** (`dependencies.py`): FastAPI dependency injection
+- **Constants** (`constants/`): All magic values extracted
+
+### Features
+- ✅ Role-based access control (venue_admin only for create)
+- ✅ Ownership verification (only owners can modify/delete)
+- ✅ Advanced filtering (type, capacity range, price range, search)
+- ✅ Pagination (configurable page size, max 100)
+- ✅ Soft delete (deleted_at timestamp, not hard delete)
+- ✅ Case-insensitive search on name + address fields
+- ✅ 100% type hints (mypy strict mode)
+- ✅ All validation via Pydantic schemas
+- ✅ Google-style docstrings throughout
+- ✅ Zero ruff linting errors
+
+### Files Created (VL-007)
+```
+backend/app/modules/venues/
+├── __init__.py              # Module export
+├── models.py                # Venue ORM model (from VL-002)
+├── schemas.py               # ~194 lines - Pydantic schemas
+├── services.py              # ~230 lines - Business logic
+├── repository.py            # ~215 lines - Data access
+├── router.py                # ~123 lines - 5 endpoints
+├── dependencies.py          # ~53 lines - Query parsing
+├── constants/
+│   ├── __init__.py         # Constants barrel export
+│   ├── validation.py       # Min/max constraints
+│   └── errors.py           # Error messages enum
+└── utils/
+    └── __init__.py         # Utility placeholder
+```
+
+**Total**: ~850 lines of production-ready Python code
 
 ---
 
@@ -271,34 +338,40 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-## 🚀 Next Steps (VL-016 & VL-005)
+## 🚀 Next Steps
 
-### Clerk Keys Configuration (VL-016)
-**Priority**: 🔴 Critical
-**Goal**: secure necessary API keys for Authentication.
+### Phase 2: Venue Management (In Progress)
+- **VL-006**: Student Org Dashboard Foundation (VL-004, VL-005)
+- **VL-008**: Venue Discovery Frontend (VL-004, VL-007)
+- **VL-009**: Venue Details Page (VL-008)
+- **VL-010**: Booking Request Form (VL-009)
+- **VL-011**: Venue Admin Dashboard (VL-007)
 
-### Authentication UI Implementation (VL-005)
-**Priority**: 🔴 Critical
-**Effort**: 8 hours
-**Dependencies**: VL-003, VL-004
+### Phase 3: Supporting Systems (Planned)
+- **VL-012**: Shared TypeScript Types & Constants
+- **VL-013**: API Client & Error Handling
+- **VL-014**: React Query Setup & Cache Strategy
+- **VL-015**: Form Validation & Input Components
 
-**Key Deliverables**:
-1. Login Screen with Role Selector
-2. Signup Screen with .edu validation
-3. Protected Routes
-4. Integration with Clerk SDK
+### Key Deliverables for Phase 2
+1. Complete venue CRUD API with 5 RESTful endpoints ✅
+2. Venue discovery UI with search/filters
+3. Booking request workflow
+4. Venue admin dashboard with stats
 
 ---
 
 ## 📊 Key Metrics
 
 ### Codebase Stats
-- **Backend Python files**: ~25
+- **Backend Python files**: ~35 (includes venues module)
 - **Database tables**: 4
 - **Migration count**: 1
-- **Type coverage**: 100%
-- **Linting errors**: 0
+- **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
+- **Type coverage**: 100% (mypy strict mode)
+- **Linting errors**: 0 (ruff clean)
 - **Test coverage**: 0% (no tests yet)
+- **Lines of code (Python)**: ~850 (venues module alone)
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks
