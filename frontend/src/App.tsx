@@ -1,22 +1,19 @@
-import { Container, Title, Text } from '@mantine/core';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppShell } from './layout';
+import { Home } from './pages/Home';
 
 /**
- * Root application component
- *
- * This is a placeholder component that will be replaced with
- * actual routing and feature components in subsequent tasks.
+ * Root application component with routing configuration.
  */
 function App() {
   return (
-    <Container size="md" py="xl">
-      <Title order={1}>VenueLink</Title>
-      <Text mt="md">
-        Connect. Book. Celebrate.
-      </Text>
-      <Text c="dimmed" mt="sm">
-        The premier platform connecting college organizations with local event venues.
-      </Text>
-    </Container>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppShell />}>
+          <Route index element={<Home />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
