@@ -11,6 +11,7 @@
 - **npm** >= 9.0.0
 - **Python** >= 3.11
 - **Poetry** >= 1.7.0 ([Install Poetry](https://python-poetry.org/docs/#installation))
+- **Docker & Docker Compose** (Required for Database)
 
 ### Installation
 
@@ -31,26 +32,25 @@
    cd ..
    ```
 
-3. **Run the development servers**
+3. **Run the full stack**
 
+   This command starts the Database (Docker), Backend (FastAPI), and Frontend (Vite) concurrently.
    ```bash
-   # Terminal 1: Frontend (Vite dev server on port 3000)
-   npm run dev:frontend
-
-   # Terminal 2: Backend (FastAPI on port 8000)
-   npm run dev:backend
+   npm run dev
    ```
 
 4. **Verify the setup**
-   - Frontend: http://localhost:3000
+   - Frontend: http://localhost:5173
    - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/api/docs
+   - API Documentation: http://localhost:8000/docs
 
 ### Available Commands
 
 **Development:**
-- `npm run dev:frontend` - Start frontend dev server
-- `npm run dev:backend` - Start backend dev server
+- `npm run dev` - Start the full stack (DB + Backend + Frontend)
+- `npm run dev:frontend` - Start frontend dev server only
+- `npm run dev:backend` - Start backend dev server only
+- `npm run db:up` - Start the database container only
 
 **Code Quality:**
 - `npm run lint` - Lint frontend and backend
