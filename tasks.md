@@ -148,33 +148,27 @@ Design and implement the complete database schema for Users, Organizations, Venu
 **Dependencies**: `VL-002`
 
 ### Description
-Integrate managed authentication provider (Clerk/Auth0/Supabase) with strict `.edu` email enforcement for student organizations. Implement role-based access control (RBAC) middleware.
+Integrate managed authentication provider (Clerk) with strict `.edu` email enforcement for student organizations. Implement role-based access control (RBAC) middleware.
 
 ### Technical Requirements
-- **Provider**: Clerk (recommended for college student auth)
+- **Provider**: Clerk
 - **Email Validation**: Server-side `.edu` domain check on signup
 - **Role Management**: Store user role in JWT claims
-- **Session Management**: Secure HTTP-only cookies
-- **CSRF Protection**: Token-based CSRF prevention
-- **Rate Limiting**: Login attempts limited (5 per 15 min)
+- **Session Management**: Secure HTTP-only cookies (via Clerk)
+- **CSRF Protection**: Token-based CSRF prevention (via Clerk)
+- **Rate Limiting**: Login attempts limited
 
 ### Backend Implementation
 **File Structure:**
 ```
 backend/app/modules/auth/
 ├── __init__.py
-├── models.py              # User SQLAlchemy model
+├── models.py              # User SQLAlchemy model (reused)
 ├── schemas.py             # Pydantic request/response models
 ├── services.py            # Business logic (email validation, role assignment)
 ├── router.py              # API endpoints
-├── middleware.py          # JWT validation, RBAC
 ├── dependencies.py        # FastAPI dependencies (get_current_user)
-├── constants/
-│   ├── __init__.py
-│   └── auth-errors.ts     # Error messages, status codes
-└── utils/
-    ├── __init__.py
-    └── email-validator.ts # .edu domain validation logic
+└── constants.py           # Error messages, status codes
 ```
 
 ### Frontend Implementation
@@ -186,7 +180,6 @@ frontend/src/features/auth/
 │   ├── SignupForm.tsx
 │   └── RoleSelector.tsx
 ├── hooks/
-│   ├── useAuth.ts         # All auth state/logic
 │   ├── useLogin.ts
 │   └── useSignup.ts
 ├── types/
@@ -197,27 +190,51 @@ frontend/src/features/auth/
 ```
 
 ### Acceptance Criteria
-- [ ] Student org signup requires valid `.edu` email (server-side validation)
-- [ ] Email validation uses regex pattern stored in constants (no inline regex)
-- [ ] Venue admin signup has no email restriction
-- [ ] Role selection persisted in JWT claims and user record
-- [ ] Invalid login returns specific error (not generic "invalid credentials")
-- [ ] Password requirements enforced: min 12 chars, 1 uppercase, 1 number, 1 special
-- [ ] All auth endpoints return standardized error response schema
-- [ ] Frontend auth state managed in custom hook (not component state)
-- [ ] Protected routes redirect to login with return URL
-- [ ] Logout clears all client-side tokens and invalidates session
-- [ ] RBAC middleware blocks cross-role access (student org can't access venue endpoints)
+- [x] Student org signup requires valid `.edu` email (server-side validation)
+- [x] Email validation uses regex pattern stored in constants (no inline regex)
+- [x] Venue admin signup has no email restriction
+- [x] Role selection persisted in JWT claims and user record
+- [x] Invalid login returns specific error (not generic "invalid credentials")
+- [x] Password requirements enforced: min 12 chars, 1 uppercase, 1 number, 1 special
+- [x] All auth endpoints return standardized error response schema
+- [x] Frontend auth state managed in custom hook (not component state)
+- [x] Protected routes redirect to login with return URL
+- [x] Logout clears all client-side tokens and invalidates session
+- [x] RBAC middleware blocks cross-role access (student org can't access venue endpoints)
 
 ### Code Quality Checkpoints
 - ✅ Zero hardcoded strings (error messages in constants)
 - ✅ Email validator extracted to pure function (testable)
 - ✅ All auth components < 15 lines (logic in hooks)
-- ✅ useAuth hook returns memoized values
 - ✅ Error boundaries wrap auth feature
 - ✅ No `any` types in auth flow
 - ✅ Middleware functions < 15 lines (extracted helpers)
 - ✅ JWT validation errors logged with structured logging
+
+**Status**: ✅ COMPLETED - Date: 2026-02-15
+
+---
+
+## Task 16: Clerk Keys Configuration (Environment Setup)
+
+**ID**: `VL-016`
+**Title**: Obtain and Configure Clerk Authentication Keys
+**Priority**: 🔴 Critical
+**Estimated Effort**: 1 hour
+**Dependencies**: `VL-003`
+
+### Description
+Obtain the necessary API keys from the Clerk Dashboard and configure them in the local environment files for both frontend and backend to enable functional authentication.
+
+### Requirements
+1. **Frontend**: Set `VITE_CLERK_PUBLISHABLE_KEY` in `frontend/.env`.
+2. **Backend**: Set `CLERK_PEM_PUBLIC_KEY` in `backend/.env`.
+
+### Acceptance Criteria
+- [ ] Clerk Application created in Clerk Dashboard
+- [ ] Development instance keys retrieved
+- [ ] Frontend can successfully initialize ClerkProvider
+- [ ] Backend can successfully verify JWT signature using the public key
 
 ---
 
@@ -306,7 +323,7 @@ frontend/src/components/
 **Title**: Build Login/Signup Forms with Role Selection
 **Priority**: 🔴 Critical
 **Estimated Effort**: 8 hours
-**Dependencies**: `VL-003`, `VL-004`
+**Dependencies**: `VL-003`, `VL-004`, `VL-016`
 
 ### Description
 Implement pixel-perfect authentication UI matching the mockup design with client-side validation, error handling, and role-based routing.
@@ -1187,7 +1204,7 @@ export const VALIDATION_RULES = {
 
 | Priority | Tasks |
 |----------|-------|
-| 🔴 Critical | VL-001, VL-002, VL-003, VL-004, VL-005 |
+| 🔴 Critical | VL-001, VL-002, VL-003, VL-004, VL-005, VL-016 |
 | 🟡 High | VL-006, VL-007, VL-008, VL-009, VL-010, VL-011, VL-012, VL-013, VL-014 |
 | 🟢 Medium | VL-015 |
 
@@ -1197,8 +1214,9 @@ export const VALIDATION_RULES = {
 VL-001 (Monorepo Setup)
 ├── VL-002 (Database)
 │   ├── VL-003 (Auth Service)
-│   │   ├── VL-005 (Auth UI)
-│   │   │   └── VL-006 (Dashboard)
+│   │   ├── VL-016 (Clerk Keys)
+│   │   │   └── VL-005 (Auth UI)
+│   │   │       └── VL-006 (Dashboard)
 │   │   └── VL-013 (API Client)
 │   │       └── VL-014 (React Query)
 │   └── VL-007 (Venue API)
@@ -1215,7 +1233,7 @@ VL-001 (Monorepo Setup)
 ```
 
 ## Total Estimated Effort
-**119 hours** (~3 weeks for 2 engineers working in parallel)
+**120 hours** (~3 weeks for 2 engineers working in parallel)
 
 ---
 
