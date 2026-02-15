@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.core.database import engine
+from app.core.config import settings
 from app.modules.auth.router import router as auth_router
 
 
@@ -59,14 +60,10 @@ app = FastAPI(
 app.include_router(auth_router, prefix="/api/v1")
 
 # CORS middleware configuration
-# Allows frontend (localhost:3000) to make API requests during development
-# TODO: Restrict origins in production to actual frontend domain
+# Allows frontend to make API requests during development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # Vite dev server
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers
