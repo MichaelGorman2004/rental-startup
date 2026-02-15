@@ -33,7 +33,7 @@ class AuthService:
         """
         # 1. Validate constraints
         if (
-            user_data.role == UserRole.STUDENT_ORG
+            user_data.role == UserRole.student_org
             and not is_valid_student_email(user_data.email)
         ):
             raise ValueError(AuthError.STUDENT_EMAIL_REQUIRED)

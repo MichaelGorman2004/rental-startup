@@ -184,8 +184,8 @@ rental-startup/
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | POST | `/venues` | venue_admin | Create new venue |
-| GET | `/venues/{id}` | public | Get single venue |
-| GET | `/venues` | public | List with filters & pagination |
+| GET | `/venues/{id}` | authenticated | Get single venue |
+| GET | `/venues` | authenticated | List with filters & pagination |
 | PATCH | `/venues/{id}` | owner | Update venue (partial) |
 | DELETE | `/venues/{id}` | owner | Soft delete venue |
 

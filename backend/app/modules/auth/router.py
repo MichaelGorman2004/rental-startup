@@ -22,7 +22,7 @@ async def get_my_profile(
     via the dependency and returns the local user data.
     """
     return UserCreate(
-        id=current_user.id,
+        id=str(current_user.id),
         email=current_user.email,
         role=current_user.role,
     )

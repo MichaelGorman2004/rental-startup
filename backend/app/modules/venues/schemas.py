@@ -52,24 +52,24 @@ class VenueBase(BaseModel):
             f"Base price in cents " f"(${BASE_PRICE_MIN_CENTS//100}-${BASE_PRICE_MAX_CENTS//100})"
         ),
     )
-    address_street: str | None = Field(
-        None,
+    address_street: str = Field(
+        ...,
         max_length=255,
         description="Street address",
     )
-    address_city: str | None = Field(
-        None,
+    address_city: str = Field(
+        ...,
         max_length=100,
         description="City",
     )
-    address_state: str | None = Field(
-        None,
+    address_state: str = Field(
+        ...,
         min_length=2,
         max_length=2,
         description="Two-letter state code (e.g., CA, NY)",
     )
-    address_zip: str | None = Field(
-        None,
+    address_zip: str = Field(
+        ...,
         max_length=10,
         description="ZIP code",
     )

@@ -55,6 +55,7 @@ async def create_venue(
 async def get_venue(
     venue_id: UUID,
     db: Annotated[AsyncSession, Depends(get_db)],
+    _current_user: Annotated[User, Depends(get_current_user)],
 ) -> VenueResponse:
     """Get a single venue by ID."""
     return await venue_service.get_venue_by_id(db=db, venue_id=venue_id)
@@ -72,6 +73,7 @@ async def get_venue(
 async def list_venues(
     db: Annotated[AsyncSession, Depends(get_db)],
     filters: Annotated[VenueFilters, Depends(parse_venue_filters)],
+    _current_user: Annotated[User, Depends(get_current_user)],
 ) -> VenueListResponse:
     """List venues with filtering and pagination."""
     return await venue_service.list_venues(db=db, filters=filters)

@@ -69,10 +69,10 @@ async def get_current_user(
         # Map string to Enum
         try:
             role_enum = (
-                UserRole(role_str) if role_str else UserRole.STUDENT_ORG
+                UserRole(role_str) if role_str else UserRole.student_org
             )
         except ValueError:
-            role_enum = UserRole.STUDENT_ORG
+            role_enum = UserRole.student_org
 
         user_create = UserCreate(id=sub, email=email, role=role_enum)
 

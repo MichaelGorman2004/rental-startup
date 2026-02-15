@@ -44,6 +44,8 @@ python-dotenv = "^1.0.1"
 ruff = "^0.2.1"
 # Static type checker
 mypy = "^1.8.0"
+# Type stubs for third-party libraries
+types-python-jose = "^3.3.4.20240106"
 # Code formatter
 black = "^24.1.1"
 # Testing framework
