@@ -22,8 +22,6 @@ export const useLoginForm = () => {
     try {
       const result = await signIn.create({ identifier: data.email, password: data.password });
 
-      console.log('Login result:', result); // Debugging log
-
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
         navigate('/');

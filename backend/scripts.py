@@ -16,7 +16,7 @@ def run_command(cmd: list[str], description: str) -> int:
     print(f"\n{'='*60}")
     print(f"  {description}")
     print(f"{'='*60}")
-    result = run(cmd)
+    result = run(cmd, check=False)  # noqa: S603
     return result.returncode
 
 
@@ -48,9 +48,9 @@ def qa() -> int:
         print("\n❌ Format check failed! Run 'poetry run format' to fix.")
         return 1
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("  ✅ All QA checks passed!")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
     return 0
 
 
@@ -100,7 +100,11 @@ def dev() -> int:
     print("    URL: http://localhost:8000")
     print("    Docs: http://localhost:8000/api/docs")
     print("\n")
-    return run(["poetry", "run", "uvicorn", "app.main:app", "--reload"]).returncode
+    result = run(
+        ["poetry", "run", "uvicorn", "app.main:app", "--reload"],  # noqa: S603, S607
+        check=False,
+    )
+    return result.returncode
 
 
 if __name__ == "__main__":
