@@ -13,6 +13,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\""
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.60.1",
     "@mantine/core": "^7.5.2",
     "@mantine/hooks": "^7.5.2",
     "@tabler/icons-react": "^2.47.0",
