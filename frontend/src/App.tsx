@@ -1,14 +1,16 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter, Routes, Route, Navigate,
+} from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { AppShell } from './layout';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
-const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const CLERK_PUBLISHABLE_KEY = import.meta.env['VITE_CLERK_PUBLISHABLE_KEY'];
 
 if (!CLERK_PUBLISHABLE_KEY) {
-  console.warn("Missing Publishable Key: Please set VITE_CLERK_PUBLISHABLE_KEY in your .env");
+  throw new Error('Missing Publishable Key: Please set VITE_CLERK_PUBLISHABLE_KEY in your .env');
 }
 
 /**
@@ -26,7 +28,7 @@ function App() {
           {/* Protected Routes */}
           <Route
             path="/"
-            element={
+            element={(
               <>
                 <SignedIn>
                   <AppShell />
@@ -35,7 +37,7 @@ function App() {
                   <Navigate to="/login" />
                 </SignedOut>
               </>
-            }
+            )}
           >
             <Route index element={<Home />} />
           </Route>
