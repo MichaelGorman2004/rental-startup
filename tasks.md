@@ -231,10 +231,12 @@ Obtain the necessary API keys from the Clerk Dashboard and configure them in the
 2. **Backend**: Set `CLERK_PEM_PUBLIC_KEY` in `backend/.env`.
 
 ### Acceptance Criteria
-- [ ] Clerk Application created in Clerk Dashboard
-- [ ] Development instance keys retrieved
-- [ ] Frontend can successfully initialize ClerkProvider
-- [ ] Backend can successfully verify JWT signature using the public key
+- [x] Clerk Application created in Clerk Dashboard
+- [x] Development instance keys retrieved
+- [x] Frontend can successfully initialize ClerkProvider
+- [x] Backend can successfully verify JWT signature using the public key
+
+**Status**: ✅ COMPLETED
 
 ---
 
