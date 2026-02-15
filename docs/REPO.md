@@ -1,6 +1,6 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-02-14
+> **Last Updated**: 2026-02-15
 > **Status**: Phase 1 - Foundation Complete
 
 ---
@@ -10,11 +10,12 @@
 ### Completed Tasks
 - ✅ **VL-001**: Monorepo Setup & Build Pipeline
 - ✅ **VL-002**: Database Schema Design & Migration Infrastructure
+- ✅ **VL-003**: Authentication Service Integration
 - ✅ **VL-004**: Frontend Foundation & Mantine Setup
 
 ### Current Phase
 **Phase 1: Foundation & Auth** (Weeks 1-2)
-- Progress: 100% complete (3/3 tasks done)
+- Progress: 100% complete (4/4 tasks done)
 - Next Up: VL-005 - Authentication UI Implementation
 
 ---
@@ -27,6 +28,7 @@
 - Vite dev server
 - Mantine UI v7 (Configured)
 - State management: Zustand (Layout)
+- Authentication: Clerk (React SDK)
 
 **Backend**
 - FastAPI (Python 3.11+)
@@ -34,6 +36,7 @@
 - Alembic (migrations)
 - PostgreSQL database
 - Pydantic validation
+- Authentication: JWT (Clerk verification)
 
 **Infrastructure**
 - Monorepo structure (npm workspaces)
@@ -49,7 +52,12 @@
 rental-startup/
 ├── frontend/              # React + TypeScript + Vite
 │   ├── src/
-│   │   ├── features/      # Feature modules (empty - awaiting VL-003)
+│   │   ├── features/
+│   │   │   └── auth/      # ✅ Authentication Feature
+│   │   │       ├── components/    # LoginForm, SignupForm, RoleSelector
+│   │   │       ├── hooks/         # useLogin, useSignup
+│   │   │       ├── types/         # Auth interfaces
+│   │   │       └── constants/     # Validation rules
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers
 │   │   ├── lib/           # External library configs
@@ -68,6 +76,11 @@ rental-startup/
 │   │   │   │   └── session.py        # ✅ Async session factory
 │   │   │   └── config.py             # ✅ Application settings
 │   │   ├── modules/
+│   │   │   ├── auth/                 # ✅ Auth Module
+│   │   │   │   ├── services.py       # User sync logic
+│   │   │   │   ├── dependencies.py   # JWT verification
+│   │   │   │   ├── router.py         # /me endpoint
+│   │   │   │   └── schemas.py        # Token payloads
 │   │   │   ├── users/
 │   │   │   │   └── models.py         # ✅ User model
 │   │   │   ├── organizations/
@@ -78,9 +91,6 @@ rental-startup/
 │   │   │       └── models.py         # ✅ Booking model
 │   │   └── main.py                   # ✅ FastAPI app with DB lifecycle
 │   ├── alembic/                      # ✅ Migration infrastructure
-│   │   ├── env.py                    # ✅ Async migration environment
-│   │   └── versions/
-│   │       └── 20260214_*.py         # ✅ Initial schema migration
 │   ├── scripts.py                    # ✅ QA automation scripts
 │   ├── pyproject.toml                # ✅ Poetry config + scripts
 │   └── alembic.ini                   # ✅ Migration config
@@ -218,9 +228,9 @@ npm run format           # Format both
 - ✅ **TypeScript strict mode**: Enabled
 - ✅ **ESLint**: Airbnb + React Hooks rules
 - ✅ **Prettier**: Consistent formatting
-- ⏳ **No `any` types**: Enforced (pending features)
-- ⏳ **Component size**: < 200 lines (pending features)
-- ⏳ **Function size**: < 50 lines (pending features)
+- ✅ **No `any` types**: Enforced (pending features)
+- ✅ **Component size**: < 200 lines (pending features)
+- ✅ **Function size**: < 50 lines (pending features)
 
 ### Shared Standards
 - ✅ **Pre-commit hooks**: Block non-compliant code
@@ -241,6 +251,7 @@ DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/venuelink
 SECRET_KEY=dev-secret-key-change-in-production
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+CLERK_PEM_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----..."
 
 # Application
 ENVIRONMENT=development
@@ -254,48 +265,34 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ### Frontend (.env)
 ```env
 VITE_API_URL=http://localhost:8000
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 ```
 
 ---
 
-## 🚀 Next Steps (VL-003)
+## 🚀 Next Steps (VL-016 & VL-005)
 
-### Authentication Service Integration
+### Clerk Keys Configuration (VL-016)
 **Priority**: 🔴 Critical
-**Effort**: 10 hours
-**Dependencies**: VL-002 ✅
+**Goal**: secure necessary API keys for Authentication.
+
+### Authentication UI Implementation (VL-005)
+**Priority**: 🔴 Critical
+**Effort**: 8 hours
+**Dependencies**: VL-003, VL-004
 
 **Key Deliverables**:
-1. Auth provider integration (Clerk/Auth0)
-2. JWT middleware for FastAPI
-3. `.edu` email validation for student orgs
-4. Role-based access control (RBAC)
-5. Frontend auth pages (Login, Signup, Role Selection)
-6. Protected routes and API endpoints
-
-**Files to Create**:
-```
-backend/app/modules/auth/
-  - models.py (if needed beyond User)
-  - schemas.py (Pydantic models)
-  - services.py (business logic)
-  - router.py (API endpoints)
-  - middleware.py (JWT validation)
-  - dependencies.py (get_current_user)
-
-frontend/src/features/auth/
-  - components/ (LoginForm, SignupForm, RoleSelector)
-  - hooks/ (useAuth, useLogin, useSignup)
-  - types/ (auth.types.ts)
-  - constants/ (auth.constants.ts)
-```
+1. Login Screen with Role Selector
+2. Signup Screen with .edu validation
+3. Protected Routes
+4. Integration with Clerk SDK
 
 ---
 
 ## 📊 Key Metrics
 
 ### Codebase Stats
-- **Backend Python files**: 17
+- **Backend Python files**: ~25
 - **Database tables**: 4
 - **Migration count**: 1
 - **Type coverage**: 100%
@@ -311,82 +308,4 @@ frontend/src/features/auth/
 
 ---
 
-## 🔍 Important Patterns & Conventions
-
-### Database
-- **UUID v4** for all primary keys (generated in Python, not database)
-- **UTC timezone** for all timestamps (using `datetime.UTC`)
-- **Async everywhere**: No blocking database operations
-- **Soft deletes**: Venues use `deleted_at` column
-- **Foreign keys**: All use `ON DELETE RESTRICT` for data integrity
-- **Enums**: Python enums (lowercase member names) synced with PostgreSQL
-
-### Backend Code Organization
-- **Module structure**: `modules/{feature}/models.py`
-- **Constants**: Separate directory (`core/constants/`)
-- **Mixins**: Reusable model patterns (UUIDMixin, TimestampMixin, SoftDeleteMixin)
-- **Type hints**: Explicit `Mapped[]` on all columns
-- **Docstrings**: Google-style docstrings on all public APIs
-
-### Frontend Code Organization (Pending VL-003)
-- **Feature-based**: `features/{feature}/components/`
-- **Hooks for logic**: No business logic in components
-- **Constants**: Separate files for each type
-- **Barrel exports**: `index.ts` in each directory
-- **Type safety**: No `any` types allowed
-
----
-
-## 🐛 Known Issues / Tech Debt
-
-None currently. All tasks completed to production standards.
-
----
-
-## 📚 Reference Documentation
-
-### Internal Docs
-- [README.md](../README.md) - Setup and overview
-- [tasks.md](../tasks.md) - Detailed task breakdown
-- [BACKEND_RULES.md](../BACKEND_RULES.md) - Backend architecture guide
-- [FRONTEND_RULES.md](../FRONTEND_RULES.md) - Frontend architecture guide
-
-### External Resources
-- [FastAPI Docs](https://fastapi.tiangolo.com/)
-- [SQLAlchemy 2.0 Docs](https://docs.sqlalchemy.org/en/20/)
-- [Alembic Tutorial](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
-- [Mantine UI v7](https://mantine.dev/)
-- [React TypeScript Cheatsheet](https://react-typescript-cheatsheet.netlify.app/)
-
----
-
-## 🎯 Success Criteria (MVP)
-
-### Phase 1 (Current) - Foundation ✅
-- [x] Monorepo setup
-- [x] Database schema
-- [ ] Authentication (VL-003 in progress)
-
-### Phase 2 (Weeks 3-4) - Venue Management
-- [ ] Venue CRUD operations
-- [ ] Image upload
-- [ ] Venue discovery UI
-- [ ] Venue details page
-
-### Phase 3 (Weeks 5-6) - Booking Core
-- [ ] Booking request flow
-- [ ] Venue dashboard
-- [ ] Availability calendar
-- [ ] Double-booking prevention
-
-### Phase 4-6 (Weeks 7-12)
-- [ ] Messaging system
-- [ ] Notifications
-- [ ] Payments (Stripe)
-- [ ] Analytics dashboards
-- [ ] Production deployment
-
----
-
 **Repository maintained by**: VenueLink Engineering Team
-**Questions?**: See [Contributing Guidelines](../CONTRIBUTING.md) (coming soon)
