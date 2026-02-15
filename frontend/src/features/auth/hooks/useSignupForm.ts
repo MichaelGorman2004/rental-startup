@@ -36,8 +36,6 @@ export const useSignupForm = () => {
         lastName: data.lastName,
         unsafeMetadata: { role: data.role, orgName: data.orgName },
       });
-      
-      console.log("Sign up result:", result); // Debugging log
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });

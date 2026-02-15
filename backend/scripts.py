@@ -48,9 +48,9 @@ def qa() -> int:
         print("\n❌ Format check failed! Run 'poetry run format' to fix.")
         return 1
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("  ✅ All QA checks passed!")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
     return 0
 
 
