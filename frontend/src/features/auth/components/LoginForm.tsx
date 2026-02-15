@@ -1,20 +1,22 @@
-import { useState } from 'react';
-import { TextInput, PasswordInput, Button, Stack, Alert } from '@mantine/core';
-import { useLogin } from '../hooks/useLogin';
+import {
+  Button, PasswordInput, Stack, Alert,
+} from '@mantine/core';
+import { useLoginForm } from '../hooks/useLoginForm';
+import { EmailInput } from './EmailInput';
 
-export const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { handleLogin, error, isLoading } = useLogin();
+export function LoginForm() {
+  const {
+    register, onSubmit, errors, isSubmitting, serverError,
+  } = useLoginForm();
 
   return (
-    <Stack>
-      {error && <Alert color="red">{error}</Alert>}
-      <TextInput label="Email" value={email} onChange={(e) => setEmail(e.currentTarget.value)} required />
-      <PasswordInput label="Password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} required />
-      <Button onClick={() => handleLogin(email, password)} loading={isLoading} fullWidth>
-        Sign In
-      </Button>
-    </Stack>
+    <form onSubmit={onSubmit}>
+      <Stack gap="md">
+        {serverError && <Alert color="red">{serverError}</Alert>}
+        <EmailInput register={register('email')} error={errors.email?.message} />
+        <PasswordInput label="Password" {...register('password')} error={errors.password?.message} required />
+        <Button type="submit" loading={isSubmitting} fullWidth>Sign In</Button>
+      </Stack>
+    </form>
   );
-};
+}
