@@ -14,6 +14,7 @@ class TokenPayload(BaseModel):
     exp: int
     iat: int
 
+
 class UserCreate(BaseModel):
     """Schema for creating a user from auth provider data."""
 

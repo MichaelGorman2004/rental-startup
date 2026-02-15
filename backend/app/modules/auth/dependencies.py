@@ -23,6 +23,7 @@ CLERK_PEM_PUBLIC_KEY = os.getenv("CLERK_PEM_PUBLIC_KEY")
 # If PEM is not provided, we might need to fetch JWKS or skip sig check in dev
 # IN PRODUCTION: Fetch from https://<your-clerk-domain>/.well-known/jwks.json
 
+
 async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -51,13 +52,8 @@ async def get_current_user(
         sub = payload_dict.get("sub")
         email = payload_dict.get("email")
         role_str = payload_dict.get(ROLE_CLAIM_KEY)
-        if (
-            not role_str
-            and "public_metadata" in payload_dict
-        ):
-            role_str = payload_dict["public_metadata"].get(
-                ROLE_CLAIM_KEY
-            )
+        if not role_str and "public_metadata" in payload_dict:
+            role_str = payload_dict["public_metadata"].get(ROLE_CLAIM_KEY)
 
         if not sub or not email:
             raise HTTPException(
@@ -68,9 +64,7 @@ async def get_current_user(
 
         # Map string to Enum
         try:
-            role_enum = (
-                UserRole(role_str) if role_str else UserRole.student_org
-            )
+            role_enum = UserRole(role_str) if role_str else UserRole.student_org
         except ValueError:
             role_enum = UserRole.student_org
 

@@ -9,8 +9,10 @@ STUDENT_EMAIL_REGEX = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.edu$"
 CLERK_ISSUER = "https://clerk.venuelink.com"  # Placeholder, should be env var
 ROLE_CLAIM_KEY = "org_role"  # Key in JWT metadata
 
+
 class AuthError(str, Enum):
     """Authentication error messages."""
+
     INVALID_TOKEN = "Invalid authentication token."  # noqa: S105
     EXPIRED_TOKEN = "Authentication token has expired."  # noqa: S105
     INVALID_HEADER = "Invalid authentication header."

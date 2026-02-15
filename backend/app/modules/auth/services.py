@@ -32,10 +32,7 @@ class AuthService:
             ValueError: If validation fails (e.g. non-edu email for student org).
         """
         # 1. Validate constraints
-        if (
-            user_data.role == UserRole.student_org
-            and not is_valid_student_email(user_data.email)
-        ):
+        if user_data.role == UserRole.student_org and not is_valid_student_email(user_data.email):
             raise ValueError(AuthError.STUDENT_EMAIL_REQUIRED)
 
         # 2. Check if user exists
@@ -58,5 +55,6 @@ class AuthService:
         await db.refresh(new_user)
 
         return new_user
+
 
 auth_service = AuthService()
