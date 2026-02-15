@@ -27,6 +27,7 @@ export function SignupForm() {
         <PasswordInput label="Password" {...register('password')} error={errors.password?.message} />
         <Checkbox label="I agree to terms" {...register('terms')} error={errors.terms?.message} />
         <Button type="submit" loading={isSubmitting} fullWidth>Create Account</Button>
+        <div id="clerk-captcha" />
       </Stack>
     </form>
   );

@@ -16,6 +16,7 @@ export function LoginForm() {
         <EmailInput register={register('email')} error={errors.email?.message} />
         <PasswordInput label="Password" {...register('password')} error={errors.password?.message} required />
         <Button type="submit" loading={isSubmitting} fullWidth>Sign In</Button>
+        <div id="clerk-captcha" />
       </Stack>
     </form>
   );
