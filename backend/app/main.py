@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.core.database import engine
+from app.modules.auth.router import router as auth_router
 
 
 @asynccontextmanager
@@ -54,6 +55,8 @@ app = FastAPI(
     redoc_url="/api/redoc",  # ReDoc at /api/redoc
     lifespan=lifespan,  # Database lifecycle management
 )
+
+app.include_router(auth_router, prefix="/api/v1")
 
 # CORS middleware configuration
 # Allows frontend (localhost:3000) to make API requests during development
