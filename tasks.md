@@ -440,18 +440,18 @@ features/dashboard/
 - **User Context**: Current org name from auth context
 
 ### Acceptance Criteria
-- [ ] Dashboard matches mockup layout and styling
-- [ ] Header displays current organization name from auth state
-- [ ] Quick actions grid uses Mantine Grid component (not custom CSS)
-- [ ] Action cards navigate to respective routes on click
-- [ ] Upcoming events fetched on mount using React Query
-- [ ] Events sorted chronologically (soonest first)
-- [ ] Empty state shown if no upcoming events ("No upcoming events")
-- [ ] All icons use Tabler Icons (Mantine default)
-- [ ] Action card data defined in constants file
-- [ ] Loading skeleton displayed while fetching events
-- [ ] Error state handled gracefully (retry button)
-- [ ] All components responsive (mobile: 1 column, desktop: 2 columns)
+- [x] Dashboard matches mockup layout and styling
+- [x] Header displays current organization name from auth state
+- [x] Quick actions grid uses Mantine Grid component (not custom CSS)
+- [x] Action cards navigate to respective routes on click
+- [x] Upcoming events fetched on mount using React Query
+- [x] Events sorted chronologically (soonest first)
+- [x] Empty state shown if no upcoming events ("No upcoming events")
+- [x] All icons use Tabler Icons (Mantine default)
+- [x] Action card data defined in constants file
+- [x] Loading skeleton displayed while fetching events
+- [x] Error state handled gracefully (retry button)
+- [x] All components responsive (mobile: 1 column, desktop: 2 columns)
 
 ### Code Quality Checkpoints
 - ✅ DashboardHeader.tsx < 15 lines
@@ -463,6 +463,14 @@ features/dashboard/
 - ✅ React Query cache configured (staleTime: 5 min)
 - ✅ Components wrapped in React.memo
 - ✅ No prop drilling (use context for org data)
+
+### Implementation Notes
+- React Query infrastructure added (QueryClient, QueryProvider)
+- Uses mock data for events (backend bookings endpoint pending)
+- Header updated with org badge from Clerk publicMetadata
+- EventCard component renamed from EventItem for clarity
+
+**Status**: ✅ COMPLETED - Date: 2026-02-15, Commit: bf5b56c
 
 ---
 
