@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
 > **Last Updated**: 2026-02-15
-> **Status**: Phase 1 & 2 - Foundation & Venue APIs (In Progress)
+> **Status**: Phase 2 - Dashboard & Venue APIs In Progress
 
 ---
 
@@ -13,12 +13,13 @@
 - ✅ **VL-003**: Authentication Service Integration
 - ✅ **VL-004**: Frontend Foundation & Mantine Setup
 - ✅ **VL-005**: Authentication UI Implementation
+- ✅ **VL-006**: Student Org Dashboard Foundation
 - ✅ **VL-007**: Venue Management Backend API
 
 ### Current Phase
-**Phase 1: Foundation & Auth** (Weeks 1-2) + **Phase 2: Venue APIs** (Week 3)
-- Progress: 6/16 tasks done (~38%)
-- Next Up: VL-006 - Student Org Dashboard Foundation / VL-008 - Venue Discovery Frontend
+**Phase 2: Core Features** (Weeks 3-4)
+- Progress: 7/16 tasks done (~44%)
+- Next Up: VL-008 - Venue Discovery Frontend
 
 ---
 
@@ -29,7 +30,7 @@
 - React 18 + TypeScript (strict mode)
 - Vite dev server
 - Mantine UI v7 (Configured)
-- State management: Zustand (Layout)
+- State management: Zustand (Layout), React Query v5 (Server State)
 - Authentication: Clerk (React SDK)
 
 **Backend**
@@ -55,14 +56,20 @@ rental-startup/
 ├── frontend/              # React + TypeScript + Vite
 │   ├── src/
 │   │   ├── features/
-│   │   │   └── auth/      # ✅ Authentication Feature
-│   │   │       ├── components/    # LoginForm, SignupForm, RoleSelector
-│   │   │       ├── hooks/         # useLoginForm, useSignupForm
-│   │   │       ├── types/         # Auth interfaces
-│   │   │       └── constants/     # Validation rules
+│   │   │   ├── auth/      # ✅ Authentication Feature
+│   │   │   │   ├── components/    # LoginForm, SignupForm, RoleSelector
+│   │   │   │   ├── hooks/         # useLoginForm, useSignupForm
+│   │   │   │   ├── types/         # Auth interfaces
+│   │   │   │   └── constants/     # Validation rules
+│   │   │   └── dashboard/ # ✅ Dashboard Feature
+│   │   │       ├── components/    # DashboardPage, ActionCard, EventCard, etc.
+│   │   │       ├── hooks/         # useUpcomingEvents, useOrganization
+│   │   │       ├── types/         # Dashboard interfaces
+│   │   │       └── constants/     # Quick actions config
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers
-│   │   ├── lib/           # External library configs
+│   │   ├── lib/           # External library configs (React Query)
+│   │   ├── providers/     # QueryProvider
 │   │   ├── utils/         # Pure utility functions
 │   │   └── App.tsx
 │   ├── package.json
@@ -340,12 +347,24 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ## 🚀 Next Steps
 
-### Phase 2: Venue Management (In Progress)
-- **VL-006**: Student Org Dashboard Foundation (VL-004, VL-005)
+### Phase 2: Core Features (In Progress)
+- ~~**VL-006**: Student Org Dashboard Foundation~~ ✅
+- ~~**VL-007**: Venue Management Backend API~~ ✅
 - **VL-008**: Venue Discovery Frontend (VL-004, VL-007)
 - **VL-009**: Venue Details Page (VL-008)
 - **VL-010**: Booking Request Form (VL-009)
 - **VL-011**: Venue Admin Dashboard (VL-007)
+
+### Venue Discovery Frontend (VL-008) - Next Up
+**Priority**: 🟡 High
+**Effort**: 10 hours
+**Dependencies**: VL-004, VL-007
+
+**Key Deliverables**:
+1. Venue browse UI with search & filters
+2. Responsive venue cards grid
+3. Filter chips for venue types
+4. Integration with venues API
 
 ### Phase 3: Supporting Systems (Planned)
 - **VL-012**: Shared TypeScript Types & Constants
@@ -353,18 +372,13 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **VL-014**: React Query Setup & Cache Strategy
 - **VL-015**: Form Validation & Input Components
 
-### Key Deliverables for Phase 2
-1. Complete venue CRUD API with 5 RESTful endpoints ✅
-2. Venue discovery UI with search/filters
-3. Booking request workflow
-4. Venue admin dashboard with stats
-
 ---
 
 ## 📊 Key Metrics
 
 ### Codebase Stats
 - **Backend Python files**: ~35 (includes venues module)
+- **Frontend feature files**: ~30 (auth + dashboard)
 - **Database tables**: 4
 - **Migration count**: 1
 - **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
@@ -372,6 +386,11 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **Linting errors**: 0 (ruff clean)
 - **Test coverage**: 0% (no tests yet)
 - **Lines of code (Python)**: ~850 (venues module alone)
+
+### Dashboard Feature Stats
+- **Components**: 7 (DashboardPage, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
+- **Hooks**: 2 (useUpcomingEvents, useOrganization)
+- **React Query**: Configured with 5-min stale time
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks
