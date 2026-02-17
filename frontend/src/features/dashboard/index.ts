@@ -1,5 +1,6 @@
 // Components
-export { DashboardPage } from './components/DashboardPage';
+export { QuickActionsGrid } from './components/QuickActionsGrid';
+export { UpcomingEvents } from './components/UpcomingEvents';
 
 // Hooks
 export { useUpcomingEvents } from './hooks/useUpcomingEvents';

@@ -4,7 +4,7 @@ import {
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { QueryProvider } from './providers/QueryProvider';
 import { AppShell } from './layout';
-import { DashboardPage } from './features/dashboard';
+import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -41,7 +41,7 @@ function App() {
                 </>
               )}
             >
-              <Route index element={<DashboardPage />} />
+              <Route index element={<Dashboard />} />
             </Route>
           </Routes>
         </BrowserRouter>

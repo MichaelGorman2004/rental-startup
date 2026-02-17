@@ -1,10 +1,7 @@
-import {
-  Stack, Title, Text, Container,
-} from '@mantine/core';
-import { QuickActionsGrid } from './QuickActionsGrid';
-import { UpcomingEvents } from './UpcomingEvents';
+import { Container, Stack, Title, Text } from '@mantine/core';
+import { QuickActionsGrid, UpcomingEvents } from '../features/dashboard';
 
-export function DashboardPage() {
+export function Dashboard() {
   return (
     <Container size="md" py="xl">
       <Stack gap="xl">
