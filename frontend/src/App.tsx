@@ -5,6 +5,7 @@ import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { QueryProvider } from './providers/QueryProvider';
 import { AppShell } from './layout';
 import { DashboardPage } from './features/dashboard';
+import { VenueBrowse } from './features/venues';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -42,6 +43,7 @@ function App() {
               )}
             >
               <Route index element={<DashboardPage />} />
+              <Route path="venues" element={<VenueBrowse />} />
             </Route>
           </Routes>
         </BrowserRouter>
