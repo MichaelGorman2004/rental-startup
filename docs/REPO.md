@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-02-15
-> **Status**: Phase 2 - Dashboard & Venue APIs In Progress
+> **Last Updated**: 2026-02-22
+> **Status**: Phase 2 - Core Features In Progress
 
 ---
 
@@ -15,11 +15,12 @@
 - ✅ **VL-005**: Authentication UI Implementation
 - ✅ **VL-006**: Student Org Dashboard Foundation
 - ✅ **VL-007**: Venue Management Backend API
+- ✅ **VL-008**: Venue Discovery Frontend
 
 ### Current Phase
 **Phase 2: Core Features** (Weeks 3-4)
-- Progress: 7/16 tasks done (~44%)
-- Next Up: VL-008 - Venue Discovery Frontend
+- Progress: 8/16 tasks done (50%)
+- Next Up: VL-009 - Venue Details Page
 
 ---
 
@@ -61,11 +62,17 @@ rental-startup/
 │   │   │   │   ├── hooks/         # useLoginForm, useSignupForm
 │   │   │   │   ├── types/         # Auth interfaces
 │   │   │   │   └── constants/     # Validation rules
-│   │   │   └── dashboard/ # ✅ Dashboard Feature
-│   │   │       ├── components/    # DashboardPage, ActionCard, EventCard, etc.
-│   │   │       ├── hooks/         # useUpcomingEvents, useOrganization
-│   │   │       ├── types/         # Dashboard interfaces
-│   │   │       └── constants/     # Quick actions config
+│   │   │   ├── dashboard/ # ✅ Dashboard Feature
+│   │   │   │   ├── components/    # DashboardPage, ActionCard, EventCard, etc.
+│   │   │   │   ├── hooks/         # useUpcomingEvents, useOrganization
+│   │   │   │   ├── types/         # Dashboard interfaces
+│   │   │   │   └── constants/     # Quick actions config
+│   │   │   └── venues/    # ✅ Venue Discovery Feature (VL-008)
+│   │   │       ├── components/    # VenueBrowse, VenueCard, VenueGrid, etc.
+│   │   │       ├── hooks/         # useVenues, useVenueSearch, useVenueFilters
+│   │   │       ├── types/         # Venue interfaces
+│   │   │       ├── constants/     # Gradients, labels, query keys
+│   │   │       └── utils/         # formatPrice, formatCapacity, formatAddress
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers
 │   │   ├── lib/           # External library configs (React Query)
@@ -350,21 +357,21 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 ### Phase 2: Core Features (In Progress)
 - ~~**VL-006**: Student Org Dashboard Foundation~~ ✅
 - ~~**VL-007**: Venue Management Backend API~~ ✅
-- **VL-008**: Venue Discovery Frontend (VL-004, VL-007)
+- ~~**VL-008**: Venue Discovery Frontend~~ ✅
 - **VL-009**: Venue Details Page (VL-008)
 - **VL-010**: Booking Request Form (VL-009)
 - **VL-011**: Venue Admin Dashboard (VL-007)
 
-### Venue Discovery Frontend (VL-008) - Next Up
+### Venue Details Page (VL-009) - Next Up
 **Priority**: 🟡 High
-**Effort**: 10 hours
-**Dependencies**: VL-004, VL-007
+**Effort**: 8 hours
+**Dependencies**: VL-008
 
 **Key Deliverables**:
-1. Venue browse UI with search & filters
-2. Responsive venue cards grid
-3. Filter chips for venue types
-4. Integration with venues API
+1. Venue detail view with hero section
+2. Address with Google Maps link
+3. "Request Booking" CTA button
+4. Breadcrumb navigation
 
 ### Phase 3: Supporting Systems (Planned)
 - **VL-012**: Shared TypeScript Types & Constants
@@ -378,12 +385,12 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ### Codebase Stats
 - **Backend Python files**: ~35 (includes venues module)
-- **Frontend feature files**: ~30 (auth + dashboard)
+- **Frontend feature files**: ~53 (auth + dashboard + venues)
 - **Database tables**: 4
 - **Migration count**: 1
 - **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
-- **Type coverage**: 100% (mypy strict mode)
-- **Linting errors**: 0 (ruff clean)
+- **Type coverage**: 100% (mypy strict mode, TypeScript strict mode)
+- **Linting errors**: 0 (ruff + ESLint clean)
 - **Test coverage**: 0% (no tests yet)
 - **Lines of code (Python)**: ~850 (venues module alone)
 
@@ -391,6 +398,13 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **Components**: 7 (DashboardPage, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
 - **Hooks**: 2 (useUpcomingEvents, useOrganization)
 - **React Query**: Configured with 5-min stale time
+
+### Venue Discovery Feature Stats (VL-008)
+- **Components**: 9 (VenueBrowse, VenueCard, VenueCardGradient, VenueCardSkeleton, VenueEmptyState, VenueErrorState, VenueFilters, VenueGrid, VenueSearchBar)
+- **Hooks**: 3 (useVenues, useVenueSearch, useVenueFilters)
+- **Utilities**: 3 (formatPrice, formatCapacity, formatAddress)
+- **React Query**: 10-min stale time for venue data
+- **URL-synced**: Filter state in search params (?type=bar&search=rooftop)
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks
