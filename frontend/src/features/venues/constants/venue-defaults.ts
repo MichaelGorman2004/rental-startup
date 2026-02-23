@@ -37,3 +37,26 @@ export const VENUE_MESSAGES = {
   CAPACITY_UNIT: 'guests',
   PRICE_PREFIX: 'From',
 } as const;
+
+/** UI messages for the venue detail page. */
+export const VENUE_DETAIL_MESSAGES = {
+  NOT_FOUND_TITLE: 'Venue not found',
+  NOT_FOUND_SUBTITLE: 'This venue may have been removed or the link is incorrect.',
+  BACK_TO_BROWSE: 'Back to Browse',
+  OPEN_IN_MAPS: 'Open in Maps',
+  REQUEST_BOOKING: 'Request Booking',
+  PRICE_SUFFIX: '/event',
+  CAPACITY_LABEL: 'Capacity',
+  PRICE_LABEL: 'Base Price',
+  ADDRESS_LABEL: 'Address',
+  VENUE_TYPE_LABEL: 'Venue Type',
+  BOOKING_NOTICE: 'Bookings require at least 7 days advance notice.',
+  CANCELLATION_POLICY: 'Free cancellation up to 48 hours before event.',
+  VENUE_ADMIN_TOOLTIP: 'Only student organizations can request bookings.',
+  BREADCRUMB_HOME: 'Home',
+  BREADCRUMB_VENUES: 'Browse Venues',
+  ERROR_LOADING: 'Failed to load venue details',
+} as const;
+
+/** Height of the gradient hero banner on the detail page in pixels. */
+export const HERO_GRADIENT_HEIGHT = 220;
