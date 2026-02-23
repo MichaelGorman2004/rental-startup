@@ -74,11 +74,14 @@ export function normalizeError(error: AxiosError): ApiError {
   const status = error.response?.status ?? 0;
   const data = error.response?.data;
 
+  const isServerErrorStatus = status >= 500 && status < 600;
+
   return {
     message: parseBackendMessage(data)
       ?? STATUS_TO_MESSAGE[status]
-      ?? ERROR_MESSAGES.UNKNOWN,
-    code: STATUS_TO_ERROR_CODE[status] ?? ApiErrorCode.ServerError,
+      ?? (isServerErrorStatus ? ERROR_MESSAGES.SERVER : ERROR_MESSAGES.UNKNOWN),
+    code: STATUS_TO_ERROR_CODE[status]
+      ?? (isServerErrorStatus ? ApiErrorCode.ServerError : ApiErrorCode.UnknownError),
     statusCode: status,
     field: parseBackendField(data),
   };

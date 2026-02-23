@@ -20,11 +20,14 @@ function toApiParams(filters: VenueFilters) {
  * Uses the centralized API client and query key factory.
  */
 export function useVenuesQuery(filters: VenueFilters) {
+  const normalizedSearch = filters.search || undefined;
+
   return useQuery<VenueListResponse>({
     queryKey: queryKeys.venues.list({
       type: filters.type,
-      search: filters.search,
+      search: normalizedSearch,
       page: filters.page,
+      pageSize: filters.pageSize,
     }),
     queryFn: () => getVenues(toApiParams(filters)),
     staleTime: STALE_TIMES.VENUES,
@@ -36,7 +39,7 @@ export function useVenuesQuery(filters: VenueFilters) {
  * Enabled only when a valid venueId is provided.
  */
 export function useVenueDetailQuery(venueId: string) {
-  return useQuery<Venue | null>({
+  return useQuery<Venue>({
     queryKey: queryKeys.venues.detail(venueId),
     queryFn: () => getVenue(venueId),
     staleTime: STALE_TIMES.VENUES,

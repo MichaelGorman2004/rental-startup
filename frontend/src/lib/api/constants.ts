@@ -52,7 +52,14 @@ export function getApiBaseUrl(): string {
     throw new Error(ERROR_MESSAGES.MISSING_BASE_URL);
   }
 
-  return baseUrl.endsWith(API_PATH_SUFFIX)
-    ? baseUrl
-    : `${baseUrl}${API_PATH_SUFFIX}`;
+  if (baseUrl.endsWith(`${API_PATH_SUFFIX}/`)) {
+    return baseUrl.slice(0, -1);
+  }
+
+  if (baseUrl.endsWith(API_PATH_SUFFIX)) {
+    return baseUrl;
+  }
+
+  const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
+  return `${normalizedBaseUrl}${API_PATH_SUFFIX}`;
 }

@@ -3,6 +3,7 @@ import {
 } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { QueryProvider } from './providers/QueryProvider';
+import { ApiClientInitializer } from './providers/ApiClientInitializer';
 import { AppShell } from './layout';
 import { DashboardPage } from './features/dashboard';
 import { VenueBrowse, VenueDetail } from './features/venues';
@@ -24,35 +25,37 @@ function App() {
   return (
     <QueryProvider>
       <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+        <ApiClientInitializer>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={(
-                <>
-                  <SignedIn>
-                    <AppShell />
-                  </SignedIn>
-                  <SignedOut>
-                    <Navigate to="/login" />
-                  </SignedOut>
-                </>
-              )}
-            >
-              <Route index element={<DashboardPage />} />
-              <Route path="venues" element={<VenueBrowse />} />
-              <Route path="venues/:id" element={<VenueDetail />} />
-              <Route path="venues/:id/book" element={<BookingForm />} />
-              <Route path="bookings" element={<div>Bookings</div>} />
-              <Route path="admin" element={<AdminDashboard />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+              {/* Protected Routes */}
+              <Route
+                path="/"
+                element={(
+                  <>
+                    <SignedIn>
+                      <AppShell />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" />
+                    </SignedOut>
+                  </>
+                )}
+              >
+                <Route index element={<DashboardPage />} />
+                <Route path="venues" element={<VenueBrowse />} />
+                <Route path="venues/:id" element={<VenueDetail />} />
+                <Route path="venues/:id/book" element={<BookingForm />} />
+                <Route path="bookings" element={<div>Bookings</div>} />
+                <Route path="admin" element={<AdminDashboard />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ApiClientInitializer>
       </ClerkProvider>
     </QueryProvider>
   );

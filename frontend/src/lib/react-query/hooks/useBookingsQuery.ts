@@ -59,7 +59,7 @@ export function useVenueStatsQuery(venueId: string) {
 
 /**
  * Mutation hooks for accepting or declining bookings.
- * Provides optimistic updates and automatic cache invalidation.
+ * Invalidates booking and stats caches on settlement.
  */
 export function useBookingActionMutations(venueId: string) {
   const queryClient = useQueryClient();
