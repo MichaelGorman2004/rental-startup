@@ -3,15 +3,10 @@ import { SimpleGrid, Skeleton } from '@mantine/core';
 import {
   IconCalendarEvent, IconCash, IconStar, IconChartBar,
 } from '@tabler/icons-react';
-import type { VenueStats } from '../types/venue-admin.types';
-import { ADMIN_MESSAGES, STATS_SKELETON_COUNT } from '../constants/venue-admin-defaults';
-import { formatPrice } from '../../venues/utils/format-price';
+import type { StatsGridProps } from '../types';
+import { ADMIN_MESSAGES, STATS_SKELETON_COUNT } from '../constants';
+import { formatPrice } from '../utils';
 import { StatCard } from './StatCard';
-
-interface StatsGridProps {
-  stats: VenueStats | null;
-  isLoading: boolean;
-}
 
 /** Format the rating value for display. */
 function formatRating(rating: number | null): string {
@@ -20,7 +15,20 @@ function formatRating(rating: number | null): string {
 }
 
 /** 2x2 grid of venue performance stat cards. */
-export const StatsGrid = memo(({ stats, isLoading }: StatsGridProps) => {
+export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) => {
+  if (isError) {
+    return (
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+        <StatCard
+          icon={<IconChartBar size="1.25rem" stroke={1.5} />}
+          label="Stats"
+          value="Failed to load"
+          color="red"
+        />
+      </SimpleGrid>
+    );
+  }
+
   if (isLoading || !stats) {
     return (
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">

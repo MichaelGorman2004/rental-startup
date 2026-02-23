@@ -1,17 +1,13 @@
 import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BookingStatus } from '../../bookings/types/booking.types';
-import type { AdminBooking, BookingAction } from '../types/venue-admin.types';
+import { BookingStatus } from '../../bookings';
+import type {
+  AdminBooking, BookingAction, ActionPayload,
+} from '../types';
 import {
   ADMIN_QUERY_KEYS,
   MOCK_ACTION_DELAY_MS,
-} from '../constants/venue-admin-defaults';
-
-interface ActionPayload {
-  bookingId: string;
-  action: BookingAction;
-  venueId: string;
-}
+} from '../constants';
 
 /** Map action type to the resulting booking status. */
 function getNewStatus(action: BookingAction): BookingStatus {

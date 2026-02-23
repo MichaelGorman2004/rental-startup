@@ -5,21 +5,14 @@ import {
 import {
   IconCalendar, IconClock, IconUsers, IconCheck, IconX,
 } from '@tabler/icons-react';
-import { BookingStatus } from '../../bookings/types/booking.types';
-import type { AdminBooking } from '../types/venue-admin.types';
+import { BookingStatus } from '../../bookings';
+import type { BookingCardProps } from '../types';
 import {
   STATUS_BADGE_COLORS,
   STATUS_LABELS,
   ADMIN_MESSAGES,
-} from '../constants/venue-admin-defaults';
-import { formatBookingDate, formatBookingTime } from '../../bookings/utils/format-booking-date';
-
-interface BookingCardProps {
-  booking: AdminBooking;
-  onAccept: (id: string) => void;
-  onDecline: (id: string) => void;
-  isActionPending: boolean;
-}
+} from '../constants';
+import { formatBookingDate, formatBookingTime } from '../utils';
 
 /** Single booking request card with status badge and action buttons. */
 export const BookingCard = memo(({
@@ -55,7 +48,7 @@ export const BookingCard = memo(({
         <Group gap="lg">
           <Group gap="xs">
             <Box c="dimmed"><IconCalendar size="0.875rem" stroke={1.5} /></Box>
-            <Text size="sm">{formatBookingDate(new Date(booking.eventDate))}</Text>
+            <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><IconClock size="0.875rem" stroke={1.5} /></Box>

@@ -3,22 +3,12 @@ import {
   Stack, Text, Title, Skeleton, ThemeIcon,
 } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
-import type { AdminBooking } from '../types/venue-admin.types';
+import type { BookingsListProps } from '../types';
 import {
   ADMIN_MESSAGES,
   BOOKINGS_SKELETON_COUNT,
-} from '../constants/venue-admin-defaults';
+} from '../constants';
 import { BookingCard } from './BookingCard';
-
-interface BookingsListProps {
-  bookings: AdminBooking[];
-  isLoading: boolean;
-  isError: boolean;
-  onAccept: (id: string) => void;
-  onDecline: (id: string) => void;
-  isPending: boolean;
-  activeBookingId: string | null;
-}
 
 /** Loading skeleton for the bookings list. */
 function BookingsLoadingSkeleton() {

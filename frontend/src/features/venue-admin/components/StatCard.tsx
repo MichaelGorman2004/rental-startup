@@ -2,14 +2,7 @@ import { memo } from 'react';
 import {
   Card, Group, Text, ThemeIcon, Box,
 } from '@mantine/core';
-
-interface StatCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  color: string;
-  subtitle?: string;
-}
+import type { StatCardProps } from '../types';
 
 /** Single stat card with icon, label, and value. */
 export const StatCard = memo(({

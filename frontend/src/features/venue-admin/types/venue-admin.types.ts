@@ -1,4 +1,4 @@
-import type { BookingStatus } from '../../bookings/types/booking.types';
+import type { BookingStatus } from '../../bookings';
 
 /** Venue performance stats displayed on the admin dashboard. */
 export interface VenueStats {
@@ -22,3 +22,45 @@ export interface AdminBooking {
 
 /** Possible actions a venue admin can take on a booking. */
 export type BookingAction = 'accept' | 'decline';
+
+/** Payload for a booking accept/decline mutation. */
+export interface ActionPayload {
+  bookingId: string;
+  action: BookingAction;
+  venueId: string;
+}
+
+/** Props for the StatCard component. */
+export interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  color: string;
+  subtitle?: string;
+}
+
+/** Props for the StatsGrid component. */
+export interface StatsGridProps {
+  stats: VenueStats | null;
+  isLoading: boolean;
+  isError?: boolean;
+}
+
+/** Props for the BookingCard component. */
+export interface BookingCardProps {
+  booking: AdminBooking;
+  onAccept: (id: string) => void;
+  onDecline: (id: string) => void;
+  isActionPending: boolean;
+}
+
+/** Props for the BookingsList component. */
+export interface BookingsListProps {
+  bookings: AdminBooking[];
+  isLoading: boolean;
+  isError: boolean;
+  onAccept: (id: string) => void;
+  onDecline: (id: string) => void;
+  isPending: boolean;
+  activeBookingId: string | null;
+}

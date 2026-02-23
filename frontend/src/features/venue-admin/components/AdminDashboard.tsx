@@ -1,8 +1,8 @@
 import {
   Container, Stack, Title, Text,
 } from '@mantine/core';
-import { useAdminDashboard } from '../hooks/useAdminDashboard';
-import { ADMIN_MESSAGES } from '../constants/venue-admin-defaults';
+import { useAdminDashboard } from '../hooks';
+import { ADMIN_MESSAGES } from '../constants';
 import { StatsGrid } from './StatsGrid';
 import { BookingsList } from './BookingsList';
 import { AccessDenied } from './AccessDenied';
@@ -10,7 +10,7 @@ import { AccessDenied } from './AccessDenied';
 /** Venue admin dashboard page with stats grid and bookings list. */
 export function AdminDashboard() {
   const {
-    isVenueAdmin, stats, isStatsLoading,
+    isVenueAdmin, stats, isStatsLoading, isStatsError,
     bookings, isBookingsLoading, isBookingsError,
     handleAccept, handleDecline, isPending, activeBookingId,
   } = useAdminDashboard();
@@ -31,7 +31,7 @@ export function AdminDashboard() {
           <Text c="dimmed">{ADMIN_MESSAGES.PAGE_SUBTITLE}</Text>
         </Stack>
 
-        <StatsGrid stats={stats} isLoading={isStatsLoading} />
+        <StatsGrid stats={stats} isLoading={isStatsLoading} isError={isStatsError} />
 
         <BookingsList
           bookings={bookings}

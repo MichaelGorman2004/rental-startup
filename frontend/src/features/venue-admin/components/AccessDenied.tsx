@@ -4,7 +4,7 @@ import {
 } from '@mantine/core';
 import { IconShieldOff } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { ADMIN_MESSAGES } from '../constants/venue-admin-defaults';
+import { ADMIN_MESSAGES } from '../constants';
 
 /** Shown when a non-venue-admin user tries to access the dashboard. */
 export const AccessDenied = memo(() => {

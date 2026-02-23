@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import type { VenueStats } from '../types/venue-admin.types';
+import type { VenueStats } from '../types';
 import {
   ADMIN_QUERY_KEYS,
   STATS_STALE_TIME_MS,
   STATS_REFETCH_INTERVAL_MS,
   MOCK_VENUE_STATS,
-} from '../constants/venue-admin-defaults';
+} from '../constants';
 
 /** Simulate fetching venue stats. Replace with GET /api/v1/venues/:id/stats. */
 async function fetchVenueStats(): Promise<VenueStats> {

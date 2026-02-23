@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { BookingStatus } from '../../bookings/types/booking.types';
-import type { AdminBooking } from '../types/venue-admin.types';
+import { BookingStatus } from '../../bookings';
+import type { AdminBooking } from '../types';
 import {
   ADMIN_QUERY_KEYS,
   BOOKINGS_STALE_TIME_MS,
   MOCK_ADMIN_BOOKINGS,
-} from '../constants/venue-admin-defaults';
+} from '../constants';
 
 /** Sort bookings: pending first, then by date descending. */
 function sortBookings(bookings: AdminBooking[]): AdminBooking[] {

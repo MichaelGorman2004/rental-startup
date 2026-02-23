@@ -1,5 +1,5 @@
-import { BookingStatus } from '../../bookings/types/booking.types';
-import type { AdminBooking, VenueStats } from '../types/venue-admin.types';
+import { BookingStatus } from '../../bookings';
+import type { AdminBooking, VenueStats } from '../types';
 
 /** Auto-refresh interval for venue stats in milliseconds (60 seconds). */
 export const STATS_REFETCH_INTERVAL_MS = 60 * 1000;
