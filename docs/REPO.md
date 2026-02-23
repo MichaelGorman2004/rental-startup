@@ -17,11 +17,13 @@
 - ✅ **VL-007**: Venue Management Backend API
 - ✅ **VL-008**: Venue Discovery Frontend
 - ✅ **VL-009**: Venue Details Page
+- ✅ **VL-010**: Booking Request Form
+- ✅ **VL-011**: Venue Admin Dashboard
 
 ### Current Phase
 **Phase 2: Core Features** (Weeks 3-4)
-- Progress: 9/16 tasks done (56%)
-- Next Up: VL-010 - Booking Request Form
+- Progress: 11/16 tasks done (69%)
+- Next Up: VL-012 - Shared TypeScript Types & Constants
 
 ---
 
@@ -68,12 +70,23 @@ rental-startup/
 │   │   │   │   ├── hooks/         # useUpcomingEvents, useOrganization
 │   │   │   │   ├── types/         # Dashboard interfaces
 │   │   │   │   └── constants/     # Quick actions config
-│   │   │   └── venues/    # ✅ Venue Discovery Feature (VL-008)
-│   │   │       ├── components/    # VenueBrowse, VenueCard, VenueGrid, etc.
-│   │   │       ├── hooks/         # useVenues, useVenueSearch, useVenueFilters
-│   │   │       ├── types/         # Venue interfaces
-│   │   │       ├── constants/     # Gradients, labels, query keys
-│   │   │       └── utils/         # formatPrice, formatCapacity, formatAddress
+│   │   │   ├── venues/    # ✅ Venue Discovery Feature (VL-008/009)
+│   │   │   │   ├── components/    # VenueBrowse, VenueCard, VenueDetail, etc.
+│   │   │   │   ├── hooks/         # useVenues, useVenueSearch, useVenueFilters, useVenueDetail
+│   │   │   │   ├── types/         # Venue interfaces
+│   │   │   │   ├── constants/     # Gradients, labels, query keys, mock data
+│   │   │   │   └── utils/         # formatPrice, formatCapacity, formatAddress, buildMapsUrl
+│   │   │   ├── bookings/ # ✅ Booking Request Form (VL-010)
+│   │   │   │   ├── components/    # BookingForm, EventDetailsStep, ReviewStep, etc.
+│   │   │   │   ├── hooks/         # useBookingForm, useCreateBooking, useBookingPage
+│   │   │   │   ├── types/         # Booking interfaces, BookingStatus enum
+│   │   │   │   ├── constants/     # Validation rules, messages, step config
+│   │   │   │   └── utils/         # calculateCost, validateDate, formatBookingDate
+│   │   │   └── venue-admin/ # ✅ Venue Admin Dashboard (VL-011)
+│   │   │       ├── components/    # AdminDashboard, StatsGrid, BookingCard, etc.
+│   │   │       ├── hooks/         # useVenueStats, useVenueBookings, useBookingActions
+│   │   │       ├── types/         # VenueStats, AdminBooking interfaces
+│   │   │       └── constants/     # Status colors, labels, mock data
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers
 │   │   ├── lib/           # External library configs (React Query)
@@ -355,26 +368,15 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ## 🚀 Next Steps
 
-### Phase 2: Core Features (In Progress)
+### Phase 2: Core Features (Complete)
 - ~~**VL-006**: Student Org Dashboard Foundation~~ ✅
 - ~~**VL-007**: Venue Management Backend API~~ ✅
 - ~~**VL-008**: Venue Discovery Frontend~~ ✅
 - ~~**VL-009**: Venue Details Page~~ ✅
-- **VL-010**: Booking Request Form (VL-009)
-- **VL-011**: Venue Admin Dashboard (VL-007)
+- ~~**VL-010**: Booking Request Form~~ ✅
+- ~~**VL-011**: Venue Admin Dashboard~~ ✅
 
-### Booking Request Form (VL-010) - Next Up
-**Priority**: 🟡 High
-**Effort**: 12 hours
-**Dependencies**: VL-009
-
-**Key Deliverables**:
-1. Multi-step booking wizard (Mantine Stepper)
-2. Date/time selection with availability check
-3. Guest count validation against venue capacity
-4. Review & submit with estimated cost
-
-### Phase 3: Supporting Systems (Planned)
+### Phase 3: Supporting Systems (Next)
 - **VL-012**: Shared TypeScript Types & Constants
 - **VL-013**: API Client & Error Handling
 - **VL-014**: React Query Setup & Cache Strategy
@@ -386,7 +388,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ### Codebase Stats
 - **Backend Python files**: ~35 (includes venues module)
-- **Frontend feature files**: ~65 (auth + dashboard + venues + shared UI)
+- **Frontend feature files**: ~100+ (auth + dashboard + venues + bookings + venue-admin + shared UI)
 - **Database tables**: 4
 - **Migration count**: 1
 - **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
@@ -401,9 +403,21 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **React Query**: Configured with 5-min stale time
 
 ### Venue Feature Stats (VL-008 + VL-009)
-- **Components**: 16 (Browse: VenueBrowse, VenueCard, VenueCardGradient, VenueCardSkeleton, VenueEmptyState, VenueErrorState, VenueFilters, VenueGrid, VenueSearchBar | Detail: VenueDetail, VenueHero, VenueInfo, VenueAddress, BookingCTA, VenueDetailSkeleton, VenueNotFound)
-- **Hooks**: 4 (useVenues, useVenueSearch, useVenueFilters, useVenueDetail)
+- **Components**: 16 (Browse + Detail page components)
+- **Hooks**: 6 (useVenues, useVenueSearch, useVenueFilters, useVenueDetail, useVenueBrowse, useVenueDetailPage)
 - **Utilities**: 4 (formatPrice, formatCapacity, formatAddress, buildMapsUrl)
+
+### Booking Feature Stats (VL-010)
+- **Components**: 9 (BookingForm, EventDetailsStep, AdditionalInfoStep, ReviewStep, BookingSummary, BookingSuccess, VenueSummaryCard, BookingFormSkeleton, BookingNotFound)
+- **Hooks**: 3 (useBookingForm, useCreateBooking, useBookingPage)
+- **Utilities**: 5 (calculateCost, getMinBookingDate, getMaxBookingDate, formatBookingDate, formatBookingTime)
+- **Validation**: React Hook Form + Zod, progressive per-step validation
+- **Form**: 3-step Mantine Stepper with DatePickerInput, TimeInput, NumberInput
+
+### Venue Admin Feature Stats (VL-011)
+- **Components**: 6 (AdminDashboard, StatsGrid, StatCard, BookingsList, BookingCard, AccessDenied)
+- **Hooks**: 4 (useVenueStats, useVenueBookings, useBookingActions, useAdminDashboard)
+- **Features**: Optimistic updates, 60s auto-refresh, role-based access guard
 - **Shared UI**: Reusable Breadcrumbs component (components/ui/Breadcrumbs/)
 - **React Query**: 10-min stale time, detail query keyed by venue ID
 - **URL-synced**: Filter state in search params (?type=bar&search=rooftop)
