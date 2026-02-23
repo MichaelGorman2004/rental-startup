@@ -6,6 +6,8 @@ import { QueryProvider } from './providers/QueryProvider';
 import { AppShell } from './layout';
 import { DashboardPage } from './features/dashboard';
 import { VenueBrowse, VenueDetail } from './features/venues';
+import { BookingForm } from './features/bookings';
+import { AdminDashboard } from './features/venue-admin';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -45,6 +47,8 @@ function App() {
               <Route index element={<DashboardPage />} />
               <Route path="venues" element={<VenueBrowse />} />
               <Route path="venues/:id" element={<VenueDetail />} />
+              <Route path="venues/:id/book" element={<BookingForm />} />
+              <Route path="admin" element={<AdminDashboard />} />
             </Route>
           </Routes>
         </BrowserRouter>
