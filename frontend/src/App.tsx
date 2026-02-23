@@ -48,6 +48,7 @@ function App() {
               <Route path="venues" element={<VenueBrowse />} />
               <Route path="venues/:id" element={<VenueDetail />} />
               <Route path="venues/:id/book" element={<BookingForm />} />
+              <Route path="bookings" element={<div>Bookings</div>} />
               <Route path="admin" element={<AdminDashboard />} />
             </Route>
           </Routes>
