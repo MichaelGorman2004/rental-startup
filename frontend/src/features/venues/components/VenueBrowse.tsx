@@ -1,26 +1,18 @@
-import { useEffect } from 'react';
 import {
   Stack, Title, Text, Container,
 } from '@mantine/core';
 import { VENUE_MESSAGES } from '../constants/venue-defaults';
-import { useVenueFilters } from '../hooks/useVenueFilters';
-import { useVenueSearch } from '../hooks/useVenueSearch';
-import { useVenues } from '../hooks/useVenues';
+import { useVenueBrowse } from '../hooks/useVenueBrowse';
 import { VenueSearchBar } from './VenueSearchBar';
 import { VenueFilters } from './VenueFilters';
 import { VenueGrid } from './VenueGrid';
 
 /** Main venue discovery page composing search, filters, and grid. */
 export function VenueBrowse() {
-  const { filters, setTypeFilter, setSearchFilter } = useVenueFilters();
   const {
-    inputValue, debouncedValue, handleSearchChange, clearSearch,
-  } = useVenueSearch(filters.search);
-  const {
-    venues, isLoading, isError, refetch,
-  } = useVenues({ ...filters, search: debouncedValue });
-
-  useEffect(() => { setSearchFilter(debouncedValue); }, [debouncedValue, setSearchFilter]);
+    filters, inputValue, venues, isLoading, isError,
+    refetch, setTypeFilter, handleSearchChange, clearSearch,
+  } = useVenueBrowse();
 
   return (
     <Container size="lg" py="xl">

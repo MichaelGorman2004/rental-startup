@@ -42,19 +42,23 @@ function paginateVenues(venues: Venue[], filters: VenueFilters): VenueListRespon
  * Currently uses mock data; will be replaced with API call.
  */
 export function useVenues(filters: VenueFilters) {
+  const {
+    type, search, page, pageSize,
+  } = filters;
+
   const fetchVenues = useCallback(async (): Promise<VenueListResponse> => {
     await new Promise((resolve) => { setTimeout(resolve, 600); });
 
-    const filtered = filterVenues(MOCK_VENUES, filters);
-    return paginateVenues(filtered, filters);
-  }, [filters]);
+    const filtered = filterVenues(MOCK_VENUES, {
+      type, search, page, pageSize,
+    });
+    return paginateVenues(filtered, {
+      type, search, page, pageSize,
+    });
+  }, [type, search, page, pageSize]);
 
   const query = useQuery({
-    queryKey: VENUE_QUERY_KEYS.list({
-      type: filters.type,
-      search: filters.search,
-      page: filters.page,
-    }),
+    queryKey: VENUE_QUERY_KEYS.list({ type, search, page }),
     queryFn: fetchVenues,
     staleTime: VENUE_STALE_TIME_MS,
   });
