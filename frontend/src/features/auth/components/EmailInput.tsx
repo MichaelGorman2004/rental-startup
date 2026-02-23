@@ -1,6 +1,6 @@
 import { TextInput, Alert, Stack } from '@mantine/core';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { AUTH_CONSTANTS } from '../constants/auth.constants';
+import { AUTH_CONSTANTS } from '../constants';
 
 interface EmailInputProps {
   register: UseFormRegisterReturn;

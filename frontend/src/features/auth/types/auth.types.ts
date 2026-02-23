@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { loginSchema, signupSchema } from '../constants/auth.schemas';
+import { loginSchema, signupSchema } from '../constants';
 
 export type UserRole = 'student_org' | 'venue_admin';
 

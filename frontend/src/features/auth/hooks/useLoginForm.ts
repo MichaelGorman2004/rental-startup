@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { loginSchema } from '../constants/auth.schemas';
-import { LoginFormData } from '../types/auth.types';
+import { loginSchema } from '../constants';
+import type { LoginFormData } from '../types';
 
 export const useLoginForm = () => {
   const { isLoaded, signIn, setActive } = useSignIn();

@@ -1,7 +1,6 @@
 import { Text, Anchor } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { AuthLayout } from '../features/auth/components/AuthLayout';
-import { SignupForm } from '../features/auth/components/SignupForm';
+import { AuthLayout, SignupForm } from '../features/auth';
 
 export function Signup() {
   return (
