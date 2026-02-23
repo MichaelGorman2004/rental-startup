@@ -1,7 +1,7 @@
 import {
   Button, PasswordInput, Stack, Alert,
 } from '@mantine/core';
-import { useLoginForm } from '../hooks/useLoginForm';
+import { useLoginForm } from '../hooks';
 import { EmailInput } from './EmailInput';
 
 export function LoginForm() {

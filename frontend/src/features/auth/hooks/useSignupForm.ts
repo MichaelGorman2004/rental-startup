@@ -3,9 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { signupSchema } from '../constants/auth.schemas';
-import { SignupFormData } from '../types/auth.types';
-import { AUTH_CONSTANTS } from '../constants/auth.constants';
+import { signupSchema, AUTH_CONSTANTS } from '../constants';
+import type { SignupFormData } from '../types';
 
 export const useSignupForm = () => {
   const { isLoaded, signUp, setActive } = useSignUp();

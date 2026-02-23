@@ -1,4 +1,4 @@
-import { AUTH_CONSTANTS } from '../constants/auth.constants';
+import { AUTH_CONSTANTS } from '../constants';
 
 /**
  * Validates if an email address belongs to a .edu domain.

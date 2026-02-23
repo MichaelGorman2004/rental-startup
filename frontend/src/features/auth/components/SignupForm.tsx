@@ -1,11 +1,11 @@
 import {
   Button, Checkbox, PasswordInput, TextInput, Stack, Alert, Group,
 } from '@mantine/core';
-import { useSignupForm } from '../hooks/useSignupForm';
+import { useSignupForm } from '../hooks';
 import { RoleSelector } from './RoleSelector';
 import { EmailInput } from './EmailInput';
-import { AUTH_CONSTANTS } from '../constants/auth.constants';
-import { UserRole } from '../types/auth.types';
+import { AUTH_CONSTANTS } from '../constants';
+import type { UserRole } from '../types';
 
 export function SignupForm() {
   const {

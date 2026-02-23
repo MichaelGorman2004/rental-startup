@@ -19,7 +19,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children, title }: AuthLayoutProps) {
   return (
-    <Center h="100vh" bg="gray.0">
+    <Center h="100vh">
       <Container size={420} p={0}>
         <Paper p="xl" radius="md" withBorder shadow="sm">
           <AuthHeader title={title} />

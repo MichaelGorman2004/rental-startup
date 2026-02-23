@@ -1,5 +1,5 @@
 import { SegmentedControl } from '@mantine/core';
-import { AUTH_CONSTANTS } from '../constants/auth.constants';
+import { AUTH_CONSTANTS } from '../constants';
 
 interface RoleSelectorProps {
   value: string;
