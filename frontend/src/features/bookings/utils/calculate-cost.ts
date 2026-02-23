@@ -1,4 +1,4 @@
-import { PER_GUEST_COST_CENTS } from '../constants/booking-defaults';
+import { PER_GUEST_COST_CENTS } from '../constants';
 
 /**
  * Calculate estimated event cost from base venue price and guest count.

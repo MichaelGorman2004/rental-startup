@@ -1,7 +1,10 @@
-export { BookingForm } from './components/BookingForm';
-export { BookingStatus } from './types/booking.types';
+export { BookingForm } from './components';
+export { BookingStatus } from './types';
 export type {
   BookingFormValues,
+  ValidatedBookingData,
   CreateBookingRequest,
   BookingConfirmation,
-} from './types/booking.types';
+} from './types';
+export { BOOKING_MESSAGES } from './constants';
+export { formatBookingDate, formatBookingTime } from './utils';

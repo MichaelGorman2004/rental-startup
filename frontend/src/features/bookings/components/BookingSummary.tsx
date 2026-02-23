@@ -5,12 +5,13 @@ import {
 import {
   IconCalendar, IconClock, IconUsers, IconNote, IconReceipt,
 } from '@tabler/icons-react';
-import type { Venue } from '../../venues/types/venue.types';
-import type { BookingFormValues } from '../types/booking.types';
-import { BOOKING_MESSAGES } from '../constants/booking-defaults';
-import { VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS } from '../../venues/constants/venue-types';
-import { formatPrice } from '../../venues/utils/format-price';
-import { formatBookingDate, formatBookingTime } from '../utils/format-booking-date';
+import type { Venue } from '../../venues';
+import {
+  VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS, formatPrice,
+} from '../../venues';
+import type { BookingFormValues } from '../types';
+import { BOOKING_MESSAGES } from '../constants';
+import { formatBookingDate, formatBookingTime } from '../utils';
 
 interface BookingSummaryProps {
   formValues: BookingFormValues;

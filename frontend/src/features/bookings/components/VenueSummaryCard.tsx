@@ -3,12 +3,12 @@ import {
   Card, Stack, Text, Group, Badge, ThemeIcon, Box,
 } from '@mantine/core';
 import { IconUsers, IconCash, IconMapPin } from '@tabler/icons-react';
-import type { Venue } from '../../venues/types/venue.types';
-import { VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS, VENUE_TYPE_GRADIENTS } from '../../venues/constants/venue-types';
-import { formatPrice } from '../../venues/utils/format-price';
-import { formatCapacity } from '../../venues/utils/format-capacity';
-import { formatAddress } from '../../venues/utils/format-address';
-import { BOOKING_MESSAGES } from '../constants/booking-defaults';
+import type { Venue } from '../../venues';
+import {
+  VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS, VENUE_TYPE_GRADIENTS,
+  formatPrice, formatCapacity, formatAddress,
+} from '../../venues';
+import { BOOKING_MESSAGES } from '../constants';
 
 interface VenueSummaryCardProps {
   venue: Venue;

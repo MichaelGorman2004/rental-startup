@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { BookingStatus } from '../types/booking.types';
-import type { CreateBookingRequest, BookingConfirmation } from '../types/booking.types';
-import { MOCK_SUBMISSION_DELAY_MS } from '../constants/booking-defaults';
+import { BookingStatus } from '../types';
+import type { CreateBookingRequest, BookingConfirmation } from '../types';
+import { MOCK_SUBMISSION_DELAY_MS } from '../constants';
 
 /** Generate a mock reference number for booking confirmations. */
 function generateReferenceNumber(): string {
@@ -16,12 +16,12 @@ async function createBookingApi(request: CreateBookingRequest): Promise<BookingC
   return {
     id: crypto.randomUUID(),
     referenceNumber: generateReferenceNumber(),
-    venueName: '',
+    venueName: 'Mock Venue',
     eventName: request.eventName,
     eventDate: request.eventDate,
     eventTime: request.eventTime,
     guestCount: request.guestCount,
-    estimatedCostCents: 0,
+    estimatedCostCents: request.guestCount * 7500,
     status: BookingStatus.Pending,
   };
 }

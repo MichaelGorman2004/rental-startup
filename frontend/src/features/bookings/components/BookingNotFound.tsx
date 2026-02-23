@@ -4,7 +4,7 @@ import {
 } from '@mantine/core';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { BOOKING_MESSAGES } from '../constants/booking-defaults';
+import { BOOKING_MESSAGES } from '../constants';
 
 /** 404 state shown when the target venue cannot be found. */
 export const BookingNotFound = memo(() => {

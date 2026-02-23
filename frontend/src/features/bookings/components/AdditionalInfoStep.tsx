@@ -3,10 +3,10 @@ import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 import { Stack, Textarea, Select } from '@mantine/core';
 import { IconNote, IconWallet } from '@tabler/icons-react';
-import type { BookingFormValues } from '../types/booking.types';
+import type { BookingFormValues } from '../types';
 import {
   BOOKING_MESSAGES, BUDGET_OPTIONS, MAX_SPECIAL_REQUESTS_LENGTH,
-} from '../constants/booking-defaults';
+} from '../constants';
 
 interface AdditionalInfoStepProps {
   control: Control<BookingFormValues>;

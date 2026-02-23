@@ -6,8 +6,8 @@ import {
   IconCircleCheck, IconCalendarEvent, IconBuildingStore,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import type { BookingConfirmation } from '../types/booking.types';
-import { BOOKING_MESSAGES } from '../constants/booking-defaults';
+import type { BookingConfirmation } from '../types';
+import { BOOKING_MESSAGES } from '../constants';
 
 interface BookingSuccessProps {
   confirmation: BookingConfirmation;
@@ -51,9 +51,15 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
             <Text size="sm">{confirmation.eventName}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconBuildingStore size="1rem" stroke={1.5} /></Box>
-            <Text size="sm" c="dimmed">{confirmation.eventDate}</Text>
+            <Box c="dimmed"><IconCalendarEvent size="1rem" stroke={1.5} /></Box>
+            <Text size="sm">{confirmation.eventDate}</Text>
           </Group>
+          {confirmation.venueName ? (
+            <Group gap="xs">
+              <Box c="dimmed"><IconBuildingStore size="1rem" stroke={1.5} /></Box>
+              <Text size="sm" c="dimmed">{confirmation.venueName}</Text>
+            </Group>
+          ) : null}
         </Stack>
       </Card>
 

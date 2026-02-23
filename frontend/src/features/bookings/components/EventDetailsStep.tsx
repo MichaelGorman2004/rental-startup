@@ -4,9 +4,9 @@ import type { Control, FieldErrors } from 'react-hook-form';
 import { Stack, TextInput, NumberInput } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { IconCalendar, IconClock, IconUsers } from '@tabler/icons-react';
-import type { BookingFormValues } from '../types/booking.types';
-import { BOOKING_MESSAGES, MIN_GROUP_SIZE } from '../constants/booking-defaults';
-import { getMinBookingDate, getMaxBookingDate } from '../utils/validate-date';
+import type { BookingFormValues } from '../types';
+import { BOOKING_MESSAGES, MIN_GROUP_SIZE } from '../constants';
+import { getMinBookingDate, getMaxBookingDate } from '../utils';
 
 interface EventDetailsStepProps {
   control: Control<BookingFormValues>;
@@ -70,7 +70,14 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
       render={({ field }) => (
         <NumberInput
           value={field.value ?? ''}
-          onChange={(val) => field.onChange(val === '' ? undefined : val)}
+          onChange={(val) => {
+            if (val === '') {
+              field.onChange(undefined);
+              return;
+            }
+            const numericValue = typeof val === 'number' ? val : Number(val);
+            field.onChange(Number.isNaN(numericValue) ? undefined : numericValue);
+          }}
           label={BOOKING_MESSAGES.GUEST_COUNT_LABEL}
           description={`${MIN_GROUP_SIZE} – ${maxCapacity} guests`}
           leftSection={<IconUsers size="1rem" stroke={1.5} />}

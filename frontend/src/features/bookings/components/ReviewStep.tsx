@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Stack } from '@mantine/core';
-import type { Venue } from '../../venues/types/venue.types';
-import type { BookingFormValues } from '../types/booking.types';
+import type { Venue } from '../../venues';
+import type { BookingFormValues } from '../types';
 import { BookingSummary } from './BookingSummary';
 
 interface ReviewStepProps {

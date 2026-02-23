@@ -1,4 +1,4 @@
-import { MIN_NOTICE_DAYS, MAX_ADVANCE_DAYS } from '../constants/booking-defaults';
+import { MIN_NOTICE_DAYS, MAX_ADVANCE_DAYS } from '../constants';
 
 /**
  * Get the earliest allowed booking date (today + MIN_NOTICE_DAYS).

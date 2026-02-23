@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useVenueDetail } from '../../venues/hooks/useVenueDetail';
-import type { ValidatedBookingData } from '../types/booking.types';
+import { useVenueDetail } from '../../venues';
+import type { ValidatedBookingData } from '../types';
 import { useBookingForm } from './useBookingForm';
 import { useCreateBooking } from './useCreateBooking';
-import { calculateEstimatedCost } from '../utils/calculate-cost';
+import { calculateEstimatedCost } from '../utils';
 
 /**
  * Orchestrates the booking page: route params, venue data, form state, and submission.
@@ -30,7 +30,7 @@ export function useBookingPage() {
       createBooking.mutate({
         venueId: id,
         eventName: data.eventName,
-        eventDate: data.eventDate.toISOString().split('T')[0] ?? '',
+        eventDate: `${data.eventDate.getFullYear()}-${String(data.eventDate.getMonth() + 1).padStart(2, '0')}-${String(data.eventDate.getDate()).padStart(2, '0')}`,
         eventTime: data.eventTime,
         guestCount: data.guestCount,
         specialRequests: data.specialRequests,

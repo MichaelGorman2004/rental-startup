@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { BookingFormValues, ValidatedBookingData } from '../types/booking.types';
+import type { BookingFormValues, ValidatedBookingData } from '../types';
 import {
   BOOKING_FORM_DEFAULTS,
   STEP_FIELDS,
@@ -12,7 +12,7 @@ import {
   MAX_SPECIAL_REQUESTS_LENGTH,
   MIN_GROUP_SIZE,
   BOOKING_MESSAGES,
-} from '../constants/booking-defaults';
+} from '../constants';
 
 /**
  * Create a Zod schema that accepts nullable form inputs but validates them as required.

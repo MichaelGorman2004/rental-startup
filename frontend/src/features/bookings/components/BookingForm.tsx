@@ -3,9 +3,12 @@ import {
   Container, Stack, Grid, Title, Text, Stepper, Group, Button,
 } from '@mantine/core';
 import { IconArrowLeft, IconArrowRight, IconSend } from '@tabler/icons-react';
-import { useBookingPage } from '../hooks/useBookingPage';
-import type { BookingFormValues } from '../types/booking.types';
-import { BOOKING_MESSAGES, BOOKING_STEP_LABELS, BOOKING_STEP_DESCRIPTIONS } from '../constants/booking-defaults';
+import { useBookingPage } from '../hooks';
+import type { BookingFormValues } from '../types';
+import {
+  BOOKING_MESSAGES, BOOKING_STEP_LABELS, BOOKING_STEP_DESCRIPTIONS,
+} from '../constants';
+import { VenueErrorState } from '../../venues';
 import { VenueSummaryCard } from './VenueSummaryCard';
 import { EventDetailsStep } from './EventDetailsStep';
 import { AdditionalInfoStep } from './AdditionalInfoStep';
@@ -13,7 +16,6 @@ import { ReviewStep } from './ReviewStep';
 import { BookingSuccess } from './BookingSuccess';
 import { BookingFormSkeleton } from './BookingFormSkeleton';
 import { BookingNotFound } from './BookingNotFound';
-import { VenueErrorState } from '../../venues/components/VenueErrorState';
 
 /** Cast control to resolve react-hook-form generic variance. */
 function castControl(
