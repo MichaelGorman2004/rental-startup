@@ -47,6 +47,7 @@ export const VENUE_DETAIL_MESSAGES = {
   REQUEST_BOOKING: 'Request Booking',
   PRICE_SUFFIX: '/event',
   CAPACITY_LABEL: 'Capacity',
+  CAPACITY_UNIT: 'guests',
   PRICE_LABEL: 'Base Price',
   ADDRESS_LABEL: 'Address',
   VENUE_TYPE_LABEL: 'Venue Type',
