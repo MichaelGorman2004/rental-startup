@@ -646,19 +646,19 @@ features/venues/
 - **Venues**: React Query cache (invalidation on filter change)
 
 ### Acceptance Criteria
-- [ ] Search input debounced 500ms before API call
-- [ ] Filter chips update URL query params (e.g., ?type=bar)
-- [ ] Venue cards match mockup styling (image placeholder, info layout)
-- [ ] Grid responsive: 1 col (mobile), 2 cols (tablet), 3 cols (desktop)
-- [ ] Loading state shows skeleton cards (not spinner)
-- [ ] Empty state displayed if no results ("No venues match your filters")
-- [ ] Venue card click navigates to details page (/venues/:id)
-- [ ] All icons use Tabler Icons
-- [ ] Filter chips use Mantine Chip component
-- [ ] Search input uses Mantine TextInput with icon
-- [ ] Price displayed as formatted currency ($450, not 45000 cents)
-- [ ] Capacity formatted with comma separator (1,200 not 1200)
-- [ ] Image placeholders use gradient backgrounds (from mockup)
+- [x] Search input debounced 500ms before API call
+- [x] Filter chips update URL query params (e.g., ?type=bar)
+- [x] Venue cards match mockup styling (image placeholder, info layout)
+- [x] Grid responsive: 1 col (mobile), 2 cols (tablet), 3 cols (desktop)
+- [x] Loading state shows skeleton cards (not spinner)
+- [x] Empty state displayed if no results ("No venues match your filters")
+- [x] Venue card click navigates to details page (/venues/:id)
+- [x] All icons use Tabler Icons
+- [x] Filter chips use Mantine Chip component
+- [x] Search input uses Mantine TextInput with icon
+- [x] Price displayed as formatted currency ($450, not 45000 cents)
+- [x] Capacity formatted with comma separator (1,200 not 1200)
+- [x] Image placeholders use gradient backgrounds (from mockup)
 
 ### Code Quality Checkpoints
 - ✅ VenueBrowse.tsx < 15 lines (composes smaller components)
@@ -671,6 +671,39 @@ features/venues/
 - ✅ All callbacks wrapped in useCallback
 - ✅ VenueCard memoized (prevents unnecessary re-renders)
 - ✅ Grid uses Mantine Grid component (not custom CSS)
+
+### Implementation Notes
+- Uses mock data for venues (backend API integration pending)
+- Venue-type-specific gradient system: Bar (amber→red), Restaurant (cyan→blue), Event Space (violet→pink), Cafe (green→emerald)
+- Sidebar refactored with route-aware active state and navigation
+- Barrel exports on all subdirectories (constants, types, utils, hooks)
+- All components use Mantine primitives exclusively (zero raw HTML)
+
+**Files Created/Modified**:
+- ✅ `frontend/src/features/venues/types/venue.types.ts` - Venue, VenueType enum, VenueFilters interfaces
+- ✅ `frontend/src/features/venues/constants/venue-types.ts` - Filter options, gradients, labels, badge colors
+- ✅ `frontend/src/features/venues/constants/venue-defaults.ts` - Query keys, messages, config constants
+- ✅ `frontend/src/features/venues/utils/format-price.ts` - Cents to currency display
+- ✅ `frontend/src/features/venues/utils/format-capacity.ts` - Number with locale separators
+- ✅ `frontend/src/features/venues/utils/format-address.ts` - Address string formatter
+- ✅ `frontend/src/features/venues/hooks/useVenueSearch.ts` - Debounced search (500ms)
+- ✅ `frontend/src/features/venues/hooks/useVenueFilters.ts` - URL-synced filter state
+- ✅ `frontend/src/features/venues/hooks/useVenues.ts` - React Query data fetching + mock data
+- ✅ `frontend/src/features/venues/components/VenueSearchBar.tsx` - Search input with clear
+- ✅ `frontend/src/features/venues/components/VenueFilters.tsx` - Chip.Group filter bar
+- ✅ `frontend/src/features/venues/components/VenueCardGradient.tsx` - Type-specific gradient header
+- ✅ `frontend/src/features/venues/components/VenueCard.tsx` - Card with hover effect
+- ✅ `frontend/src/features/venues/components/VenueCardSkeleton.tsx` - 6 skeleton loading cards
+- ✅ `frontend/src/features/venues/components/VenueEmptyState.tsx` - Empty results state
+- ✅ `frontend/src/features/venues/components/VenueErrorState.tsx` - Error with retry
+- ✅ `frontend/src/features/venues/components/VenueGrid.tsx` - Responsive SimpleGrid (1/2/3 cols)
+- ✅ `frontend/src/features/venues/components/VenueBrowse.tsx` - Page composition
+- ✅ `frontend/src/features/venues/index.ts` - Feature barrel export
+- ✅ Barrel exports: `constants/index.ts`, `types/index.ts`, `utils/index.ts`, `hooks/index.ts`
+- ✅ `frontend/src/App.tsx` - Added /venues route
+- ✅ `frontend/src/layout/components/Sidebar.tsx` - Route-aware active state + navigation
+
+**Status**: ✅ COMPLETED - Date: 2026-02-22, Branch: Task8_Venue_Discovery
 
 ---
 
@@ -723,18 +756,18 @@ features/venues/
 - **Error Handling**: 404 if venue not found or deleted
 
 ### Acceptance Criteria
-- [ ] Page fetches venue data on mount using React Query
-- [ ] Loading state shows hero + details skeleton
-- [ ] 404 error shows "Venue not found" message with back button
-- [ ] Venue image uses gradient placeholder matching venue type
-- [ ] "Open in Maps" link generates Google Maps URL from address
-- [ ] Price displayed as currency ($450/event)
-- [ ] Capacity displayed with "people" unit (80 people)
-- [ ] Breadcrumb navigation (Home > Browse Venues > {Venue Name})
-- [ ] "Request Booking" button navigates to booking form
-- [ ] Button disabled if user is not student org (show tooltip)
-- [ ] Page is mobile-responsive (stacked layout on mobile)
-- [ ] Back button navigates to venue browse page
+- [x] Page fetches venue data on mount using React Query
+- [x] Loading state shows hero + details skeleton
+- [x] 404 error shows "Venue not found" message with back button
+- [x] Venue image uses gradient placeholder matching venue type
+- [x] "Open in Maps" link generates Google Maps URL from address
+- [x] Price displayed as currency ($450/event)
+- [x] Capacity displayed with "people" unit (80 people)
+- [x] Breadcrumb navigation (Home > Browse Venues > {Venue Name})
+- [x] "Request Booking" button navigates to booking form
+- [x] Button disabled if user is not student org (show tooltip)
+- [x] Page is mobile-responsive (stacked layout on mobile)
+- [x] Back button navigates to venue browse page
 
 ### Code Quality Checkpoints
 - ✅ VenueDetail.tsx < 15 lines (composition pattern)
@@ -746,6 +779,33 @@ features/venues/
 - ✅ Components use Mantine layout primitives
 - ✅ Error boundary wraps detail page
 - ✅ React Query cache prevents redundant fetches
+
+### Implementation Notes
+- Mock data extracted to shared `constants/mock-venues.ts` (single source of truth for list + detail)
+- Reusable `Breadcrumbs` component added to `components/ui/Breadcrumbs/` (generic, not venue-specific)
+- Google Maps URL built via `buildMapsUrl` utility with proper URI encoding
+- Booking CTA disabled for venue_admin role with tooltip explanation
+- `useVenueDetail` hook returns `isNotFound` flag for clean 404 handling
+- All detail page messages in `VENUE_DETAIL_MESSAGES` constant object
+
+**Files Created/Modified**:
+- ✅ `frontend/src/features/venues/constants/venue-defaults.ts` - Added VENUE_DETAIL_MESSAGES, HERO_GRADIENT_HEIGHT
+- ✅ `frontend/src/features/venues/constants/mock-venues.ts` - Extracted shared mock venue data
+- ✅ `frontend/src/features/venues/utils/build-maps-url.ts` - Google Maps URL generator
+- ✅ `frontend/src/features/venues/hooks/useVenueDetail.ts` - Single venue fetch with React Query
+- ✅ `frontend/src/features/venues/components/VenueHero.tsx` - Full-width gradient + name + badge
+- ✅ `frontend/src/features/venues/components/VenueInfo.tsx` - Capacity/price stat cards
+- ✅ `frontend/src/features/venues/components/VenueAddress.tsx` - Address card with Maps link
+- ✅ `frontend/src/features/venues/components/BookingCTA.tsx` - Booking button + policy disclaimers
+- ✅ `frontend/src/features/venues/components/VenueDetailSkeleton.tsx` - Loading skeleton
+- ✅ `frontend/src/features/venues/components/VenueNotFound.tsx` - 404 state with back button
+- ✅ `frontend/src/features/venues/components/VenueDetail.tsx` - Page composition
+- ✅ `frontend/src/components/ui/Breadcrumbs/` - Reusable breadcrumb component (types + component + barrel)
+- ✅ Updated barrel exports: constants, utils, hooks, feature index, ui index
+- ✅ `frontend/src/App.tsx` - Added /venues/:id route
+- ✅ `frontend/src/features/venues/hooks/useVenues.ts` - Refactored to use shared mock data
+
+**Status**: ✅ COMPLETED - Date: 2026-02-22, Branch: Task8_9_Venue_Discovery_Details
 
 ---
 
