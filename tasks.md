@@ -756,18 +756,18 @@ features/venues/
 - **Error Handling**: 404 if venue not found or deleted
 
 ### Acceptance Criteria
-- [ ] Page fetches venue data on mount using React Query
-- [ ] Loading state shows hero + details skeleton
-- [ ] 404 error shows "Venue not found" message with back button
-- [ ] Venue image uses gradient placeholder matching venue type
-- [ ] "Open in Maps" link generates Google Maps URL from address
-- [ ] Price displayed as currency ($450/event)
-- [ ] Capacity displayed with "people" unit (80 people)
-- [ ] Breadcrumb navigation (Home > Browse Venues > {Venue Name})
-- [ ] "Request Booking" button navigates to booking form
-- [ ] Button disabled if user is not student org (show tooltip)
-- [ ] Page is mobile-responsive (stacked layout on mobile)
-- [ ] Back button navigates to venue browse page
+- [x] Page fetches venue data on mount using React Query
+- [x] Loading state shows hero + details skeleton
+- [x] 404 error shows "Venue not found" message with back button
+- [x] Venue image uses gradient placeholder matching venue type
+- [x] "Open in Maps" link generates Google Maps URL from address
+- [x] Price displayed as currency ($450/event)
+- [x] Capacity displayed with "people" unit (80 people)
+- [x] Breadcrumb navigation (Home > Browse Venues > {Venue Name})
+- [x] "Request Booking" button navigates to booking form
+- [x] Button disabled if user is not student org (show tooltip)
+- [x] Page is mobile-responsive (stacked layout on mobile)
+- [x] Back button navigates to venue browse page
 
 ### Code Quality Checkpoints
 - ✅ VenueDetail.tsx < 15 lines (composition pattern)
@@ -779,6 +779,33 @@ features/venues/
 - ✅ Components use Mantine layout primitives
 - ✅ Error boundary wraps detail page
 - ✅ React Query cache prevents redundant fetches
+
+### Implementation Notes
+- Mock data extracted to shared `constants/mock-venues.ts` (single source of truth for list + detail)
+- Reusable `Breadcrumbs` component added to `components/ui/Breadcrumbs/` (generic, not venue-specific)
+- Google Maps URL built via `buildMapsUrl` utility with proper URI encoding
+- Booking CTA disabled for venue_admin role with tooltip explanation
+- `useVenueDetail` hook returns `isNotFound` flag for clean 404 handling
+- All detail page messages in `VENUE_DETAIL_MESSAGES` constant object
+
+**Files Created/Modified**:
+- ✅ `frontend/src/features/venues/constants/venue-defaults.ts` - Added VENUE_DETAIL_MESSAGES, HERO_GRADIENT_HEIGHT
+- ✅ `frontend/src/features/venues/constants/mock-venues.ts` - Extracted shared mock venue data
+- ✅ `frontend/src/features/venues/utils/build-maps-url.ts` - Google Maps URL generator
+- ✅ `frontend/src/features/venues/hooks/useVenueDetail.ts` - Single venue fetch with React Query
+- ✅ `frontend/src/features/venues/components/VenueHero.tsx` - Full-width gradient + name + badge
+- ✅ `frontend/src/features/venues/components/VenueInfo.tsx` - Capacity/price stat cards
+- ✅ `frontend/src/features/venues/components/VenueAddress.tsx` - Address card with Maps link
+- ✅ `frontend/src/features/venues/components/BookingCTA.tsx` - Booking button + policy disclaimers
+- ✅ `frontend/src/features/venues/components/VenueDetailSkeleton.tsx` - Loading skeleton
+- ✅ `frontend/src/features/venues/components/VenueNotFound.tsx` - 404 state with back button
+- ✅ `frontend/src/features/venues/components/VenueDetail.tsx` - Page composition
+- ✅ `frontend/src/components/ui/Breadcrumbs/` - Reusable breadcrumb component (types + component + barrel)
+- ✅ Updated barrel exports: constants, utils, hooks, feature index, ui index
+- ✅ `frontend/src/App.tsx` - Added /venues/:id route
+- ✅ `frontend/src/features/venues/hooks/useVenues.ts` - Refactored to use shared mock data
+
+**Status**: ✅ COMPLETED - Date: 2026-02-22, Branch: Task8_9_Venue_Discovery_Details
 
 ---
 
