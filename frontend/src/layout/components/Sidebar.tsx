@@ -29,7 +29,7 @@ export function Sidebar() {
           key={item.route}
           label={item.label}
           leftSection={<item.icon size="1rem" stroke={1.5} />}
-          active={location.pathname === item.route}
+          active={item.route === '/' ? location.pathname === '/' : location.pathname.startsWith(item.route)}
           onClick={handleNavClick(item.route)}
         />
       ))}

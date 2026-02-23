@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
-import { TextInput } from '@mantine/core';
-import { IconSearch, IconX } from '@tabler/icons-react';
+import { TextInput, CloseButton } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 import { VENUE_MESSAGES } from '../constants/venue-defaults';
 
 interface VenueSearchBarProps {
@@ -20,7 +20,7 @@ export const VenueSearchBar = memo(({ value, onChange, onClear }: VenueSearchBar
       size="lg"
       placeholder={VENUE_MESSAGES.SEARCH_PLACEHOLDER}
       leftSection={<IconSearch size="1.25rem" stroke={1.5} />}
-      rightSection={value ? <IconX size="1rem" stroke={1.5} onClick={onClear} aria-label="Clear search" /> : null}
+      rightSection={value ? <CloseButton size="sm" onClick={onClear} aria-label="Clear search" /> : null}
       value={value}
       onChange={handleChange}
       aria-label={VENUE_MESSAGES.SEARCH_PLACEHOLDER}

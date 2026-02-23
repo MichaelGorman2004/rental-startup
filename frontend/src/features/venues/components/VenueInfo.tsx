@@ -25,7 +25,7 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
           <Text fw={600}>
             {formatCapacity(capacity)}
             {' '}
-            {VENUE_DETAIL_MESSAGES.CAPACITY_LABEL.toLowerCase()}
+            people
           </Text>
         </div>
       </Group>

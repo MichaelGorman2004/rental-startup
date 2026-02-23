@@ -26,11 +26,15 @@ function isValidVenueType(value: string): value is VenueType {
 function parseFiltersFromParams(params: URLSearchParams): VenueFilters {
   const typeParam = params.get(PARAM_KEYS.TYPE);
   const pageParam = params.get(PARAM_KEYS.PAGE);
+  const parsedPage = pageParam !== null ? parseInt(pageParam, 10) : NaN;
+  const page = Number.isNaN(parsedPage)
+    ? DEFAULT_PAGE
+    : Math.max(DEFAULT_PAGE, parsedPage);
 
   return {
     type: typeParam && isValidVenueType(typeParam) ? typeParam : null,
     search: params.get(PARAM_KEYS.SEARCH) ?? '',
-    page: pageParam ? Math.max(DEFAULT_PAGE, parseInt(pageParam, 10)) : DEFAULT_PAGE,
+    page,
     pageSize: DEFAULT_PAGE_SIZE,
   };
 }

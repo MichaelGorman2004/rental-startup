@@ -9,7 +9,7 @@ export const Breadcrumbs = memo(({ items }: BreadcrumbsProps) => (
     {items.map((item) => (
       item.href
         ? (
-          <Anchor key={item.label} component={Link} to={item.href} size="sm">
+          <Anchor key={item.href} component={Link} to={item.href} size="sm">
             {item.label}
           </Anchor>
         )

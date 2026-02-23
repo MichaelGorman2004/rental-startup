@@ -13,6 +13,16 @@ export function useVenueSearch(initialValue: string) {
   const [debouncedValue, setDebouncedValue] = useState(initialValue);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /** Sync internal state when external initialValue changes (e.g., browser back/forward). */
+  useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setInputValue(initialValue);
+    setDebouncedValue(initialValue);
+  }, [initialValue]);
+
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       setDebouncedValue(inputValue);
