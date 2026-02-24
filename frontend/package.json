@@ -13,6 +13,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\""
   },
   "dependencies": {
+    "@venuelink/shared": "*",
     "@clerk/clerk-react": "^5.60.1",
     "@hookform/resolvers": "^5.2.2",
     "@mantine/core": "^7.5.2",

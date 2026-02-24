@@ -45,7 +45,9 @@
       "@/features/*": ["src/features/*"],
       "@/components/*": ["src/components/*"],
       "@/layout/*": ["src/layout/*"],
-      "@/lib/*": ["src/lib/*"]
+      "@/lib/*": ["src/lib/*"],
+      "@venuelink/shared": ["../shared/src/index.ts"],
+      "@venuelink/shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src"],

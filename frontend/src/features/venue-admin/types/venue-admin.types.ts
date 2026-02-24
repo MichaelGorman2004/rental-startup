@@ -1,4 +1,15 @@
-import type { BookingStatus } from '../../bookings';
+/**
+ * Venue admin types - re-exported from shared package for backward compatibility.
+ *
+ * NOTE: Prefer importing directly from '@venuelink/shared' for new code.
+ * This file maintains backward compatibility during migration.
+ */
+
+import type { BookingStatus } from '@venuelink/shared';
+
+// Re-export shared types
+export { BookingStatus } from '@venuelink/shared';
+export type { AdminBookingView, VenueStatsResponse } from '@venuelink/shared';
 
 /** Venue performance stats displayed on the admin dashboard. */
 export interface VenueStats {

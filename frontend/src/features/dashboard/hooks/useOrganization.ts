@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/clerk-react';
 import { useMemo } from 'react';
+import { OrganizationType, isOrganizationType } from '@venuelink/shared';
 import type { OrganizationData } from '../types/dashboard.types';
 
 interface UseOrganizationReturn {
@@ -22,10 +23,13 @@ export function useOrganization(): UseOrganizationReturn {
 
     if (!orgName) return null;
 
+    const rawType = metadata['org_type'];
+    const orgType = isOrganizationType(rawType) ? rawType : OrganizationType.Club;
+
     return {
       id: (metadata['org_id'] as string) ?? '',
       name: orgName as string,
-      type: (metadata['org_type'] as string) ?? 'club',
+      type: orgType,
       university: (metadata['university'] as string) ?? '',
     };
   }, [user?.publicMetadata]);
