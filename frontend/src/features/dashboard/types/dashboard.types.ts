@@ -1,4 +1,17 @@
+/**
+ * Dashboard types - re-exported from shared package for backward compatibility.
+ *
+ * NOTE: Prefer importing directly from '@venuelink/shared' for new code.
+ * This file maintains backward compatibility during migration.
+ */
+
 import type { Icon } from '@tabler/icons-react';
+
+// Re-export shared types
+export { OrganizationType } from '@venuelink/shared';
+export type { OrganizationSummary, UpcomingEvent } from '@venuelink/shared';
+
+// Local types (UI-specific)
 
 /**
  * Configuration for a quick action card in the dashboard grid.
@@ -17,25 +30,8 @@ export interface QuickAction {
 }
 
 /**
- * Represents an upcoming event/booking for display in the dashboard.
- */
-export interface UpcomingEvent {
-  /** Unique booking identifier */
-  id: string;
-  /** Event date in ISO 8601 format (YYYY-MM-DD) */
-  eventDate: string;
-  /** Event time in HH:MM format */
-  eventTime: string;
-  /** Display name for the event */
-  eventName: string;
-  /** Name of the venue */
-  venueName: string;
-  /** Venue address for display */
-  venueAddress: string;
-}
-
-/**
  * Organization data extracted from Clerk metadata.
+ * Uses the shared OrganizationType enum.
  */
 export interface OrganizationData {
   /** Organization ID from the database */
@@ -43,7 +39,7 @@ export interface OrganizationData {
   /** Organization display name */
   name: string;
   /** Organization type (fraternity, sorority, club, other) */
-  type: string;
+  type: import('@venuelink/shared').OrganizationType;
   /** University name */
   university: string;
 }

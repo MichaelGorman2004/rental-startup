@@ -8,18 +8,28 @@
     "declarationMap": true,
     "outDir": "dist",
 
-    // Strict type checking
+    // Strict type checking (matches FRONTEND_RULES.md requirements)
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
 
+    // Module interop
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    // Path mapping for internal imports
+    "baseUrl": ".",
+    "paths": {
+      "@venuelink/shared": ["./src/index.ts"],
+      "@venuelink/shared/*": ["./src/*"]
+    }
   },
-  "include": ["types/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

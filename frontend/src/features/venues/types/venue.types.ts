@@ -1,41 +1,15 @@
 /**
- * Venue type classification matching backend VenueType enum.
- * String values are identical to PostgreSQL ENUM values.
+ * Venue types - re-exported from shared package for backward compatibility.
+ *
+ * NOTE: Prefer importing directly from '@venuelink/shared' for new code.
+ * This file maintains backward compatibility during migration.
  */
-export enum VenueType {
-  Bar = 'bar',
-  Restaurant = 'restaurant',
-  EventSpace = 'event_space',
-  Cafe = 'cafe',
-}
 
-/** Address fields for a venue location. */
-export interface VenueAddress {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-}
+import type { Venue as SharedVenue, VenueType } from '@venuelink/shared';
 
-/**
- * Venue entity as returned by GET /api/v1/venues.
- * Fields match the backend VenueResponse Pydantic schema.
- */
-export interface Venue {
-  id: string;
-  name: string;
-  type: VenueType;
-  capacity: number;
-  basePriceCents: number;
-  addressStreet: string;
-  addressCity: string;
-  addressState: string;
-  addressZip: string;
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
+// Re-export shared types
+export { VenueType } from '@venuelink/shared';
+export type { Venue, VenueAddress, VenueSummary } from '@venuelink/shared';
 
 /** Query parameters for filtering the venue list endpoint. */
 export interface VenueFilters {
@@ -47,7 +21,7 @@ export interface VenueFilters {
 
 /** Paginated response shape from GET /api/v1/venues. */
 export interface VenueListResponse {
-  items: Venue[];
+  items: SharedVenue[];
   total: number;
   page: number;
   pageSize: number;

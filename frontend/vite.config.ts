@@ -19,6 +19,7 @@ export default defineConfig({
       '@/components': path.resolve(__dirname, './src/components'),
       '@/layout': path.resolve(__dirname, './src/layout'),
       '@/lib': path.resolve(__dirname, './src/lib'),
+      '@venuelink/shared': path.resolve(__dirname, '../shared/src'),
     },
   },
 

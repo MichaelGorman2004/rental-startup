@@ -1,11 +1,15 @@
-/** Booking status values matching the PostgreSQL booking_status enum. */
-export enum BookingStatus {
-  Pending = 'pending',
-  Confirmed = 'confirmed',
-  Rejected = 'rejected',
-  Completed = 'completed',
-  Cancelled = 'cancelled',
-}
+/**
+ * Booking types - re-exported from shared package for backward compatibility.
+ *
+ * NOTE: Prefer importing directly from '@venuelink/shared' for new code.
+ * This file maintains backward compatibility during migration.
+ */
+
+// Re-export shared types
+export { BookingStatus } from '@venuelink/shared';
+export type { BookingConfirmation, UpcomingEvent } from '@venuelink/shared';
+
+// Local types not in shared package (form-specific)
 
 /** Raw form values managed by react-hook-form (pre-validation). */
 export interface BookingFormValues {
@@ -36,17 +40,4 @@ export interface CreateBookingRequest {
   guestCount: number;
   specialRequests: string;
   budgetCents: number | null;
-}
-
-/** Confirmation data returned after successful booking creation. */
-export interface BookingConfirmation {
-  id: string;
-  referenceNumber: string;
-  venueName: string;
-  eventName: string;
-  eventDate: string;
-  eventTime: string;
-  guestCount: number;
-  estimatedCostCents: number;
-  status: BookingStatus;
 }
