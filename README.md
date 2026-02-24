@@ -50,6 +50,16 @@ Starts the database (Docker), backend (FastAPI), and frontend (Vite). On first r
 | `npm run format` | Format with Prettier and Black |
 | `npm run test` | Run all tests |
 
+## Project Structure
+
+```
+rental-startup/
+├── frontend/     # React + TypeScript + Vite
+├── backend/      # FastAPI + SQLAlchemy + PostgreSQL
+├── shared/       # @venuelink/shared - TypeScript types & constants
+└── docs/         # Documentation
+```
+
 ## Documentation
 
 - **[docs/REPO.md](docs/REPO.md)** — Project status, architecture, structure, environment config
