@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-02-22
-> **Status**: Phase 2 - Core Features In Progress
+> **Last Updated**: 2026-02-23
+> **Status**: Phase 3 - Supporting Systems In Progress
 
 ---
 
@@ -19,11 +19,13 @@
 - ✅ **VL-009**: Venue Details Page
 - ✅ **VL-010**: Booking Request Form
 - ✅ **VL-011**: Venue Admin Dashboard
+- ✅ **VL-013**: API Client & Error Handling
+- ✅ **VL-014**: React Query Setup & Cache Strategy
 
 ### Current Phase
-**Phase 2: Core Features** (Weeks 3-4)
-- Progress: 11/16 tasks done (69%)
-- Next Up: VL-012 - Shared TypeScript Types & Constants
+**Phase 3: Supporting Systems** (Weeks 5-6)
+- Progress: 13/16 tasks done (81%)
+- Next Up: VL-012 - Shared TypeScript Types & Constants, VL-015 - Form Validation & Input Components
 
 ---
 
@@ -89,8 +91,20 @@ rental-startup/
 │   │   │       └── constants/     # Status colors, labels, mock data
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers
-│   │   ├── lib/           # External library configs (React Query)
-│   │   ├── providers/     # QueryProvider
+│   │   ├── lib/
+│   │   │   ├── api/             # ✅ Type-Safe API Client (VL-013)
+│   │   │   │   ├── client.ts          # Axios instance with deferred init
+│   │   │   │   ├── constants.ts       # Timeout, retry config, error messages
+│   │   │   │   ├── error-handler.ts   # Error normalization (ApiError shape)
+│   │   │   │   ├── interceptors.ts    # Auth, error, retry interceptors
+│   │   │   │   ├── types/             # ApiError, HttpStatus, ApiErrorCode
+│   │   │   │   └── endpoints/         # Typed API functions (venues, bookings)
+│   │   │   └── react-query/     # ✅ React Query Infrastructure (VL-014)
+│   │   │       ├── client.ts          # QueryClient with optimized defaults
+│   │   │       ├── constants.ts       # Stale times, GC times, refetch intervals
+│   │   │       ├── keys/              # Centralized query key factory
+│   │   │       └── hooks/             # Query/mutation hooks (venues, bookings)
+│   │   ├── providers/     # QueryProvider + ReactQueryDevtools
 │   │   ├── utils/         # Pure utility functions
 │   │   └── App.tsx
 │   ├── package.json
@@ -260,6 +274,62 @@ backend/app/modules/venues/
 
 ---
 
+## 🌐 API Client & Data Layer (VL-013 + VL-014)
+
+### API Client Architecture
+**Layered design with strict separation of concerns:**
+- **Types** (`types/`): ApiError, HttpStatus, ApiErrorCode, PaginatedResponse
+- **Constants** (`constants.ts`): Timeout, retry config, error messages, base URL
+- **Error Handler** (`error-handler.ts`): Normalizes all failure modes into ApiError shape
+- **Interceptors** (`interceptors.ts`): Auth token injection, error normalization, retry with backoff
+- **Client** (`client.ts`): Axios singleton with deferred initialization
+- **Endpoints** (`endpoints/`): Typed API functions with snake→camel transformation
+
+### Features
+- ✅ Type-safe API calls with request/response contracts
+- ✅ Automatic JWT injection via Clerk `getToken()`
+- ✅ Error normalization (network, timeout, HTTP status → ApiError)
+- ✅ Retry with exponential backoff (3 attempts, 1s/2s/4s)
+- ✅ 401 triggers auth failure callback (logout + redirect)
+- ✅ Environment variable validation on startup
+- ✅ Snake-to-camel case transformation per endpoint
+
+### React Query Cache Strategy
+| Entity | Stale Time | GC Time | Refetch |
+|--------|-----------|---------|---------|
+| Venues | 10 min | 30 min | On window focus |
+| Bookings | 2 min | 30 min | On window focus |
+| Stats | 1 min | 30 min | Auto-poll (60s) |
+| User Profile | 15 min | 30 min | On window focus |
+| Events | 5 min | 30 min | On window focus |
+
+### Files Created
+```
+frontend/src/lib/
+├── api/                         # Type-Safe API Client
+│   ├── client.ts               # Axios instance + initializeApiClient()
+│   ├── constants.ts            # Config values, error messages
+│   ├── error-handler.ts        # normalizeError(), isApiError()
+│   ├── interceptors.ts         # Auth, error, retry interceptors
+│   ├── types/
+│   │   └── api-error.ts       # ApiError, HttpStatus, ApiErrorCode
+│   ├── endpoints/
+│   │   ├── venues.ts          # 5 typed venue API functions
+│   │   └── bookings.ts        # 5 typed booking API functions
+│   └── index.ts               # Barrel export
+└── react-query/                # React Query Infrastructure
+    ├── client.ts              # QueryClient with optimized defaults
+    ├── constants.ts           # Stale times, GC times, refetch intervals
+    ├── keys/
+    │   └── query-keys.ts     # Centralized key factory (4 entities)
+    ├── hooks/
+    │   ├── useVenuesQuery.ts # Query + detail + prefetch hooks
+    │   └── useBookingsQuery.ts # Mutation + query hooks
+    └── index.ts              # Barrel export
+```
+
+---
+
 ## 🛠️ Development Workflow
 
 ### Backend Commands
@@ -360,8 +430,8 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 
 ### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:8000
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
+VITE_API_BASE_URL=http://localhost:8000
 ```
 
 ---
@@ -376,10 +446,10 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - ~~**VL-010**: Booking Request Form~~ ✅
 - ~~**VL-011**: Venue Admin Dashboard~~ ✅
 
-### Phase 3: Supporting Systems (Next)
+### Phase 3: Supporting Systems (In Progress)
 - **VL-012**: Shared TypeScript Types & Constants
-- **VL-013**: API Client & Error Handling
-- **VL-014**: React Query Setup & Cache Strategy
+- ~~**VL-013**: API Client & Error Handling~~ ✅
+- ~~**VL-014**: React Query Setup & Cache Strategy~~ ✅
 - **VL-015**: Form Validation & Input Components
 
 ---
@@ -392,6 +462,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **Database tables**: 4
 - **Migration count**: 1
 - **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
+- **Frontend API functions**: 10 typed endpoints (5 venues, 5 bookings)
 - **Type coverage**: 100% (mypy strict mode, TypeScript strict mode)
 - **Linting errors**: 0 (ruff + ESLint clean)
 - **Test coverage**: 0% (no tests yet)
@@ -421,6 +492,21 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 - **Shared UI**: Reusable Breadcrumbs component (components/ui/Breadcrumbs/)
 - **React Query**: 10-min stale time, detail query keyed by venue ID
 - **URL-synced**: Filter state in search params (?type=bar&search=rooftop)
+
+### API Client Stats (VL-013)
+- **Files**: 8 (client, constants, error-handler, interceptors, types, 2 endpoints, barrel)
+- **Typed endpoints**: 10 (getVenues, getVenue, createVenue, updateVenue, deleteVenue, createBooking, getVenueBookings, getVenueStats, acceptBooking, declineBooking)
+- **Error codes**: 10 (network, timeout, validation, auth, authz, not-found, conflict, rate-limit, server, unknown)
+- **Interceptors**: 3 (auth token, error normalization, retry with exponential backoff)
+- **Retry**: Max 3 attempts, exponential backoff (1s, 2s, 4s), retryable status codes only
+
+### React Query Infrastructure Stats (VL-014)
+- **Files**: 7 (client, constants, query-keys, 2 hooks, 2 barrels)
+- **Query hooks**: 5 (useVenuesQuery, useVenueDetailQuery, useVenueBookingsQuery, useVenueStatsQuery, usePrefetchVenue)
+- **Mutation hooks**: 3 (useCreateBookingMutation, useBookingActionMutations)
+- **Query key entities**: 4 (venues, bookings, admin, dashboard)
+- **Stale times**: Venues (10m), Bookings (2m), Stats (1m), User Profile (15m), Events (5m)
+- **DevTools**: Integrated in development, tree-shaken in production
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks

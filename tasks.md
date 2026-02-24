@@ -1183,17 +1183,17 @@ interface ApiError {
 - Server errors (500)
 
 ### Acceptance Criteria
-- [ ] Axios instance configured with baseURL from env var
-- [ ] Request interceptor adds Authorization header if token exists
-- [ ] Response interceptor normalizes all errors to ApiError shape
-- [ ] Retry logic implemented for network failures (max 3 attempts)
-- [ ] Exponential backoff between retries (1s, 2s, 4s)
-- [ ] 401 errors trigger logout and redirect to login
-- [ ] All API methods strongly typed (request + response)
-- [ ] Environment variables validated on startup (fail if missing)
-- [ ] Timeout set to 10 seconds (configurable via constant)
-- [ ] CSRF token retrieved from cookie and included in headers
-- [ ] Loading states managed via React Query (not Axios interceptors)
+- [x] Axios instance configured with baseURL from env var
+- [x] Request interceptor adds Authorization header if token exists
+- [x] Response interceptor normalizes all errors to ApiError shape
+- [x] Retry logic implemented for network failures (max 3 attempts)
+- [x] Exponential backoff between retries (1s, 2s, 4s)
+- [x] 401 errors trigger logout and redirect to login
+- [x] All API methods strongly typed (request + response)
+- [x] Environment variables validated on startup (fail if missing)
+- [x] Timeout set to 10 seconds (configurable via constant)
+- [ ] CSRF token retrieved from cookie and included in headers — deferred (Clerk handles CSRF via cookies)
+- [x] Loading states managed via React Query (not Axios interceptors)
 
 ### Code Quality Checkpoints
 - ✅ All API functions return typed promises
@@ -1204,6 +1204,27 @@ interface ApiError {
 - ✅ All timeouts/delays in constants (not hardcoded)
 - ✅ Error messages never expose sensitive data
 - ✅ API methods use consistent naming (getVenues, createBooking)
+
+### Implementation Notes
+- Layered architecture: Types → Constants → Error Handler → Interceptors → Client → Endpoints
+- Snake-to-camel case transformation handled per-endpoint with explicit mapper functions
+- Initialization separated from creation to avoid circular deps with Clerk
+- Retry interceptor runs before error interceptor in the chain
+- All error messages in constants — zero inline strings
+- Backend API response interfaces kept private to endpoint modules
+- `initializeApiClient()` accepts injected `getToken` and `onAuthFailure` callbacks
+
+**Files Created**:
+- ✅ `frontend/src/lib/api/types/api-error.ts` - ApiError, HttpStatus, ApiErrorCode, PaginatedResponse
+- ✅ `frontend/src/lib/api/constants.ts` - Timeout, retry config, error messages, base URL validation
+- ✅ `frontend/src/lib/api/error-handler.ts` - Error normalization (network, timeout, HTTP status)
+- ✅ `frontend/src/lib/api/interceptors.ts` - Auth, error, and retry interceptors
+- ✅ `frontend/src/lib/api/client.ts` - Axios instance with deferred initialization
+- ✅ `frontend/src/lib/api/endpoints/venues.ts` - 5 typed venue API functions
+- ✅ `frontend/src/lib/api/endpoints/bookings.ts` - 5 typed booking API functions
+- ✅ Barrel exports: types/index.ts, endpoints/index.ts, api/index.ts
+
+**Status**: ✅ COMPLETED - Date: 2026-02-23, Branch: Task13_14_APIClient_ReactQuery
 
 ---
 
@@ -1256,16 +1277,16 @@ const venueKeys = {
 ```
 
 ### Acceptance Criteria
-- [ ] QueryClient configured with global defaults
-- [ ] DevTools enabled in development mode
-- [ ] Query keys follow hierarchical structure (easy invalidation)
-- [ ] Mutations invalidate related queries on success
-- [ ] Optimistic updates implemented for booking actions
-- [ ] Error handling with retry logic (exponential backoff)
-- [ ] Loading/error states handled in useQuery hooks
-- [ ] Prefetching implemented for venue detail hover (faster navigation)
-- [ ] Query key factory prevents typos and ensures consistency
-- [ ] Cache persistence configured (localStorage for offline support)
+- [x] QueryClient configured with global defaults
+- [x] DevTools enabled in development mode
+- [x] Query keys follow hierarchical structure (easy invalidation)
+- [x] Mutations invalidate related queries on success
+- [x] Optimistic updates implemented for booking actions
+- [x] Error handling with retry logic (exponential backoff)
+- [x] Loading/error states handled in useQuery hooks
+- [x] Prefetching implemented for venue detail hover (faster navigation)
+- [x] Query key factory prevents typos and ensures consistency
+- [ ] Cache persistence configured (localStorage for offline support) — deferred to production phase
 
 ### Code Quality Checkpoints
 - ✅ All stale/cache times in constants
@@ -1275,6 +1296,27 @@ const venueKeys = {
 - ✅ Optimistic updates properly roll back on error
 - ✅ DevTools only included in dev build (tree-shaken in prod)
 - ✅ Type-safe hooks (useQuery typed with response shape)
+
+### Implementation Notes
+- Centralized query key factory with hierarchical structure (entity → scope → params)
+- Entity-specific stale times: Venues (10m), Bookings (2m), Stats (1m), User Profile (15m)
+- Auto-polling for venue stats (60s refetch interval)
+- Prefetch hook (`usePrefetchVenue`) for faster venue detail navigation
+- QueryClient moved from single file to directory structure: `lib/react-query/`
+- React Query DevTools integrated in QueryProvider (tree-shaken in prod)
+- Mutations auto-invalidate related query caches on settle
+
+**Files Created/Modified**:
+- ✅ `frontend/src/lib/react-query/client.ts` - Enhanced QueryClient config (replaced old react-query.ts)
+- ✅ `frontend/src/lib/react-query/constants.ts` - Stale times, GC times, refetch intervals
+- ✅ `frontend/src/lib/react-query/keys/query-keys.ts` - Centralized key factory (venues, bookings, admin, dashboard)
+- ✅ `frontend/src/lib/react-query/hooks/useVenuesQuery.ts` - useVenuesQuery, useVenueDetailQuery, usePrefetchVenue
+- ✅ `frontend/src/lib/react-query/hooks/useBookingsQuery.ts` - useCreateBookingMutation, useVenueBookingsQuery, useVenueStatsQuery, useBookingActionMutations
+- ✅ Barrel exports: keys/index.ts, hooks/index.ts, react-query/index.ts
+- ✅ `frontend/src/providers/QueryProvider.tsx` - Added ReactQueryDevtools
+- ✅ Deleted: `frontend/src/lib/react-query.ts` (replaced by directory)
+
+**Status**: ✅ COMPLETED - Date: 2026-02-23, Branch: Task13_14_APIClient_ReactQuery
 
 ---
 
@@ -1364,13 +1406,272 @@ export const VALIDATION_RULES = {
 
 ---
 
+## Task 17: My Bookings Page (Student Org)
+
+**ID**: `VL-017`
+**Title**: Build Booking History & Management Page for Student Orgs
+**Priority**: 🟡 High
+**Estimated Effort**: 10 hours
+**Dependencies**: `VL-010`, `VL-013`, `VL-014`
+
+### Description
+Implement the "My Bookings" page where student organizations can view all their booking requests, see statuses (pending, confirmed, rejected, completed, cancelled), and cancel upcoming bookings. Currently the `/bookings` route is a placeholder `<div>`.
+
+### UI Sections
+1. **Booking Tabs / Filter Bar**
+   - Filter by status: All, Pending, Confirmed, Completed, Cancelled
+   - Sort by: Most recent, Event date
+
+2. **Booking Cards List**
+   - Each card shows: Venue name, Event name, Date/Time, Guest count, Status badge
+   - Pending/Confirmed bookings show "Cancel" action
+   - Completed bookings show summary info only
+
+3. **Empty State**
+   - "No bookings yet" with CTA to Browse Venues
+
+### Backend API
+1. **GET /api/v1/bookings/me** — List current user's organization's bookings
+   - Query params: `status`, `page`, `page_size`
+   - Returns: Paginated booking list with venue names
+2. **PATCH /api/v1/bookings/:id/cancel** — Cancel a booking
+   - Auth: Organization owner only (the org that created the booking)
+   - Validation: Can only cancel pending/confirmed bookings
+
+### Component Architecture
+```
+features/bookings/
+├── components/
+│   ├── BookingsPage.tsx          # Page composition
+│   ├── BookingsFilterBar.tsx     # Status filter chips
+│   ├── BookingHistoryCard.tsx    # Single booking card
+│   ├── BookingsEmptyState.tsx    # No bookings CTA
+│   └── BookingsPageSkeleton.tsx  # Loading skeleton
+├── hooks/
+│   ├── useMyBookings.ts          # Fetch user's bookings
+│   ├── useCancelBooking.ts       # Cancel mutation
+│   └── useBookingsPage.ts        # Orchestration hook
+└── ...
+```
+
+### Acceptance Criteria
+- [ ] `/bookings` route renders real component (not placeholder)
+- [ ] Bookings fetched for current user's organization
+- [ ] Filter chips filter by booking status
+- [ ] Booking cards show venue name, event name, date/time, guest count, status
+- [ ] Status badges use consistent color scheme (yellow=pending, green=confirmed, etc.)
+- [ ] Cancel button available for pending/confirmed bookings
+- [ ] Cancel shows confirmation modal before API call
+- [ ] Optimistic UI update on cancel
+- [ ] Empty state with "Browse Venues" CTA when no bookings
+- [ ] Loading skeletons during fetch
+- [ ] Mobile-responsive (stacked cards on mobile)
+- [ ] All data fetching in custom hooks
+
+### Code Quality Checkpoints
+- ✅ BookingsPage.tsx < 15 lines (composition)
+- ✅ All booking data in custom hooks (not components)
+- ✅ Status colors reuse venue-admin STATUS_BADGE_COLORS constant
+- ✅ Filter state synced with URL params
+- ✅ Query keys use centralized factory
+- ✅ All text in constants file
+- ✅ Mantine primitives only (no raw HTML)
+
+---
+
+## Task 18: Organization Profile & Description
+
+**ID**: `VL-018`
+**Title**: Build Organization Profile with Description for Booking Autofill
+**Priority**: 🟡 High
+**Estimated Effort**: 10 hours
+**Dependencies**: `VL-003`, `VL-013`
+
+### Description
+Allow student organizations to create and edit a profile with a description, contact info, and additional details. This profile is visible to venue admins when reviewing booking requests, and auto-fills org info in the booking flow. Currently, org data is minimal (name, type, university) — we need to extend it with description, contact email, phone, logo, and member count.
+
+### Database Changes
+**Extend organizations table:**
+- `description` (TEXT, nullable) — organization description/bio
+- `contact_email` (VARCHAR, nullable) — public contact email
+- `contact_phone` (VARCHAR, nullable) — contact phone
+- `member_count` (INTEGER, nullable) — org size
+- `website_url` (VARCHAR, nullable) — org website
+- `logo_url` (VARCHAR, nullable) — org logo/avatar
+
+### Backend API
+1. **GET /api/v1/organizations/:id** — Get organization profile
+   - Auth: Authenticated users
+   - Returns: Full org profile with description
+2. **PATCH /api/v1/organizations/:id** — Update organization profile
+   - Auth: Organization owner only
+   - Body: Partial update fields
+3. **GET /api/v1/organizations/me** — Get current user's organization
+   - Auth: Student org role only
+
+### Frontend Implementation
+```
+features/organization/
+├── components/
+│   ├── OrgProfilePage.tsx        # Profile view page
+│   ├── OrgProfileForm.tsx        # Edit form
+│   ├── OrgProfileCard.tsx        # Summary card (reusable)
+│   └── OrgProfileSkeleton.tsx    # Loading skeleton
+├── hooks/
+│   ├── useOrgProfile.ts          # Fetch org data
+│   ├── useUpdateOrg.ts           # Update mutation
+│   └── useOrgProfilePage.ts      # Orchestration hook
+├── types/
+│   └── organization.types.ts     # Org interfaces
+├── constants/
+│   └── organization-defaults.ts  # Messages, validation rules
+└── index.ts
+```
+
+### Booking Integration
+- Booking form auto-fills organization name from profile
+- Venue admin booking cards show org description snippet
+- Booking review step shows org contact info
+
+### Acceptance Criteria
+- [ ] Org profile page accessible from Settings or Dashboard
+- [ ] Org profile shows: name, type, university, description, contact info, member count
+- [ ] Edit form validates all fields (Zod schema)
+- [ ] Description field is rich text or multi-line (Mantine Textarea)
+- [ ] Member count is a number input with min/max
+- [ ] Contact email validated as email format
+- [ ] Phone validated as phone format
+- [ ] Save button disabled during mutation
+- [ ] Success feedback on save (toast or inline)
+- [ ] Venue admins see org description in booking review
+- [ ] Booking form auto-fills org name from profile
+- [ ] All backend endpoints have proper RBAC
+- [ ] Alembic migration for new columns
+
+### Code Quality Checkpoints
+- ✅ All form logic in hooks
+- ✅ Components < 15 lines
+- ✅ Validation schema in types file
+- ✅ All messages in constants
+- ✅ Backend: Repository → Service → Router pattern
+- ✅ Zero any types
+
+---
+
+## Task 19: Settings Page with Profile & Sign Out
+
+**ID**: `VL-019`
+**Title**: Build Settings Page with Account, Profile, and Sign Out
+**Priority**: 🟡 High
+**Estimated Effort**: 8 hours
+**Dependencies**: `VL-003`, `VL-018`
+
+### Description
+Implement a Settings page with tabbed navigation for Account (email, password via Clerk), Organization Profile (links to org edit form), and a Sign Out button. Currently there is no way for users to log out of the application.
+
+### UI Sections
+1. **Settings Tabs** (Mantine Tabs)
+   - **Account** — Email display, link to Clerk user profile, change password
+   - **Organization** — Org profile form (from VL-018) or link to org profile page
+   - **Preferences** — (future: notification preferences, theme toggle)
+
+2. **Sign Out**
+   - Prominent "Sign Out" button in the settings sidebar or account tab
+   - Also add sign-out option to Header avatar dropdown/menu
+
+3. **Header Avatar Menu**
+   - Click avatar → dropdown: "Profile", "Settings", "Sign Out"
+   - Uses Mantine Menu component
+
+### Component Architecture
+```
+features/settings/
+├── components/
+│   ├── SettingsPage.tsx          # Page with tabs
+│   ├── AccountTab.tsx            # Account info + Clerk link
+│   ├── OrganizationTab.tsx       # Org profile section
+│   └── SignOutButton.tsx         # Clerk SignOutButton wrapper
+├── hooks/
+│   └── useSettingsPage.ts        # Tab state + user data
+├── types/
+│   └── settings.types.ts
+├── constants/
+│   └── settings-defaults.ts
+└── index.ts
+
+layout/components/
+├── HeaderUserMenu.tsx            # Avatar dropdown with sign out
+```
+
+### Acceptance Criteria
+- [ ] `/settings` route renders real SettingsPage component
+- [ ] Tabs: Account, Organization (Preferences future)
+- [ ] Account tab shows user email from Clerk
+- [ ] Organization tab shows org profile form or summary
+- [ ] Sign Out button calls Clerk signOut and redirects to /login
+- [ ] Header avatar has clickable dropdown menu
+- [ ] Dropdown menu items: Settings, Sign Out
+- [ ] Sign out clears all React Query caches
+- [ ] All tab state managed in hook
+- [ ] Mobile-responsive tab layout
+
+### Code Quality Checkpoints
+- ✅ SettingsPage.tsx < 15 lines (composition)
+- ✅ Sign out logic in dedicated hook
+- ✅ All text in constants
+- ✅ Mantine Tabs component (not custom)
+- ✅ Mantine Menu for avatar dropdown
+- ✅ No raw HTML elements
+
+---
+
+## Task 20: VenueLink Logo & Branding
+
+**ID**: `VL-020`
+**Title**: Design Logo and Integrate into Navigation
+**Priority**: 🟢 Medium
+**Estimated Effort**: 3 hours
+**Dependencies**: `VL-004`
+
+### Description
+Create a VenueLink logo (SVG) and integrate it into the Header/Sidebar navigation alongside the "VenueLink" text. Also update the favicon and Open Graph metadata.
+
+### Deliverables
+1. **Logo SVG** — Clean, minimal logo that works at small sizes (24-32px height)
+2. **Favicon** — `.ico` + `.png` versions (16x16, 32x32, 180x180)
+3. **Header Integration** — Logo image next to "VenueLink" text in Header
+4. **Login/Signup Pages** — Logo on auth screens
+
+### Technical Requirements
+- SVG format for scalability
+- Works on both light and dark backgrounds
+- Placed in `frontend/public/` (favicon) and `frontend/src/assets/` (logo SVG)
+- Logo component wraps `<img>` with proper alt text and sizing
+
+### Acceptance Criteria
+- [ ] SVG logo file created in `frontend/src/assets/`
+- [ ] Logo displayed in Header alongside "VenueLink" text
+- [ ] Logo displayed on Login/Signup pages
+- [ ] Favicon updated in `index.html`
+- [ ] Logo works at 24px, 32px, and 48px heights
+- [ ] Proper alt text on all logo images
+- [ ] Logo visible on both light and dark backgrounds
+
+### Code Quality Checkpoints
+- ✅ Logo component is reusable (accepts size prop)
+- ✅ SVG optimized (no unnecessary metadata)
+- ✅ Mantine Image component used (not raw `<img>`)
+- ✅ Alt text in constants
+
+---
+
 ## Priority Matrix
 
 | Priority | Tasks |
 |----------|-------|
 | 🔴 Critical | VL-001, VL-002, VL-003, VL-004, VL-005, VL-016 |
-| 🟡 High | VL-006, VL-007, VL-008, VL-009, VL-010, VL-011, VL-012, VL-013, VL-014 |
-| 🟢 Medium | VL-015 |
+| 🟡 High | VL-006, VL-007, VL-008, VL-009, VL-010, VL-011, VL-012, VL-013, VL-014, VL-017, VL-018, VL-019 |
+| 🟢 Medium | VL-015, VL-020 |
 
 ## Dependency Graph
 
@@ -1381,23 +1682,28 @@ VL-001 (Monorepo Setup)
 │   │   ├── VL-016 (Clerk Keys)
 │   │   │   └── VL-005 (Auth UI)
 │   │   │       └── VL-006 (Dashboard)
-│   │   └── VL-013 (API Client)
-│   │       └── VL-014 (React Query)
+│   │   ├── VL-013 (API Client) ✅
+│   │   │   └── VL-014 (React Query) ✅
+│   │   ├── VL-018 (Org Profile)
+│   │   │   └── VL-019 (Settings + Sign Out)
+│   │   └── VL-017 (My Bookings)
 │   └── VL-007 (Venue API)
 │       └── VL-008 (Venue Browse)
 │           ├── VL-009 (Venue Detail)
 │           │   └── VL-010 (Booking Form)
+│           │       └── VL-017 (My Bookings)
 │           └── VL-011 (Venue Admin)
 ├── VL-004 (Mantine Setup)
 │   ├── VL-005 (Auth UI)
 │   ├── VL-008 (Venue Browse)
-│   └── VL-015 (Form Components)
+│   ├── VL-015 (Form Components)
+│   └── VL-020 (Logo & Branding)
 └── VL-012 (Shared Types)
-    └── VL-013 (API Client)
+    └── VL-013 (API Client) ✅
 ```
 
 ## Total Estimated Effort
-**120 hours** (~3 weeks for 2 engineers working in parallel)
+**151 hours** (~4 weeks for 2 engineers working in parallel)
 
 ---
 
