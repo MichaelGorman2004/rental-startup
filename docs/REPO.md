@@ -19,13 +19,14 @@
 - ✅ **VL-009**: Venue Details Page
 - ✅ **VL-010**: Booking Request Form
 - ✅ **VL-011**: Venue Admin Dashboard
+- ✅ **VL-012**: Shared TypeScript Types & Constants
 - ✅ **VL-013**: API Client & Error Handling
 - ✅ **VL-014**: React Query Setup & Cache Strategy
 
 ### Current Phase
 **Phase 3: Supporting Systems** (Weeks 5-6)
-- Progress: 13/16 tasks done (81%)
-- Next Up: VL-012 - Shared TypeScript Types & Constants, VL-015 - Form Validation & Input Components
+- Progress: 14/16 tasks done (88%)
+- Next Up: VL-015 - Form Validation & Input Components
 
 ---
 
@@ -149,7 +150,15 @@ rental-startup/
 │   ├── pyproject.toml                # ✅ Poetry config + scripts
 │   └── alembic.ini                   # ✅ Migration config
 │
-├── shared/                # Shared types (planned)
+├── shared/                # ✅ Shared TypeScript Types (VL-012)
+│   └── src/
+│       ├── enums/         # UserRole, OrganizationType, VenueType, BookingStatus
+│       ├── entities/      # User, Organization, Venue, Booking interfaces
+│       ├── api/           # Pagination, errors, filters, requests, responses
+│       ├── constants/     # Validation limits, field lengths
+│       ├── guards/        # Type guards for runtime validation
+│       └── index.ts       # Main barrel export
+│
 ├── docs/
 │   ├── ui-mockup.html    # UI design mockups
 │   └── REPO.md           # This file
@@ -330,6 +339,51 @@ frontend/src/lib/
 
 ---
 
+## 📦 Shared Types Package (VL-012)
+
+### Package Overview
+**Name**: `@venuelink/shared`
+**Location**: `shared/src/`
+
+Centralized TypeScript types and constants used across frontend.
+All enums match PostgreSQL ENUM types exactly.
+
+### Exports
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| Enums | 4 | `UserRole`, `VenueType`, `BookingStatus`, `OrganizationType` |
+| Entities | 15+ | `User`, `Venue`, `Booking`, `Organization`, summaries |
+| API Types | 20+ | `PaginatedResponse<T>`, `ApiError`, `CreateBookingRequest` |
+| Constants | 25+ | `VENUE_CAPACITY_MAX`, `BOOKING_MIN_NOTICE_DAYS` |
+| Type Guards | 10 | `isVenueType()`, `isApiError()`, `assertUserRole()` |
+
+### Usage
+
+```typescript
+// Direct import from shared package
+import {
+  UserRole,
+  VenueType,
+  Venue,
+  isVenueType,
+  VENUE_CAPACITY_MAX
+} from '@venuelink/shared';
+
+// Feature types re-export from shared for backward compatibility
+import { VenueType, Venue } from '@/features/venues/types';
+```
+
+### Key Features
+- ✅ All enums use string values matching PostgreSQL
+- ✅ JSDoc on all interfaces and enums
+- ✅ Type guards for runtime validation
+- ✅ Validation constants matching backend Pydantic schemas
+- ✅ Barrel exports for clean imports
+- ✅ Zero `any` types, strict mode enabled
+
+---
+
 ## 🛠️ Development Workflow
 
 ### Backend Commands
@@ -447,7 +501,7 @@ VITE_API_BASE_URL=http://localhost:8000
 - ~~**VL-011**: Venue Admin Dashboard~~ ✅
 
 ### Phase 3: Supporting Systems (In Progress)
-- **VL-012**: Shared TypeScript Types & Constants
+- ~~**VL-012**: Shared TypeScript Types & Constants~~ ✅
 - ~~**VL-013**: API Client & Error Handling~~ ✅
 - ~~**VL-014**: React Query Setup & Cache Strategy~~ ✅
 - **VL-015**: Form Validation & Input Components
@@ -507,6 +561,16 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Query key entities**: 4 (venues, bookings, admin, dashboard)
 - **Stale times**: Venues (10m), Bookings (2m), Stats (1m), User Profile (15m), Events (5m)
 - **DevTools**: Integrated in development, tree-shaken in production
+
+### Shared Types Package Stats (VL-012)
+- **Files**: 26 (5 enums, 4 entities, 5 API types, 2 constants, 5 guards, 5 barrels)
+- **Enums**: 4 (UserRole, OrganizationType, VenueType, BookingStatus)
+- **Entity interfaces**: 15 (User, Organization, Venue, Booking + variants)
+- **API types**: 20+ (requests, responses, pagination, filters, errors)
+- **Validation constants**: 25+ (all matching backend Pydantic schemas)
+- **Type guards**: 10 (isVenueType, isUserRole, isApiError, etc. + assert variants)
+- **Package size**: ~1,700 lines TypeScript
+- **Exports**: ~150 named exports via barrel files
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks
