@@ -1,13 +1,12 @@
 import {
-  Group, Burger, Text, Badge, Avatar,
+  Group, Burger, Text, Badge,
 } from '@mantine/core';
-import { useUser } from '@clerk/clerk-react';
 import { useLayout } from '../hooks/useLayout';
 import { useOrganization } from '../../features/dashboard';
+import { HeaderUserMenu } from './HeaderUserMenu';
 
 export function Header() {
   const { sidebarOpen, toggleSidebar } = useLayout();
-  const { user } = useUser();
   const { organization } = useOrganization();
 
   return (
@@ -17,7 +16,7 @@ export function Header() {
         <Text fw={700} size="lg">VenueLink</Text>
         {organization?.name && <Badge variant="light">{organization.name}</Badge>}
       </Group>
-      <Avatar src={user?.imageUrl} alt={user?.fullName ?? 'User'} radius="xl" />
+      <HeaderUserMenu />
     </Group>
   );
 }

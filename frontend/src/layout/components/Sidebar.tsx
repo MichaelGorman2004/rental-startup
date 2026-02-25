@@ -20,7 +20,9 @@ const NAV_ITEMS: readonly NavItem[] = [
   {
     label: 'Venues', icon: IconBuilding, route: '/venues', roles: ['student_org'],
   },
-  { label: 'Bookings', icon: IconCalendarEvent, route: '/bookings' },
+  {
+    label: 'Bookings', icon: IconCalendarEvent, route: '/bookings', roles: ['student_org'],
+  },
   {
     label: 'Venue Admin', icon: IconChartBar, route: '/admin', roles: ['venue_admin'],
   },
@@ -32,7 +34,7 @@ export function Sidebar() {
   const navigate = useNavigate();
   const { user } = useUser();
 
-  const userRole = user?.unsafeMetadata?.['role'] as string | undefined;
+  const userRole = (user?.publicMetadata as Record<string, string> | undefined)?.['role'];
 
   const visibleItems = useMemo(
     () => NAV_ITEMS.filter(
