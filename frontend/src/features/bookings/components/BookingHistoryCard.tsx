@@ -39,7 +39,7 @@ export const BookingHistoryCard = memo(({ booking, onCancel }: BookingHistoryCar
         <Group gap="lg">
           <Group gap="xs">
             <Box c="dimmed"><IconCalendar size="0.875rem" stroke={1.5} /></Box>
-            <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
+            <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00Z`))}</Text>
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><IconClock size="0.875rem" stroke={1.5} /></Box>

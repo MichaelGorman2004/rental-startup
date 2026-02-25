@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 from app.core.constants.enums import OrganizationType
 from app.modules.organizations.constants import (
@@ -41,7 +41,7 @@ class OrganizationUpdate(BaseModel):
     type: OrganizationType | None = None
     university: str | None = Field(None, max_length=255)
     description: str | None = Field(None, max_length=DESCRIPTION_MAX_LENGTH)
-    contact_email: str | None = Field(None, max_length=CONTACT_EMAIL_MAX_LENGTH)
+    contact_email: EmailStr | None = Field(None, max_length=CONTACT_EMAIL_MAX_LENGTH)
     contact_phone: str | None = Field(None, max_length=CONTACT_PHONE_MAX_LENGTH)
     member_count: int | None = Field(
         None,
