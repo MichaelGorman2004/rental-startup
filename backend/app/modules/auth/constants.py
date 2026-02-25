@@ -7,7 +7,7 @@ STUDENT_EMAIL_REGEX = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.edu$"
 
 # JWT Claims
 CLERK_ISSUER = "https://clerk.venuelink.com"  # Placeholder, should be env var
-ROLE_CLAIM_KEY = "org_role"  # Key in JWT metadata
+ROLE_CLAIM_KEY = "role"  # Key in JWT metadata
 
 
 class AuthError(str, Enum):
