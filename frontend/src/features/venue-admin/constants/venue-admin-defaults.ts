@@ -1,6 +1,8 @@
 import { BookingStatus } from '../../bookings';
 import type { AdminBooking, VenueStats } from '../types';
 
+export { STATUS_BADGE_COLORS, STATUS_LABELS } from '@/lib/constants';
+
 /** Auto-refresh interval for venue stats in milliseconds (60 seconds). */
 export const STATS_REFETCH_INTERVAL_MS = 60 * 1000;
 
@@ -23,24 +25,6 @@ export const MOCK_ACTION_DELAY_MS = 800;
 export const ADMIN_QUERY_KEYS = {
   STATS: (venueId: string) => ['venue-admin', 'stats', venueId] as const,
   BOOKINGS: (venueId: string) => ['venue-admin', 'bookings', venueId] as const,
-};
-
-/** Mantine color references for booking status badges. */
-export const STATUS_BADGE_COLORS: Record<BookingStatus, string> = {
-  [BookingStatus.Pending]: 'yellow',
-  [BookingStatus.Confirmed]: 'green',
-  [BookingStatus.Rejected]: 'red',
-  [BookingStatus.Completed]: 'blue',
-  [BookingStatus.Cancelled]: 'gray',
-};
-
-/** Human-readable labels for booking statuses. */
-export const STATUS_LABELS: Record<BookingStatus, string> = {
-  [BookingStatus.Pending]: 'Pending',
-  [BookingStatus.Confirmed]: 'Confirmed',
-  [BookingStatus.Rejected]: 'Declined',
-  [BookingStatus.Completed]: 'Completed',
-  [BookingStatus.Cancelled]: 'Cancelled',
 };
 
 /** UI messages for the venue admin dashboard. */
