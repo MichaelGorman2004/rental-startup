@@ -29,6 +29,8 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
+    String,
+    Text,
     Time,
     UniqueConstraint,
 )
@@ -101,6 +103,18 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
     guest_count: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
+    )
+
+    # Event details
+    event_name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        default="",
+    )
+
+    special_requests: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
     )
 
     # Booking workflow state
