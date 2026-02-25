@@ -21,6 +21,10 @@ export interface Booking {
   guestCount: number;
   /** Current booking status */
   status: BookingStatus;
+  /** Event name/title */
+  eventName: string;
+  /** Special requests or notes (optional) */
+  specialRequests?: string;
   /** ISO 8601 timestamp of creation */
   createdAt: string;
   /** ISO 8601 timestamp of last update */
@@ -37,8 +41,6 @@ export interface BookingWithDetails extends Booking {
   venueName: string;
   /** Organization name for display */
   organizationName: string;
-  /** Event name/title */
-  eventName: string;
 }
 
 /**
