@@ -4,11 +4,12 @@ import {
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { QueryProvider } from './providers/QueryProvider';
 import { ApiClientInitializer } from './providers/ApiClientInitializer';
-import { AppShell } from './layout';
+import { AppShell, RoleGuard } from './layout';
 import { DashboardPage } from './features/dashboard';
 import { VenueBrowse, VenueDetail } from './features/venues';
-import { BookingForm } from './features/bookings';
+import { BookingForm, BookingsPage } from './features/bookings';
 import { AdminDashboard } from './features/venue-admin';
+import { SettingsPage } from './features/settings';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -47,11 +48,12 @@ function App() {
                 )}
               >
                 <Route index element={<DashboardPage />} />
-                <Route path="venues" element={<VenueBrowse />} />
-                <Route path="venues/:id" element={<VenueDetail />} />
-                <Route path="venues/:id/book" element={<BookingForm />} />
-                <Route path="bookings" element={<div>Bookings</div>} />
-                <Route path="admin" element={<AdminDashboard />} />
+                <Route path="venues" element={<RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard>} />
+                <Route path="venues/:id" element={<RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard>} />
+                <Route path="venues/:id/book" element={<RoleGuard roles={['student_org']}><BookingForm /></RoleGuard>} />
+                <Route path="bookings" element={<RoleGuard roles={['student_org']}><BookingsPage /></RoleGuard>} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="admin" element={<RoleGuard roles={['venue_admin']}><AdminDashboard /></RoleGuard>} />
               </Route>
             </Routes>
           </BrowserRouter>
