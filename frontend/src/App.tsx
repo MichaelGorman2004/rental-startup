@@ -2,6 +2,7 @@ import {
   BrowserRouter, Routes, Route, Navigate,
 } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
+import { Notifications } from '@mantine/notifications';
 import { QueryProvider } from './providers/QueryProvider';
 import { ApiClientInitializer } from './providers/ApiClientInitializer';
 import { AppShell, RoleGuard } from './layout';
@@ -26,6 +27,7 @@ function App() {
   return (
     <QueryProvider>
       <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+        <Notifications />
         <ApiClientInitializer>
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>

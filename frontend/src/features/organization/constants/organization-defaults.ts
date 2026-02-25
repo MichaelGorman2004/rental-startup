@@ -20,6 +20,9 @@ export const ORG_MESSAGES = {
   NO_ORG: 'No organization found',
 } as const;
 
+/** Basic email format check. */
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /** Validation limits for organization profile form. */
 export const ORG_VALIDATION = {
   NAME_MIN: 2,

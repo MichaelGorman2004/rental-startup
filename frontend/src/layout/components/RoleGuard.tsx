@@ -8,10 +8,13 @@ interface RoleGuardProps {
 
 /** Redirects to dashboard if the user's role is not in the allowed list. */
 export function RoleGuard({ roles, children }: RoleGuardProps) {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+
+  if (!isLoaded) return null;
+
   const role = (user?.publicMetadata as Record<string, string> | undefined)?.['role'];
 
-  if (role && !roles.includes(role)) {
+  if (!role || !roles.includes(role)) {
     return <Navigate to="/" replace />;
   }
 

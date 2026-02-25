@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { useUpdateOrganizationMutation } from '@/lib/react-query';
 import type { OrganizationProfile, OrgProfileFormValues } from '../types/organization.types';
-import { ORG_MESSAGES, ORG_VALIDATION } from '../constants/organization-defaults';
+import { EMAIL_REGEX, ORG_MESSAGES, ORG_VALIDATION } from '../constants/organization-defaults';
 
 /** Hook for organization profile form logic and mutation. */
 export function useUpdateOrg(organization: OrganizationProfile | undefined) {
@@ -10,18 +11,32 @@ export function useUpdateOrg(organization: OrganizationProfile | undefined) {
 
   const form = useForm<OrgProfileFormValues>({
     initialValues: {
-      name: organization?.name ?? '',
-      description: organization?.description ?? '',
-      contactEmail: organization?.contactEmail ?? '',
-      contactPhone: organization?.contactPhone ?? '',
-      memberCount: organization?.memberCount,
-      websiteUrl: organization?.websiteUrl ?? '',
+      name: '',
+      description: '',
+      contactEmail: '',
+      contactPhone: '',
+      memberCount: undefined,
+      websiteUrl: '',
     },
     validate: {
       name: (v: string) => (v.length < ORG_VALIDATION.NAME_MIN ? 'Name is too short' : null),
-      contactEmail: (v: string) => (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Invalid email' : null),
+      contactEmail: (v: string) => (v && !EMAIL_REGEX.test(v) ? 'Invalid email' : null),
     },
   });
+
+  useEffect(() => {
+    if (organization) {
+      form.initialize({
+        name: organization.name ?? '',
+        description: organization.description ?? '',
+        contactEmail: organization.contactEmail ?? '',
+        contactPhone: organization.contactPhone ?? '',
+        memberCount: organization.memberCount,
+        websiteUrl: organization.websiteUrl ?? '',
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
 
   const handleSubmit = form.onSubmit((values: OrgProfileFormValues) => {
     if (!organization) return;

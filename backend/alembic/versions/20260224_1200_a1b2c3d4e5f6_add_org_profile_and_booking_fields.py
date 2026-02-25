@@ -39,6 +39,14 @@ def upgrade() -> None:
         "bookings",
         sa.Column("event_name", sa.String(length=100), nullable=False, server_default=""),
     )
+    # Drop the server default so future inserts must explicitly provide event_name
+    op.alter_column(
+        "bookings",
+        "event_name",
+        existing_type=sa.String(length=100),
+        nullable=False,
+        server_default=None,
+    )
     op.add_column("bookings", sa.Column("special_requests", sa.Text(), nullable=True))
 
 
