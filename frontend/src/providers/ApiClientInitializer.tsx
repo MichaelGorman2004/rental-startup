@@ -15,7 +15,7 @@ export function ApiClientInitializer({ children }: { children: React.ReactNode }
     initialized.current = true;
 
     initializeApiClient(
-      () => getToken(),
+      () => getToken({ template: 'venuelink' }),
       () => { signOut(); },
     );
   }, [getToken, signOut]);

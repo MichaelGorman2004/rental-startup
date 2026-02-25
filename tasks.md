@@ -1477,18 +1477,18 @@ features/bookings/
 ```
 
 ### Acceptance Criteria
-- [ ] `/bookings` route renders real component (not placeholder)
-- [ ] Bookings fetched for current user's organization
-- [ ] Filter chips filter by booking status
-- [ ] Booking cards show venue name, event name, date/time, guest count, status
-- [ ] Status badges use consistent color scheme (yellow=pending, green=confirmed, etc.)
-- [ ] Cancel button available for pending/confirmed bookings
-- [ ] Cancel shows confirmation modal before API call
-- [ ] Optimistic UI update on cancel
-- [ ] Empty state with "Browse Venues" CTA when no bookings
-- [ ] Loading skeletons during fetch
-- [ ] Mobile-responsive (stacked cards on mobile)
-- [ ] All data fetching in custom hooks
+- [x] `/bookings` route renders real component (not placeholder)
+- [x] Bookings fetched for current user's organization
+- [x] Filter chips filter by booking status
+- [x] Booking cards show venue name, event name, date/time, guest count, status
+- [x] Status badges use consistent color scheme (yellow=pending, green=confirmed, etc.)
+- [x] Cancel button available for pending/confirmed bookings
+- [x] Cancel shows confirmation modal before API call
+- [x] Optimistic UI update on cancel
+- [x] Empty state with "Browse Venues" CTA when no bookings
+- [x] Loading skeletons during fetch
+- [x] Mobile-responsive (stacked cards on mobile)
+- [x] All data fetching in custom hooks
 
 ### Code Quality Checkpoints
 - ✅ BookingsPage.tsx < 15 lines (composition)
@@ -1498,6 +1498,8 @@ features/bookings/
 - ✅ Query keys use centralized factory
 - ✅ All text in constants file
 - ✅ Mantine primitives only (no raw HTML)
+
+**Status**: ✅ COMPLETED - Date: 2026-02-24
 
 ---
 
@@ -1556,19 +1558,19 @@ features/organization/
 - Booking review step shows org contact info
 
 ### Acceptance Criteria
-- [ ] Org profile page accessible from Settings or Dashboard
-- [ ] Org profile shows: name, type, university, description, contact info, member count
-- [ ] Edit form validates all fields (Zod schema)
-- [ ] Description field is rich text or multi-line (Mantine Textarea)
-- [ ] Member count is a number input with min/max
-- [ ] Contact email validated as email format
-- [ ] Phone validated as phone format
-- [ ] Save button disabled during mutation
-- [ ] Success feedback on save (toast or inline)
-- [ ] Venue admins see org description in booking review
-- [ ] Booking form auto-fills org name from profile
-- [ ] All backend endpoints have proper RBAC
-- [ ] Alembic migration for new columns
+- [x] Org profile page accessible from Settings or Dashboard
+- [x] Org profile shows: name, type, university, description, contact info, member count
+- [x] Edit form validates all fields (Zod schema)
+- [x] Description field is rich text or multi-line (Mantine Textarea)
+- [x] Member count is a number input with min/max
+- [x] Contact email validated as email format
+- [x] Phone validated as phone format
+- [x] Save button disabled during mutation
+- [x] Success feedback on save (toast or inline)
+- [x] Venue admins see org description in booking review
+- [x] Booking form auto-fills org name from profile
+- [x] All backend endpoints have proper RBAC
+- [x] Alembic migration for new columns
 
 ### Code Quality Checkpoints
 - ✅ All form logic in hooks
@@ -1577,6 +1579,8 @@ features/organization/
 - ✅ All messages in constants
 - ✅ Backend: Repository → Service → Router pattern
 - ✅ Zero any types
+
+**Status**: ✅ COMPLETED - Date: 2026-02-24
 
 ---
 
@@ -1626,16 +1630,16 @@ layout/components/
 ```
 
 ### Acceptance Criteria
-- [ ] `/settings` route renders real SettingsPage component
-- [ ] Tabs: Account, Organization (Preferences future)
-- [ ] Account tab shows user email from Clerk
-- [ ] Organization tab shows org profile form or summary
-- [ ] Sign Out button calls Clerk signOut and redirects to /login
-- [ ] Header avatar has clickable dropdown menu
-- [ ] Dropdown menu items: Settings, Sign Out
-- [ ] Sign out clears all React Query caches
-- [ ] All tab state managed in hook
-- [ ] Mobile-responsive tab layout
+- [x] `/settings` route renders real SettingsPage component
+- [x] Tabs: Account, Organization (Preferences future)
+- [x] Account tab shows user email from Clerk
+- [x] Organization tab shows org profile form or summary
+- [x] Sign Out button calls Clerk signOut and redirects to /login
+- [x] Header avatar has clickable dropdown menu
+- [x] Dropdown menu items: Settings, Sign Out
+- [x] Sign out clears all React Query caches
+- [x] All tab state managed in hook
+- [x] Mobile-responsive tab layout
 
 ### Code Quality Checkpoints
 - ✅ SettingsPage.tsx < 15 lines (composition)
@@ -1644,6 +1648,8 @@ layout/components/
 - ✅ Mantine Tabs component (not custom)
 - ✅ Mantine Menu for avatar dropdown
 - ✅ No raw HTML elements
+
+**Status**: ✅ COMPLETED - Date: 2026-02-24
 
 ---
 
@@ -1691,34 +1697,34 @@ Create a VenueLink logo (SVG) and integrate it into the Header/Sidebar navigatio
 
 | Priority | Tasks |
 |----------|-------|
-| 🔴 Critical | VL-001, VL-002, VL-003, VL-004, VL-005, VL-016 |
-| 🟡 High | VL-006, VL-007, VL-008, VL-009, VL-010, VL-011, VL-012, VL-013, VL-014, VL-017, VL-018, VL-019 |
-| 🟢 Medium | VL-015, VL-020 |
+| 🔴 Critical | VL-001 ✅, VL-002 ✅, VL-003 ✅, VL-004 ✅, VL-005 ✅, VL-016 ✅ |
+| 🟡 High | VL-006 ✅, VL-007 ✅, VL-008 ✅, VL-009 ✅, VL-010 ✅, VL-011 ✅, VL-012 ✅, VL-013 ✅, VL-014 ✅, VL-017 ✅, VL-018 ✅, VL-019 ✅ |
+| 🟢 Medium | VL-015 ✅, VL-020 |
 
 ## Dependency Graph
 
 ```
-VL-001 (Monorepo Setup)
-├── VL-002 (Database)
-│   ├── VL-003 (Auth Service)
-│   │   ├── VL-016 (Clerk Keys)
-│   │   │   └── VL-005 (Auth UI)
-│   │   │       └── VL-006 (Dashboard)
+VL-001 (Monorepo Setup) ✅
+├── VL-002 (Database) ✅
+│   ├── VL-003 (Auth Service) ✅
+│   │   ├── VL-016 (Clerk Keys) ✅
+│   │   │   └── VL-005 (Auth UI) ✅
+│   │   │       └── VL-006 (Dashboard) ✅
 │   │   ├── VL-013 (API Client) ✅
 │   │   │   └── VL-014 (React Query) ✅
-│   │   ├── VL-018 (Org Profile)
-│   │   │   └── VL-019 (Settings + Sign Out)
-│   │   └── VL-017 (My Bookings)
-│   └── VL-007 (Venue API)
-│       └── VL-008 (Venue Browse)
-│           ├── VL-009 (Venue Detail)
-│           │   └── VL-010 (Booking Form)
-│           │       └── VL-017 (My Bookings)
-│           └── VL-011 (Venue Admin)
-├── VL-004 (Mantine Setup)
-│   ├── VL-005 (Auth UI)
-│   ├── VL-008 (Venue Browse)
-│   ├── VL-015 (Form Components)
+│   │   ├── VL-018 (Org Profile) ✅
+│   │   │   └── VL-019 (Settings + Sign Out) ✅
+│   │   └── VL-017 (My Bookings) ✅
+│   └── VL-007 (Venue API) ✅
+│       └── VL-008 (Venue Browse) ✅
+│           ├── VL-009 (Venue Detail) ✅
+│           │   └── VL-010 (Booking Form) ✅
+│           │       └── VL-017 (My Bookings) ✅
+│           └── VL-011 (Venue Admin) ✅
+├── VL-004 (Mantine Setup) ✅
+│   ├── VL-005 (Auth UI) ✅
+│   ├── VL-008 (Venue Browse) ✅
+│   ├── VL-015 (Bookings Management) ✅
 │   └── VL-020 (Logo & Branding)
 └── VL-012 (Shared Types) ✅
     └── VL-013 (API Client) ✅

@@ -16,4 +16,6 @@ export {
   useVenueBookingsQuery,
   useVenueStatsQuery,
   useBookingActionMutations,
+  useMyOrganizationQuery,
+  useUpdateOrganizationMutation,
 } from './hooks';

@@ -6,6 +6,57 @@ import type {
 import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
 import { apiClient } from '../client';
 
+/** Frontend shape for a booking with details (my bookings list). */
+export interface MyBooking {
+  id: string;
+  venueId: string;
+  organizationId: string;
+  eventName: string;
+  eventDate: string;
+  eventTime: string;
+  guestCount: number;
+  status: BookingStatus;
+  specialRequests?: string;
+  venueName: string;
+  organizationName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Paginated my bookings response. */
+export interface MyBookingsResponse {
+  items: MyBooking[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+/** Backend snake_case shape for my bookings. */
+interface MyBookingApiResponse {
+  id: string;
+  venue_id: string;
+  organization_id: string;
+  event_name: string;
+  event_date: string;
+  event_time: string;
+  guest_count: number;
+  status: BookingStatus;
+  special_requests: string | null;
+  venue_name: string;
+  organization_name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface PaginatedApiResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
 /** Backend snake_case booking shape returned from the API. */
 interface BookingApiResponse {
   id: string;
@@ -123,4 +174,50 @@ export async function acceptBooking(bookingId: string): Promise<void> {
 /** PATCH /bookings/:id/decline — Decline a booking request. */
 export async function declineBooking(bookingId: string): Promise<void> {
   await apiClient.patch(`/bookings/${bookingId}/decline`);
+}
+
+/** Transform a backend my booking to frontend shape. */
+function toMyBooking(raw: MyBookingApiResponse): MyBooking {
+  return {
+    id: raw.id,
+    venueId: raw.venue_id,
+    organizationId: raw.organization_id,
+    eventName: raw.event_name,
+    eventDate: raw.event_date,
+    eventTime: raw.event_time,
+    guestCount: raw.guest_count,
+    status: raw.status,
+    specialRequests: raw.special_requests ?? undefined,
+    venueName: raw.venue_name,
+    organizationName: raw.organization_name,
+    createdAt: raw.created_at,
+    updatedAt: raw.updated_at,
+  };
+}
+
+/** GET /bookings/me — List current user's org bookings. */
+export async function getMyBookings(params?: {
+  status?: BookingStatus;
+  page?: number;
+  page_size?: number;
+}): Promise<MyBookingsResponse> {
+  const { data } = await apiClient.get<PaginatedApiResponse<MyBookingApiResponse>>(
+    '/bookings/me',
+    { params },
+  );
+  return {
+    items: data.items.map(toMyBooking),
+    total: data.total,
+    page: data.page,
+    pageSize: data.page_size,
+    totalPages: data.total_pages,
+  };
+}
+
+/** PATCH /bookings/:id/cancel — Cancel a booking. */
+export async function cancelBooking(bookingId: string): Promise<MyBooking> {
+  const { data } = await apiClient.patch<MyBookingApiResponse>(
+    `/bookings/${bookingId}/cancel`,
+  );
+  return toMyBooking(data);
 }

@@ -8,6 +8,7 @@ export function formatBookingDate(date: Date): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   }).format(date);
 }
 

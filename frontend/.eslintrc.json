@@ -62,6 +62,13 @@
     // This ensures CI fails on any linting issue
     "max-warnings": 0
   },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    }
+  },
   "ignorePatterns": [
     "dist",
     "node_modules",

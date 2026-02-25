@@ -92,6 +92,7 @@ export type {
   CreateVenueResponse,
   UpdateVenueResponse,
   CreateBookingResponse,
+  MyBookingsResponse,
   OrganizationDetailResponse,
   CurrentOrganizationResponse,
   VenueStatsResponse,
