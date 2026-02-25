@@ -1,4 +1,4 @@
-import type { Venue, Organization, BookingConfirmation } from '../entities';
+import type { Venue, OrganizationProfile, BookingConfirmation, BookingWithDetails } from '../entities';
 import type { PaginatedResponse } from './pagination';
 
 /**
@@ -27,14 +27,19 @@ export type UpdateVenueResponse = Venue;
 export type CreateBookingResponse = BookingConfirmation;
 
 /**
- * Response from GET /api/v1/organizations/:id (single org).
+ * Response from GET /api/v1/bookings/me (user's org bookings, paginated).
  */
-export type OrganizationDetailResponse = Organization;
+export type MyBookingsResponse = PaginatedResponse<BookingWithDetails>;
 
 /**
- * Response from GET /api/v1/organizations/me (current user's org).
+ * Response from GET /api/v1/organizations/:id (single org with profile).
  */
-export type CurrentOrganizationResponse = Organization;
+export type OrganizationDetailResponse = OrganizationProfile;
+
+/**
+ * Response from GET /api/v1/organizations/me (current user's org with profile).
+ */
+export type CurrentOrganizationResponse = OrganizationProfile;
 
 /**
  * Venue statistics for admin dashboard.
