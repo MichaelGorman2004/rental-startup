@@ -50,6 +50,14 @@ export const queryKeys = {
     ] as const,
   },
 
+  /** Organization-related query keys. */
+  organizations: {
+    all: ['organizations'] as const,
+    details: () => [...queryKeys.organizations.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.organizations.details(), id] as const,
+    me: () => [...queryKeys.organizations.all, 'me'] as const,
+  },
+
   /** Dashboard query keys. */
   dashboard: {
     all: ['dashboard'] as const,
