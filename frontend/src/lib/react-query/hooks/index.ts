@@ -10,3 +10,8 @@ export {
   useVenueStatsQuery,
   useBookingActionMutations,
 } from './useBookingsQuery';
+
+export {
+  useMyOrganizationQuery,
+  useUpdateOrganizationMutation,
+} from './useOrganizationsQuery';
