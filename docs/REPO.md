@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-02-23
-> **Status**: Phase 3 - Supporting Systems In Progress
+> **Last Updated**: 2026-02-24
+> **Status**: Phase 3 - Supporting Systems (Most Complete)
 
 ---
 
@@ -22,11 +22,16 @@
 - ✅ **VL-012**: Shared TypeScript Types & Constants
 - ✅ **VL-013**: API Client & Error Handling
 - ✅ **VL-014**: React Query Setup & Cache Strategy
+- ✅ **VL-015**: Bookings List & Management
+- ✅ **VL-016**: Organization Profile Management
+- ✅ **VL-017**: Settings & User Account Management
+- ✅ **VL-018**: Role-Based Access Control (Frontend)
+- ✅ **VL-019**: Database Schema Extension for New Features
 
 ### Current Phase
-**Phase 3: Supporting Systems** (Weeks 5-6)
-- Progress: 14/16 tasks done (88%)
-- Next Up: VL-015 - Form Validation & Input Components
+**Phase 3: Supporting Systems** (Complete)
+- Progress: 19/19 tasks done (100%)
+- Next Phase: VL-020+ Phase 4 - Testing & Refinement
 
 ---
 
@@ -79,32 +84,46 @@ rental-startup/
 │   │   │   │   ├── types/         # Venue interfaces
 │   │   │   │   ├── constants/     # Gradients, labels, query keys, mock data
 │   │   │   │   └── utils/         # formatPrice, formatCapacity, formatAddress, buildMapsUrl
-│   │   │   ├── bookings/ # ✅ Booking Request Form (VL-010)
-│   │   │   │   ├── components/    # BookingForm, EventDetailsStep, ReviewStep, etc.
-│   │   │   │   ├── hooks/         # useBookingForm, useCreateBooking, useBookingPage
+│   │   │   ├── bookings/ # ✅ Booking Request Form (VL-010) + Management (VL-015)
+│   │   │   │   ├── components/    # BookingForm, BookingsPage, BookingHistoryCard, FilterBar, etc.
+│   │   │   │   ├── hooks/         # useBookingForm, useCreateBooking, useBookingsPage, useCancelBooking
 │   │   │   │   ├── types/         # Booking interfaces, BookingStatus enum
 │   │   │   │   ├── constants/     # Validation rules, messages, step config
 │   │   │   │   └── utils/         # calculateCost, validateDate, formatBookingDate
+│   │   │   ├── organization/ # ✅ Organization Profile Management (VL-016)
+│   │   │   │   ├── components/    # OrgProfilePage, OrgProfileForm, OrgProfileCard, Skeleton
+│   │   │   │   ├── hooks/         # useOrgProfile, useOrgProfilePage, useUpdateOrg
+│   │   │   │   ├── types/         # Organization interfaces
+│   │   │   │   └── constants/     # Organization UI defaults
+│   │   │   ├── settings/ # ✅ Settings & Account Management (VL-017)
+│   │   │   │   ├── components/    # SettingsPage, AccountTab, OrganizationTab, SignOutButton
+│   │   │   │   ├── hooks/         # useSettingsPage
+│   │   │   │   ├── types/         # Settings interfaces
+│   │   │   │   └── constants/     # Settings UI defaults
 │   │   │   └── venue-admin/ # ✅ Venue Admin Dashboard (VL-011)
 │   │   │       ├── components/    # AdminDashboard, StatsGrid, BookingCard, etc.
 │   │   │       ├── hooks/         # useVenueStats, useVenueBookings, useBookingActions
 │   │   │       ├── types/         # VenueStats, AdminBooking interfaces
 │   │   │       └── constants/     # Status colors, labels, mock data
 │   │   ├── components/    # Shared UI components
-│   │   ├── layout/        # Layout wrappers
+│   │   ├── layout/        # Layout wrappers (VL-018)
+│   │   │   ├── components/    # RoleGuard, HeaderUserMenu, Header, Sidebar
+│   │   │   └── index.ts       # Layout exports
 │   │   ├── lib/
-│   │   │   ├── api/             # ✅ Type-Safe API Client (VL-013)
+│   │   │   ├── api/             # ✅ Type-Safe API Client (VL-013, VL-015, VL-016)
 │   │   │   │   ├── client.ts          # Axios instance with deferred init
 │   │   │   │   ├── constants.ts       # Timeout, retry config, error messages
 │   │   │   │   ├── error-handler.ts   # Error normalization (ApiError shape)
 │   │   │   │   ├── interceptors.ts    # Auth, error, retry interceptors
 │   │   │   │   ├── types/             # ApiError, HttpStatus, ApiErrorCode
-│   │   │   │   └── endpoints/         # Typed API functions (venues, bookings)
+│   │   │   │   └── endpoints/         # Typed API functions (venues, bookings, organizations)
+│   │   │   ├── constants/       # ✅ Shared UI Constants (VL-015, VL-018)
+│   │   │   │   └── booking-status.ts  # Booking status colors, labels
 │   │   │   └── react-query/     # ✅ React Query Infrastructure (VL-014)
 │   │   │       ├── client.ts          # QueryClient with optimized defaults
 │   │   │       ├── constants.ts       # Stale times, GC times, refetch intervals
 │   │   │       ├── keys/              # Centralized query key factory
-│   │   │       └── hooks/             # Query/mutation hooks (venues, bookings)
+│   │   │       └── hooks/             # Query/mutation hooks (venues, bookings, organizations)
 │   │   ├── providers/     # QueryProvider + ReactQueryDevtools
 │   │   ├── utils/         # Pure utility functions
 │   │   └── App.tsx
@@ -142,9 +161,28 @@ rental-startup/
 │   │   │   │   │   └── errors.py     # ✅ Error messages
 │   │   │   │   └── utils/
 │   │   │   │       └── __init__.py   # Utility functions
-│   │   │   └── bookings/
-│   │   │       └── models.py         # ✅ Booking model
-│   │   └── main.py                   # ✅ FastAPI app with DB lifecycle
+│   │   │   ├── bookings/             # ✅ Booking Management Module (VL-015)
+│   │   │   │   ├── models.py         # ✅ Booking SQLAlchemy model
+│   │   │   │   ├── schemas.py        # ✅ Pydantic schemas
+│   │   │   │   ├── services.py       # ✅ Business logic
+│   │   │   │   ├── repository.py     # ✅ Data access layer
+│   │   │   │   ├── router.py         # ✅ API endpoints
+│   │   │   │   ├── constants/
+│   │   │   │   │   ├── errors.py     # ✅ Error messages
+│   │   │   │   │   └── validation.py # ✅ Validation rules
+│   │   │   │   └── __init__.py
+│   │   │   └── organizations/        # ✅ Organization Module (VL-016)
+│   │   │       ├── models.py         # ✅ Organization model (updated)
+│   │   │       ├── schemas.py        # ✅ Pydantic schemas
+│   │   │       ├── services.py       # ✅ Business logic
+│   │   │       ├── repository.py     # ✅ Data access layer
+│   │   │       ├── router.py         # ✅ API endpoints
+│   │   │       ├── dependencies.py   # ✅ Dependency injection
+│   │   │       ├── constants/
+│   │   │       │   ├── errors.py     # ✅ Error messages
+│   │   │       │   └── validation.py # ✅ Validation rules
+│   │   │       └── __init__.py
+│   │   └── main.py                   # ✅ FastAPI app with bookings/organizations routers
 │   ├── alembic/                      # ✅ Migration infrastructure
 │   ├── scripts.py                    # ✅ QA automation scripts
 │   ├── pyproject.toml                # ✅ Poetry config + scripts
@@ -500,27 +538,38 @@ VITE_API_BASE_URL=http://localhost:8000
 - ~~**VL-010**: Booking Request Form~~ ✅
 - ~~**VL-011**: Venue Admin Dashboard~~ ✅
 
-### Phase 3: Supporting Systems (In Progress)
+### Phase 3: Supporting Systems (Complete)
 - ~~**VL-012**: Shared TypeScript Types & Constants~~ ✅
 - ~~**VL-013**: API Client & Error Handling~~ ✅
 - ~~**VL-014**: React Query Setup & Cache Strategy~~ ✅
-- **VL-015**: Form Validation & Input Components
+- ~~**VL-015**: Bookings List & Management~~ ✅
+- ~~**VL-016**: Organization Profile Management~~ ✅
+- ~~**VL-017**: Settings & User Account Management~~ ✅
+- ~~**VL-018**: Role-Based Access Control (Frontend)~~ ✅
+- ~~**VL-019**: Database Schema Extension for New Features~~ ✅
+
+### Phase 4: Testing & Refinement (Next)
+- **VL-020**: Unit Tests - Backend API
+- **VL-021**: Unit Tests - Frontend Components
+- **VL-022**: Integration Tests - API Flows
+- **VL-023**: E2E Tests - Critical User Paths
+- **VL-024**: Performance & Error Handling Refinement
 
 ---
 
 ## 📊 Key Metrics
 
 ### Codebase Stats
-- **Backend Python files**: ~35 (includes venues module)
-- **Frontend feature files**: ~100+ (auth + dashboard + venues + bookings + venue-admin + shared UI)
+- **Backend Python files**: ~65+ (venues, bookings, organizations modules)
+- **Frontend feature files**: ~150+ (auth, dashboard, venues, bookings, organization, settings, venue-admin)
 - **Database tables**: 4
-- **Migration count**: 1
-- **API endpoints**: 13 (auth: 1, venues: 5, plus 7 planned)
-- **Frontend API functions**: 10 typed endpoints (5 venues, 5 bookings)
+- **Migration count**: 2
+- **API endpoints**: 19 (auth: 1, venues: 5, bookings: 6, organizations: 3, plus utilities)
+- **Frontend API functions**: 16+ typed endpoints (venues, bookings, organizations)
 - **Type coverage**: 100% (mypy strict mode, TypeScript strict mode)
 - **Linting errors**: 0 (ruff + ESLint clean)
 - **Test coverage**: 0% (no tests yet)
-- **Lines of code (Python)**: ~850 (venues module alone)
+- **Lines of code (Python)**: ~2500+ (venues, bookings, organizations modules)
 
 ### Dashboard Feature Stats
 - **Components**: 7 (DashboardPage, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
@@ -532,12 +581,30 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Hooks**: 6 (useVenues, useVenueSearch, useVenueFilters, useVenueDetail, useVenueBrowse, useVenueDetailPage)
 - **Utilities**: 4 (formatPrice, formatCapacity, formatAddress, buildMapsUrl)
 
-### Booking Feature Stats (VL-010)
-- **Components**: 9 (BookingForm, EventDetailsStep, AdditionalInfoStep, ReviewStep, BookingSummary, BookingSuccess, VenueSummaryCard, BookingFormSkeleton, BookingNotFound)
-- **Hooks**: 3 (useBookingForm, useCreateBooking, useBookingPage)
+### Booking Feature Stats (VL-010 + VL-015)
+- **Components**: 14+ (BookingForm, EventDetailsStep, ReviewStep, BookingsPage, BookingHistoryCard, BookingsFilterBar, BookingsEmptyState, BookingsPageSkeleton, etc.)
+- **Hooks**: 6 (useBookingForm, useCreateBooking, useBookingPage, useBookingsPage, useMyBookings, useCancelBooking)
 - **Utilities**: 5 (calculateCost, getMinBookingDate, getMaxBookingDate, formatBookingDate, formatBookingTime)
 - **Validation**: React Hook Form + Zod, progressive per-step validation
 - **Form**: 3-step Mantine Stepper with DatePickerInput, TimeInput, NumberInput
+- **API Functions**: getMyBookings (paginated list), cancelBooking (with optimistic update)
+
+### Organization Feature Stats (VL-016)
+- **Components**: 4 (OrgProfilePage, OrgProfileForm, OrgProfileCard, OrgProfileSkeleton)
+- **Hooks**: 3 (useOrgProfile, useOrgProfilePage, useUpdateOrg)
+- **API Functions**: getMyOrganization, getOrganization, updateOrganization
+- **React Query**: Organization entity with me() endpoint
+
+### Settings Feature Stats (VL-017)
+- **Components**: 4 (SettingsPage, AccountTab, OrganizationTab, SignOutButton)
+- **Hooks**: 1 (useSettingsPage)
+- **Features**: Tabbed interface with account and organization management
+- **Integrations**: Clerk signOut, organization profile management
+
+### Layout & RBAC Stats (VL-018)
+- **Components**: 2 (RoleGuard, HeaderUserMenu)
+- **Features**: Role-based route protection, user menu with account/signout
+- **Routes Protected**: student_org and venue_admin specific routes
 
 ### Venue Admin Feature Stats (VL-011)
 - **Components**: 6 (AdminDashboard, StatsGrid, StatCard, BookingsList, BookingCard, AccessDenied)
@@ -547,19 +614,21 @@ VITE_API_BASE_URL=http://localhost:8000
 - **React Query**: 10-min stale time, detail query keyed by venue ID
 - **URL-synced**: Filter state in search params (?type=bar&search=rooftop)
 
-### API Client Stats (VL-013)
-- **Files**: 8 (client, constants, error-handler, interceptors, types, 2 endpoints, barrel)
-- **Typed endpoints**: 10 (getVenues, getVenue, createVenue, updateVenue, deleteVenue, createBooking, getVenueBookings, getVenueStats, acceptBooking, declineBooking)
+### API Client Stats (VL-013, VL-015, VL-016)
+- **Files**: 11+ (client, constants, error-handler, interceptors, types, 3 endpoint files, barrels)
+- **Typed endpoints**: 16+ (venues: 5, bookings: 7, organizations: 4)
+- **Bookings endpoints**: getMyBookings (paginated), cancelBooking, plus existing create/admin endpoints
+- **Organizations endpoints**: getMyOrganization, getOrganization, updateOrganization
 - **Error codes**: 10 (network, timeout, validation, auth, authz, not-found, conflict, rate-limit, server, unknown)
 - **Interceptors**: 3 (auth token, error normalization, retry with exponential backoff)
 - **Retry**: Max 3 attempts, exponential backoff (1s, 2s, 4s), retryable status codes only
 
-### React Query Infrastructure Stats (VL-014)
-- **Files**: 7 (client, constants, query-keys, 2 hooks, 2 barrels)
-- **Query hooks**: 5 (useVenuesQuery, useVenueDetailQuery, useVenueBookingsQuery, useVenueStatsQuery, usePrefetchVenue)
-- **Mutation hooks**: 3 (useCreateBookingMutation, useBookingActionMutations)
-- **Query key entities**: 4 (venues, bookings, admin, dashboard)
-- **Stale times**: Venues (10m), Bookings (2m), Stats (1m), User Profile (15m), Events (5m)
+### React Query Infrastructure Stats (VL-014, VL-015, VL-016)
+- **Files**: 8+ (client, constants, query-keys, 3 hooks, 2 barrels)
+- **Query hooks**: 8+ (venues: 3, bookings: 3, organizations: 2, admin: 3)
+- **Mutation hooks**: 4+ (createBooking, bookingActions, updateOrganization, organizations)
+- **Query key entities**: 5 (venues, bookings, organizations, admin, dashboard)
+- **Stale times**: Venues (10m), Bookings (2m), Stats (1m), Organizations (15m), Events (5m)
 - **DevTools**: Integrated in development, tree-shaken in production
 
 ### Shared Types Package Stats (VL-012)
