@@ -26,9 +26,7 @@ def _to_booking_response(booking: Booking) -> BookingResponse:
     """Convert a Booking model to BookingResponse with related names."""
     response = BookingResponse.model_validate(booking)
     response.venue_name = booking.venue.name if booking.venue else ""
-    response.organization_name = (
-        booking.organization.name if booking.organization else ""
-    )
+    response.organization_name = booking.organization.name if booking.organization else ""
     return response
 
 

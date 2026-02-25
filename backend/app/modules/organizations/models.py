@@ -124,9 +124,7 @@ class Organization(BaseModel, UUIDMixin, TimestampMixin):
     )
 
     # Table-level constraints
-    __table_args__ = (
-        CheckConstraint("member_count > 0", name="org_member_count_positive_check"),
-    )
+    __table_args__ = (CheckConstraint("member_count > 0", name="org_member_count_positive_check"),)
 
     def __repr__(self) -> str:
         """String representation for debugging."""
