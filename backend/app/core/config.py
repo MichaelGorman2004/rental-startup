@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     # Clerk Authentication
     CLERK_SECRET_KEY: str = ""
     CLERK_PUBLISHABLE_KEY: str = ""
+    CLERK_WEBHOOK_SECRET: str = ""
 
     # CORS origins (frontend URLs allowed to call this API)
     CORS_ORIGINS: list[str] = [
