@@ -1693,12 +1693,234 @@ Create a VenueLink logo (SVG) and integrate it into the Header/Sidebar navigatio
 
 ---
 
+## Task 21: Booking CRUD API Endpoints
+
+**ID**: `VL-021`
+**Title**: Implement Booking Creation and Status Update Endpoints
+**Priority**: 🟡 High
+**Estimated Effort**: 10 hours
+**Dependencies**: `VL-002`, `VL-003`, `VL-007`, `VL-010`, `VL-011`
+
+### Description
+Complete the booking API by implementing the `POST /bookings` endpoint for creating booking requests and `PATCH /bookings/{id}/status` endpoint for venue admins to accept/reject bookings. These endpoints integrate with the existing frontend BookingForm (VL-010) and Venue Admin Dashboard (VL-011).
+
+### Current State
+**Existing Endpoints:**
+- `GET /api/v1/bookings/me` - List user's organization bookings ✅
+- `PATCH /api/v1/bookings/{id}/cancel` - Cancel booking (org owner) ✅
+
+**Missing Endpoints:**
+- `POST /api/v1/bookings` - Create booking request
+- `PATCH /api/v1/bookings/{id}/status` - Update booking status (venue admin)
+
+### New API Endpoints
+
+#### 1. POST /api/v1/bookings - Create Booking
+**Auth**: Student org role only (must own an organization)
+**Request Body**:
+```json
+{
+  "venue_id": "uuid",
+  "event_name": "Spring Formal",
+  "event_date": "2026-03-15",
+  "event_time": "19:00",
+  "guest_count": 65,
+  "special_requests": "Need extra chairs (optional)"
+}
+```
+**Response** (201 Created):
+```json
+{
+  "id": "uuid",
+  "venue_id": "uuid",
+  "venue_name": "The Corner Pub",
+  "organization_id": "uuid",
+  "organization_name": "Alpha Beta Gamma",
+  "event_name": "Spring Formal",
+  "event_date": "2026-03-15",
+  "event_time": "19:00",
+  "guest_count": 65,
+  "special_requests": "Need extra chairs",
+  "status": "pending",
+  "created_at": "2026-03-03T10:30:00Z",
+  "updated_at": "2026-03-03T10:30:00Z"
+}
+```
+
+#### 2. PATCH /api/v1/bookings/{id}/status - Update Booking Status
+**Auth**: Venue admin role only (must own the venue)
+**Request Body**:
+```json
+{
+  "status": "confirmed"  // or "rejected"
+}
+```
+**Response** (200 OK): Updated BookingResponse
+
+### Backend Architecture (Following BACKEND_RULES.md)
+```
+backend/app/modules/bookings/
+├── models.py              # ✅ Already exists
+├── schemas.py             # ADD: BookingCreate, BookingStatusUpdate
+├── services.py            # ADD: create_booking, update_booking_status
+├── repository.py          # ADD: create, check_availability
+├── router.py              # ADD: POST /, PATCH /{id}/status
+├── constants/
+│   ├── errors.py          # ADD: Creation/update error messages
+│   └── validation.py      # ADD: MIN_NOTICE_DAYS, MAX_ADVANCE_DAYS, MIN_GROUP_SIZE
+└── __init__.py
+```
+
+### Layer Implementation
+
+#### Router (Thin Controllers, 5-10 lines each)
+```python
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=BookingResponse)
+async def create_booking(
+    booking_data: BookingCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> BookingResponse:
+    """Create a new booking request (student org only)."""
+    return await booking_service.create_booking(db, booking_data, current_user)
+```
+
+#### Service (Pure Business Logic, No DB Access)
+- `create_booking()`: Validate role → Get org → Validate venue → Check availability → Create booking
+- `update_booking_status()`: Validate role → Verify venue ownership → Validate status transition → Update
+
+#### Repository (Data Access Layer)
+- `create()`: Insert booking with pending status
+- `check_availability()`: Query for conflicting bookings (venue + date + time)
+- `update_status()`: Update booking status field
+
+### Validation Rules (Extract to constants/validation.py)
+```python
+MIN_NOTICE_DAYS = 7        # Booking must be >= 7 days from now
+MAX_ADVANCE_DAYS = 90      # Booking must be <= 90 days from now
+MIN_GROUP_SIZE = 10        # Minimum guest count
+```
+
+### Business Rules
+**Create Booking:**
+1. User must have `student_org` role
+2. User must own an organization
+3. Venue must exist and not be soft-deleted
+4. `guest_count` must be > 0 and <= venue capacity
+5. `guest_count` must be >= MIN_GROUP_SIZE (10)
+6. `event_date` must be >= today + MIN_NOTICE_DAYS (7 days)
+7. `event_date` must be <= today + MAX_ADVANCE_DAYS (90 days)
+8. No existing booking for same venue + date + time (409 Conflict)
+9. Booking created with status = `pending`
+
+**Update Booking Status:**
+1. User must have `venue_admin` role
+2. User must own the venue associated with the booking
+3. Only pending bookings can be confirmed/rejected
+4. Valid transitions: pending → confirmed, pending → rejected
+
+### Pydantic Schemas (schemas.py)
+```python
+class BookingCreate(BaseModel):
+    """Schema for creating a new booking request."""
+    venue_id: UUID
+    event_name: str = Field(..., min_length=3, max_length=100)
+    event_date: date
+    event_time: time
+    guest_count: int = Field(..., ge=MIN_GROUP_SIZE)
+    special_requests: str | None = Field(None, max_length=1000)
+
+class BookingStatusUpdate(BaseModel):
+    """Schema for updating booking status (venue admin only)."""
+    status: Literal[BookingStatus.confirmed, BookingStatus.rejected]
+```
+
+### Error Handling (constants/errors.py)
+```python
+class BookingError:
+    # Creation errors
+    STUDENT_ORG_REQUIRED = "Only student organizations can create bookings"
+    NO_ORGANIZATION = "User does not have an organization"
+    VENUE_NOT_FOUND = "Venue not found"
+    VENUE_DELETED = "Cannot book a deleted venue"
+    EXCEEDS_CAPACITY = "Guest count exceeds venue capacity"
+    DATE_TOO_SOON = "Booking must be at least 7 days in advance"
+    DATE_TOO_FAR = "Booking cannot be more than 90 days in advance"
+    SLOT_UNAVAILABLE = "This time slot is already booked"
+
+    # Status update errors
+    VENUE_ADMIN_REQUIRED = "Only venue admins can update booking status"
+    NOT_VENUE_OWNER = "You do not own the venue for this booking"
+    INVALID_STATUS_TRANSITION = "Cannot change status from {current} to {new}"
+```
+
+### Frontend Integration
+**Files to Update:**
+1. `frontend/src/features/bookings/hooks/useCreateBooking.ts`
+   - Replace mock `createBookingApi` with real API call
+   - Use `bookingsApi.createBooking()` from endpoints
+
+2. `frontend/src/lib/api/endpoints/bookings.ts`
+   - Add `createBooking(data: CreateBookingRequest): Promise<BookingResponse>`
+   - Add `updateBookingStatus(id: string, status: BookingStatus): Promise<BookingResponse>`
+
+3. `frontend/src/features/venue-admin/hooks/useBookingActions.ts`
+   - Replace mock accept/decline with real API calls
+
+### Acceptance Criteria
+- [ ] `POST /api/v1/bookings` endpoint implemented
+- [ ] `PATCH /api/v1/bookings/{id}/status` endpoint implemented
+- [ ] Only `student_org` role can create bookings
+- [ ] Only `venue_admin` role can update booking status
+- [ ] User must have an organization to create booking
+- [ ] Venue existence and soft-delete validated
+- [ ] Guest count validated against venue capacity
+- [ ] Guest count >= MIN_GROUP_SIZE (10)
+- [ ] Event date validated: >= 7 days, <= 90 days from now
+- [ ] Unique constraint prevents double-booking (venue + date + time)
+- [ ] Status transitions validated (pending → confirmed/rejected only)
+- [ ] Venue ownership verified for status updates
+- [ ] All validation errors return 400 with specific error codes
+- [ ] 404 returned if venue/booking not found
+- [ ] 409 returned if time slot already booked
+- [ ] 403 returned for unauthorized role/ownership
+- [ ] Frontend `useCreateBooking` hook calls real API
+- [ ] Frontend `useBookingActions` hook calls real API
+- [ ] React Query cache invalidated on mutations
+- [ ] All endpoints documented in OpenAPI (visible at /api/docs)
+
+### Code Quality Checkpoints (Per BACKEND_RULES.md)
+- ✅ Router functions are thin (5-10 lines, delegate to service)
+- ✅ Service functions are pure (no direct DB access)
+- ✅ Repository pattern isolates all SQLAlchemy queries
+- ✅ All validation logic in Pydantic schemas
+- ✅ All constants extracted (MIN_NOTICE_DAYS, MIN_GROUP_SIZE, etc.)
+- ✅ Error messages centralized in constants/errors.py
+- ✅ 100% type hints coverage
+- ✅ Google-style docstrings on all functions
+- ✅ Functions < 20 lines
+- ✅ Semantic HTTP status codes (201, 200, 400, 403, 404, 409)
+- ✅ Zero mypy errors (strict mode)
+- ✅ Zero ruff violations
+
+### Testing Requirements
+- [ ] Unit tests for service layer (mocked repository)
+- [ ] Test create booking success flow
+- [ ] Test create booking validation failures (all rules)
+- [ ] Test status update success flow
+- [ ] Test status update authorization failures
+- [ ] Test double-booking conflict detection
+
+**Status**: ⬜ Not Started
+
+---
+
 ## Priority Matrix
 
 | Priority | Tasks |
 |----------|-------|
 | 🔴 Critical | VL-001 ✅, VL-002 ✅, VL-003 ✅, VL-004 ✅, VL-005 ✅, VL-016 ✅ |
-| 🟡 High | VL-006 ✅, VL-007 ✅, VL-008 ✅, VL-009 ✅, VL-010 ✅, VL-011 ✅, VL-012 ✅, VL-013 ✅, VL-014 ✅, VL-017 ✅, VL-018 ✅, VL-019 ✅ |
+| 🟡 High | VL-006 ✅, VL-007 ✅, VL-008 ✅, VL-009 ✅, VL-010 ✅, VL-011 ✅, VL-012 ✅, VL-013 ✅, VL-014 ✅, VL-017 ✅, VL-018 ✅, VL-019 ✅, VL-021 |
 | 🟢 Medium | VL-015 ✅, VL-020 |
 
 ## Dependency Graph
@@ -1719,8 +1941,10 @@ VL-001 (Monorepo Setup) ✅
 │       └── VL-008 (Venue Browse) ✅
 │           ├── VL-009 (Venue Detail) ✅
 │           │   └── VL-010 (Booking Form) ✅
-│           │       └── VL-017 (My Bookings) ✅
+│           │       ├── VL-017 (My Bookings) ✅
+│           │       └── VL-021 (Booking CRUD API)
 │           └── VL-011 (Venue Admin) ✅
+│               └── VL-021 (Booking CRUD API)
 ├── VL-004 (Mantine Setup) ✅
 │   ├── VL-005 (Auth UI) ✅
 │   ├── VL-008 (Venue Browse) ✅
@@ -1731,7 +1955,7 @@ VL-001 (Monorepo Setup) ✅
 ```
 
 ## Total Estimated Effort
-**151 hours** (~4 weeks for 2 engineers working in parallel)
+**161 hours** (~4 weeks for 2 engineers working in parallel)
 
 ---
 
