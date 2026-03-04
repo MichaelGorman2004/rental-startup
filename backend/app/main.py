@@ -13,6 +13,7 @@ from app.modules.auth.router import router as auth_router
 from app.modules.bookings.router import router as bookings_router
 from app.modules.organizations.router import router as organizations_router
 from app.modules.venues.router import router as venues_router
+from app.modules.webhooks.router import router as webhooks_router
 
 
 @asynccontextmanager
@@ -64,6 +65,7 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(bookings_router, prefix="/api/v1")
 app.include_router(organizations_router, prefix="/api/v1")
 app.include_router(venues_router, prefix="/api/v1")
+app.include_router(webhooks_router, prefix="/webhooks")
 
 # CORS middleware configuration
 # Allows frontend to make API requests during development
