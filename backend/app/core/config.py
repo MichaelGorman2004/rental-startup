@@ -1,5 +1,6 @@
 """Application configuration using Pydantic Settings."""
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -45,6 +46,21 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
+
+    @model_validator(mode="after")
+    def normalize_database_url(self) -> "Settings":
+        """Ensure DATABASE_URL uses the asyncpg driver scheme.
+
+        Railway and other PaaS providers inject DATABASE_URL with the standard
+        ``postgresql://`` scheme. SQLAlchemy async requires ``postgresql+asyncpg://``.
+        This validator auto-converts at startup so no manual rewriting is needed.
+        """
+        url = self.DATABASE_URL
+        if url.startswith("postgresql://"):
+            self.DATABASE_URL = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif url.startswith("postgres://"):
+            self.DATABASE_URL = url.replace("postgres://", "postgresql+asyncpg://", 1)
+        return self
 
     model_config = SettingsConfigDict(
         # Load from .env file in the backend directory
