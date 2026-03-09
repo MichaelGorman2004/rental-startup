@@ -4,6 +4,7 @@ import {
 } from '@mantine/core';
 import { IconMapPin } from '@tabler/icons-react';
 import type { UpcomingEvent } from '../types/dashboard.types';
+import classes from './EventCard.module.css';
 
 interface EventCardProps {
   event: UpcomingEvent;
@@ -15,18 +16,18 @@ const formatEventDate = (dateStr: string, timeStr: string): string => {
   const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
   const dayNum = date.getDate();
   const time = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  return `${day}, ${month} ${dayNum} • ${time}`;
+  return `${day}, ${month} ${dayNum} \u2022 ${time}`;
 };
 
 export const EventCard = memo(({ event }: EventCardProps) => (
-  <Card withBorder>
+  <Card withBorder className={classes['card']}>
     <Stack gap="xs">
-      <Text size="xs" c="dimmed" fw={600}>
+      <Text size="xs" fw={600} className={classes['date']}>
         {formatEventDate(event.eventDate, event.eventTime)}
       </Text>
       <Text fw={600}>{event.eventName}</Text>
       <Group gap="xs">
-        <IconMapPin size="1rem" stroke={1.5} color="gray" />
+        <IconMapPin size="1rem" stroke={1.5} />
         <Text size="sm" c="dimmed">{event.venueName}</Text>
       </Group>
     </Stack>

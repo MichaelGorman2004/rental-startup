@@ -4,6 +4,7 @@ import {
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import type { QuickAction } from '../types/dashboard.types';
+import classes from './ActionCard.module.css';
 
 interface ActionCardProps {
   action: QuickAction;
@@ -18,9 +19,16 @@ export const ActionCard = memo(({ action }: ActionCardProps) => {
   }, [navigate, action.route]);
 
   return (
-    <Card onClick={handleClick} style={{ cursor: 'pointer' }} withBorder>
+    <Card
+      component="button"
+      type="button"
+      onClick={handleClick}
+      withBorder
+      className={classes['card']}
+      aria-label={`Navigate to ${action.title}`}
+    >
       <Stack align="center" gap="sm">
-        <ThemeIcon size="xl" radius="md" color={action.color}>
+        <ThemeIcon size="xl" radius="md" color={action.color} variant="light">
           <Icon size="1.5rem" stroke={1.5} />
         </ThemeIcon>
         <Text fw={500}>{action.title}</Text>

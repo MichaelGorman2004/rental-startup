@@ -1,0 +1,15 @@
+.card {
+  background: var(--vl-bg-card);
+  border: 1px solid var(--vl-border);
+  transition: border-color 200ms ease;
+}
+
+.card:hover {
+  border-color: var(--vl-border-hover);
+}
+
+.date {
+  color: var(--mantine-color-amber-6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
