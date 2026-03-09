@@ -1,5 +1,5 @@
 import {
-  BrowserRouter, Routes, Route, Navigate,
+  BrowserRouter, Routes, Route,
 } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { Notifications } from '@mantine/notifications';
@@ -11,6 +11,8 @@ import { VenueBrowse, VenueDetail } from './features/venues';
 import { BookingForm, BookingsPage } from './features/bookings';
 import { AdminDashboard } from './features/venue-admin';
 import { SettingsPage } from './features/settings';
+import { LandingPage } from './features/landing';
+import { DemoBrowse, DemoVenueDetail } from './features/demo';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -34,8 +36,10 @@ function App() {
               {/* Public Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/demo/venues" element={<DemoBrowse />} />
+              <Route path="/demo/venues/:id" element={<DemoVenueDetail />} />
 
-              {/* Protected Routes */}
+              {/* Root: Landing (signed out) or Dashboard shell (signed in) */}
               <Route
                 path="/"
                 element={(
@@ -44,7 +48,7 @@ function App() {
                       <AppShell />
                     </SignedIn>
                     <SignedOut>
-                      <Navigate to="/login" />
+                      <LandingPage />
                     </SignedOut>
                   </>
                 )}
