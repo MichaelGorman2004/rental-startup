@@ -3,8 +3,8 @@ import {
   Card, Stack, Group, Text, Badge, Divider, ThemeIcon, Box,
 } from '@mantine/core';
 import {
-  IconCalendar, IconClock, IconUsers, IconNote, IconReceipt,
-} from '@tabler/icons-react';
+  Calendar, Clock, Users, Notepad, Receipt,
+} from '@phosphor-icons/react';
 import type { Venue } from '../../venues';
 import {
   VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS, formatPrice,
@@ -46,28 +46,28 @@ export const BookingSummary = memo(({
       <Divider label={BOOKING_MESSAGES.EVENT_SECTION} labelPosition="left" />
       <Stack gap="sm">
         <SummaryRow
-          icon={<IconNote size="1rem" stroke={1.5} />}
+          icon={<Notepad size="1rem" />}
           label="Event Name"
           value={formValues.eventName}
         />
         <SummaryRow
-          icon={<IconCalendar size="1rem" stroke={1.5} />}
+          icon={<Calendar size="1rem" />}
           label="Date"
           value={formValues.eventDate ? formatBookingDate(formValues.eventDate) : '—'}
         />
         <SummaryRow
-          icon={<IconClock size="1rem" stroke={1.5} />}
+          icon={<Clock size="1rem" />}
           label="Time"
           value={formValues.eventTime ? formatBookingTime(formValues.eventTime) : '—'}
         />
         <SummaryRow
-          icon={<IconUsers size="1rem" stroke={1.5} />}
+          icon={<Users size="1rem" />}
           label="Guests"
           value={formValues.guestCount?.toString() ?? '—'}
         />
         {formValues.specialRequests ? (
           <SummaryRow
-            icon={<IconNote size="1rem" stroke={1.5} />}
+            icon={<Notepad size="1rem" />}
             label="Special Requests"
             value={formValues.specialRequests}
           />
@@ -88,9 +88,9 @@ export const BookingSummary = memo(({
           <Text size="xs" c="dimmed">{BOOKING_MESSAGES.COST_NOTE}</Text>
           <Group gap="xs" mt="xs">
             <ThemeIcon size="sm" variant="transparent" c="dimmed">
-              <IconReceipt size="1rem" stroke={1.5} />
+              <Receipt size="1rem" />
             </ThemeIcon>
-            <Text size="xl" fw={700} c="indigo">
+            <Text size="xl" fw={700} c="flame">
               {formatPrice(estimatedCostCents)}
             </Text>
           </Group>
