@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Card, Group, Text, Badge, Stack,
 } from '@mantine/core';
-import { IconUsers, IconMapPin } from '@tabler/icons-react';
+import { Users, MapPin } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS } from '../constants/venue-types';
 import { VENUE_MESSAGES } from '../constants/venue-defaults';
@@ -34,7 +34,7 @@ export const VenueCard = memo(({ venue }: VenueCardProps) => (
       </Group>
       <Group gap="lg">
         <Group gap="xs">
-          <IconUsers size="1rem" stroke={1.5} />
+          <Users size="1rem" />
           <Text size="sm" c="dimmed">
             {formatCapacity(venue.capacity)}
             {' '}
@@ -48,7 +48,7 @@ export const VenueCard = memo(({ venue }: VenueCardProps) => (
         </Text>
       </Group>
       <Group gap="xs">
-        <IconMapPin size="1rem" stroke={1.5} />
+        <MapPin size="1rem" />
         <Text size="sm" c="dimmed" lineClamp={1}>
           {formatAddress(venue.addressStreet, venue.addressCity, venue.addressState)}
         </Text>

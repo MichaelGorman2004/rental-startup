@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Stack, Text, ThemeIcon, Button,
 } from '@mantine/core';
-import { IconBuilding } from '@tabler/icons-react';
+import { Buildings } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { VENUE_DETAIL_MESSAGES } from '../constants/venue-defaults';
 
@@ -17,7 +17,7 @@ export const VenueNotFound = memo(() => {
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size="xl" radius="xl" variant="light" color="red">
-        <IconBuilding size="1.5rem" stroke={1.5} />
+        <Buildings size="1.5rem" />
       </ThemeIcon>
       <Stack align="center" gap="xs">
         <Text fw={600}>{VENUE_DETAIL_MESSAGES.NOT_FOUND_TITLE}</Text>
