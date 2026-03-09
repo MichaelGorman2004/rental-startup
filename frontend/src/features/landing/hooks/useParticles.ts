@@ -111,9 +111,12 @@ export function useParticles() {
       canvas.height = window.innerHeight;
 
       // Scale existing particle positions proportionally to new dimensions
-      particlesRef.current.forEach((p) => {
-        p.x *= canvas.width / oldW;
-        p.y *= canvas.height / oldH;
+      const scaleX = canvas.width / oldW;
+      const scaleY = canvas.height / oldH;
+      particlesRef.current.forEach((particle) => {
+        const pt = particle;
+        pt.x *= scaleX;
+        pt.y *= scaleY;
       });
     }
 
