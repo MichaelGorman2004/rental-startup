@@ -1,0 +1,27 @@
+.link {
+  --nl-bg: transparent;
+  --nl-hover: rgba(255, 255, 255, 0.04);
+  --nl-color: var(--vl-text-secondary);
+  border-radius: var(--mantine-radius-md);
+  transition: all 200ms ease;
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.link[data-active='true'] {
+  --nl-bg: var(--vl-amber-glow);
+  --nl-hover: var(--vl-amber-glow-strong);
+  --nl-color: var(--mantine-color-amber-6);
+}
+
+.link[data-active='true'] .linkLabel {
+  color: var(--mantine-color-amber-6);
+  font-weight: 600;
+}
+
+.linkLabel {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.wrapper {
+  animation: vl-fade-in 0.3s ease both;
+}

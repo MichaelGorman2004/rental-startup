@@ -6,6 +6,7 @@ import {
   IconDashboard, IconBuilding, IconCalendarEvent, IconSettings,
   IconChartBar,
 } from '@tabler/icons-react';
+import classes from './Sidebar.module.css';
 
 interface NavItem {
   label: string;
@@ -49,14 +50,15 @@ export function Sidebar() {
   );
 
   return (
-    <Stack gap="xs" p="md">
+    <Stack gap={0} p="sm" className={classes['wrapper']}>
       {visibleItems.map((item) => (
         <NavLink
           key={item.route}
           label={item.label}
-          leftSection={<item.icon size="1rem" stroke={1.5} />}
+          leftSection={<item.icon size="1.125rem" stroke={1.5} />}
           active={item.route === '/' ? location.pathname === '/' : location.pathname.startsWith(item.route)}
           onClick={handleNavClick(item.route)}
+          classNames={{ root: classes['link'], label: classes['linkLabel'] }}
         />
       ))}
     </Stack>
