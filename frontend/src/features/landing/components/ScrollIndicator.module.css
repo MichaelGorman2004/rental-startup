@@ -1,0 +1,22 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.wrapper {
+  position: absolute;
+  bottom: var(--mantine-spacing-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  animation: fadeIn 1s ease 1.2s both;
+}
+
+.arrow {
+  color: var(--vl-text-muted);
+  animation: bounce 2s ease-in-out infinite;
+}

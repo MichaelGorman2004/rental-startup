@@ -15,13 +15,14 @@ import classes from './VenueCard.module.css';
 
 interface VenueCardProps {
   venue: Venue;
+  basePath?: string;
 }
 
-export const VenueCard = memo(({ venue }: VenueCardProps) => (
+export const VenueCard = memo(({ venue, basePath = '/venues' }: VenueCardProps) => (
   <Card
     withBorder
     component={Link}
-    to={`/venues/${venue.id}`}
+    to={`${basePath}/${venue.id}`}
     className={classes['card']}
   >
     <VenueCardGradient venueType={venue.type} />

@@ -52,3 +52,10 @@ htmlcov/
 .cache/
 tmp/
 temp/
+
+.playwright/
+.playwright-report/
+.playwright-test-results/
+.playwright-video/
+.playwright-trace/
+.playwright-mcp/

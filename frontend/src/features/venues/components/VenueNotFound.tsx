@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { VENUE_DETAIL_MESSAGES } from '../constants/venue-defaults';
 
 /** 404 state displayed when a venue ID is not found. */
-export const VenueNotFound = memo(() => {
+export const VenueNotFound = memo(({ backPath = '/venues' }: { backPath?: string }) => {
   const navigate = useNavigate();
 
   const handleBack = useCallback(() => {
-    navigate('/venues');
-  }, [navigate]);
+    navigate(backPath);
+  }, [navigate, backPath]);
 
   return (
     <Stack align="center" gap="md" py="xl">

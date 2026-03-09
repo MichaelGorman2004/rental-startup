@@ -1,0 +1,17 @@
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.visible > * {
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.visible > *:nth-child(1) { animation-delay: 0ms; }
+.visible > *:nth-child(2) { animation-delay: 100ms; }
+.visible > *:nth-child(3) { animation-delay: 200ms; }
