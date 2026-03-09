@@ -8,8 +8,8 @@ function AuthHeader({ title }: { title: string }) {
   return (
     <Stack gap="xs" align="center" mb="xl">
       <Title order={2} className={classes['logo']}>
-        Venue
-        <Text span className={classes['logoDot']}>Link</Text>
+        VENUE
+        <Text span className={classes['logoAccent']}>LINK</Text>
       </Title>
       <Text c="dimmed" size="sm">{title}</Text>
     </Stack>
@@ -26,7 +26,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
     <Box className={classes['wrapper']}>
       <Center h="100vh">
         <Container size={420} p={0}>
-          <Paper p="xl" radius="md" shadow="sm" className={classes['card']}>
+          <Paper p="xl" shadow="sm" className={classes['card']}>
             <AuthHeader title={title} />
             {children}
           </Paper>
