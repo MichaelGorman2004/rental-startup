@@ -19,20 +19,20 @@ export const VENUE_TYPE_LABELS: Record<VenueType, string> = {
 };
 
 /**
- * Gradient pairs for venue card headers, keyed by venue type.
- * Warm palette: amber/copper tones that complement the "Warm Night" theme.
+ * Gradient pairs for venue card headers.
+ * Hot, saturated palette with flame-inspired tones.
  */
 export const VENUE_TYPE_GRADIENTS: Record<VenueType, { from: string; to: string }> = {
-  [VenueType.Bar]: { from: '#e2a052', to: '#d4634a' },
-  [VenueType.Restaurant]: { from: '#c77dba', to: '#7c5cbf' },
-  [VenueType.EventSpace]: { from: '#5b8def', to: '#8b5cf6' },
-  [VenueType.Cafe]: { from: '#4ead8a', to: '#2d8f6f' },
+  [VenueType.Bar]: { from: '#ff6b1a', to: '#e8391c' },
+  [VenueType.Restaurant]: { from: '#ff3d71', to: '#a8174e' },
+  [VenueType.EventSpace]: { from: '#7b61ff', to: '#4318c4' },
+  [VenueType.Cafe]: { from: '#ff9f43', to: '#d35400' },
 };
 
 /** Mantine color references for venue type badges. */
 export const VENUE_TYPE_BADGE_COLORS: Record<VenueType, string> = {
-  [VenueType.Bar]: 'orange',
-  [VenueType.Restaurant]: 'grape',
-  [VenueType.EventSpace]: 'indigo',
-  [VenueType.Cafe]: 'teal',
+  [VenueType.Bar]: 'flame',
+  [VenueType.Restaurant]: 'pink',
+  [VenueType.EventSpace]: 'violet',
+  [VenueType.Cafe]: 'orange',
 };

@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   SimpleGrid, Card, Group, Text, ThemeIcon,
 } from '@mantine/core';
-import { IconUsers, IconCash } from '@tabler/icons-react';
+import { Users, CurrencyDollar } from '@phosphor-icons/react';
 import { VENUE_DETAIL_MESSAGES } from '../constants/venue-defaults';
 import { formatPrice } from '../utils/format-price';
 import { formatCapacity } from '../utils/format-capacity';
@@ -17,8 +17,8 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
   <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
     <Card withBorder>
       <Group gap="md">
-        <ThemeIcon size="lg" radius="md" variant="light" color="indigo">
-          <IconUsers size="1.25rem" stroke={1.5} />
+        <ThemeIcon size="lg" radius="md" variant="light" color="flame">
+          <Users size="1.25rem" />
         </ThemeIcon>
         <div>
           <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.CAPACITY_LABEL}</Text>
@@ -33,7 +33,7 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
     <Card withBorder>
       <Group gap="md">
         <ThemeIcon size="lg" radius="md" variant="light" color="green">
-          <IconCash size="1.25rem" stroke={1.5} />
+          <CurrencyDollar size="1.25rem" />
         </ThemeIcon>
         <div>
           <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.PRICE_LABEL}</Text>

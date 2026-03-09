@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Card, Stack, Button, Text, Tooltip, Box,
 } from '@mantine/core';
-import { IconCalendarPlus } from '@tabler/icons-react';
+import { CalendarPlus } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { VENUE_DETAIL_MESSAGES } from '../constants/venue-defaults';
 
@@ -30,7 +30,7 @@ export const BookingCTA = memo(({ venueId, isStudentOrg }: BookingCTAProps) => {
             <Button
               size="lg"
               fullWidth
-              leftSection={<IconCalendarPlus size="1.25rem" stroke={1.5} />}
+              leftSection={<CalendarPlus size="1.25rem" />}
               onClick={handleBooking}
               disabled={!isStudentOrg}
               aria-label={VENUE_DETAIL_MESSAGES.REQUEST_BOOKING}
