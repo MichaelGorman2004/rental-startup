@@ -13,6 +13,7 @@ import { AdminDashboard } from './features/venue-admin';
 import { SettingsPage } from './features/settings';
 import { LandingPage } from './features/landing';
 import { DemoBrowse, DemoVenueDetail } from './features/demo';
+import { InterestPage } from './features/prerelease';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -36,6 +37,7 @@ function App() {
               {/* Public Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/interest" element={<InterestPage />} />
               <Route path="/demo/venues" element={<DemoBrowse />} />
               <Route path="/demo/venues/:id" element={<DemoVenueDetail />} />
 

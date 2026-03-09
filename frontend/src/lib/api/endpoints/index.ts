@@ -25,3 +25,5 @@ export {
 } from './organizations';
 
 export type { OrganizationProfile, UpdateOrganizationData } from './organizations';
+
+export { submitInterest } from './prerelease';
