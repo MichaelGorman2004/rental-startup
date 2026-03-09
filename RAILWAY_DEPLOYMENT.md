@@ -4,120 +4,180 @@
 
 ---
 
+## Live URLs
+
+| Service | URL |
+|---------|-----|
+| **Frontend** | `https://venuelink.up.railway.app` |
+| **Backend API** | `https://venuelink-backend-production.up.railway.app` |
+| **API Health** | `https://venuelink-backend-production.up.railway.app/api/health` |
+| **API Docs** | `https://venuelink-backend-production.up.railway.app/api/docs` |
+
+---
+
 ## Architecture
 
 | Service | Type | Details |
 |---------|------|---------|
-| **PostgreSQL** | Railway managed plugin | Provisioned via Railway dashboard, US East |
-| **Backend API** | Docker container | FastAPI + uvicorn, root dir `/backend`, Dockerfile builder |
-| **Frontend** | Docker container (Nginx) | Vite build → Nginx static serve, root dir `/`, Dockerfile at `frontend/Dockerfile` |
+| **PostgreSQL** | Railway managed plugin | Provisioned via dashboard, US East |
+| **Backend API** | Docker container | FastAPI + uvicorn, root dir `/backend`, Dockerfile builder, Metal build |
+| **Frontend** | Docker container (Nginx) | Vite build → Nginx static serve, root dir `/`, Dockerfile at `frontend/Dockerfile`, Metal build |
+
+**Region:** US East (`us-east4-eqdc4a`)
+
+**Auto-deploy:** Both services auto-deploy on push to `main`
 
 **Networking:**
-- Railway assigns each service a `*.railway.app` domain
-- Backend CORS must allow the frontend domain
-- Frontend talks to backend via `VITE_API_BASE_URL` (no dev proxy in prod)
+- Frontend public domain: `venuelink.up.railway.app`
+- Backend public domain: `venuelink-backend-production.up.railway.app`
+- Backend internal domain: `venuelink.railway.internal` (used by other Railway services)
+- Backend CORS allows: `https://venuelink.up.railway.app`
+- Frontend calls backend via `VITE_API_BASE_URL` (no dev proxy in prod)
 - Backend uses internal (private) `DATABASE_URL` from Postgres plugin
 
 ---
 
 ## Environment Variables
 
-### Backend Service
+### Backend Service (`venuelink-backend`)
 
 | Variable | Status | Value / Source |
 |----------|--------|----------------|
-| `DATABASE_URL` | SET (linked) | Referenced from Postgres plugin (internal URL) |
+| `DATABASE_URL` | SET | Referenced from Postgres plugin (internal URL, auto-converted to `asyncpg` scheme at startup) |
 | `SECRET_KEY` | SET | Generated via `openssl rand -hex 32` |
 | `ENVIRONMENT` | SET | `production` |
-| `CLERK_SECRET_KEY` | SET | `sk_test_...` (dev key for now) |
-| `CLERK_PUBLISHABLE_KEY` | SET | `pk_test_...` (dev key for now) |
-| `CORS_ORIGINS` | **TODO** | Set to frontend Railway URL once frontend is deployed |
-| `CLERK_WEBHOOK_SECRET` | **TODO** | Needed for Clerk webhook verification — get from Clerk dashboard when setting up webhook endpoint |
-| `CLERK_PEM_PUBLIC_KEY` | **TODO** | Needed for JWT verification — get from Clerk dashboard (API Keys → Advanced → PEM public key) |
+| `CORS_ORIGINS` | SET | `https://venuelink.up.railway.app` |
+| `CLERK_SECRET_KEY` | SET | `sk_test_...` (dev key — swap to `sk_live_` for go-live) |
+| `CLERK_PUBLISHABLE_KEY` | SET | `pk_test_...` (dev key — swap to `pk_live_` for go-live) |
+| `CLERK_WEBHOOK_SECRET` | **TODO** | Needed for Clerk webhook verification (see TODOs below) |
+| `CLERK_PEM_PUBLIC_KEY` | **TODO** | Needed for JWT verification (see TODOs below) |
 
-### Frontend Service (build-time only)
+### Frontend Service (`venuelink-frontend`)
 
 | Variable | Status | Value / Source |
 |----------|--------|----------------|
-| `VITE_API_BASE_URL` | **TODO** | Set to backend Railway URL once backend is deployed |
-| `VITE_CLERK_PUBLISHABLE_KEY` | **TODO** | `pk_test_...` (same key as backend's `CLERK_PUBLISHABLE_KEY`) |
+| `VITE_API_BASE_URL` | SET | `https://venuelink-backend-production.up.railway.app` |
+| `VITE_CLERK_PUBLISHABLE_KEY` | SET | `pk_test_...` (dev key — swap to `pk_live_` for go-live) |
+
+> **Note:** Frontend vars are build-time only (Vite bakes them into the JS bundle). Changing them requires a redeploy.
 
 ---
 
-## Remaining Steps to Fully Functional
+## Railway Service Config
 
-### Backend (in progress)
-- [ ] Wait for first backend deploy to succeed
-- [ ] Verify `/api/health` returns `{"status": "healthy"}` via the Railway public URL
-- [ ] Note the backend URL for frontend config
+### Backend Settings
+- **Builder:** Dockerfile
+- **Dockerfile Path:** `Dockerfile` (relative to root dir `/backend`)
+- **Root Directory:** `/backend`
+- **Watch Paths:** `backend/**`
+- **Healthcheck:** `/api/health`
+- **Serverless:** Enabled (scales to zero when idle — disable for production if cold starts are an issue)
+- **Restart Policy:** On failure
+- **Start Command:** Handled by Dockerfile CMD (`alembic upgrade head && uvicorn ...`)
 
-### Frontend (not started)
-- [ ] Create frontend service in Railway (GitHub repo, root dir `/`, Dockerfile path `frontend/Dockerfile`)
-- [ ] Set `VITE_API_BASE_URL` to backend Railway URL
-- [ ] Set `VITE_CLERK_PUBLISHABLE_KEY` to `pk_test_d29uZHJvdXMtcmFtLTE5LmNsZXJrLmFjY291bnRzLmRldiQ`
-- [ ] Generate domain for frontend service
-- [ ] Deploy frontend and verify app loads in browser
+### Frontend Settings
+- **Builder:** Dockerfile
+- **Dockerfile Path:** `frontend/Dockerfile` (relative to repo root)
+- **Root Directory:** `/` (repo root — needs access to `shared/`)
+- **Watch Paths:** `frontend/**`, `shared/**`
+- **Serverless:** Optional
+- **Start Command:** Handled by Dockerfile CMD (`nginx -g daemon off`)
 
-### Cross-wiring (after both services are up)
-- [ ] Set backend `CORS_ORIGINS` to the frontend Railway URL (triggers backend redeploy)
-- [ ] Verify frontend can make API calls to backend (no CORS errors)
-
-### Clerk Production Setup (for go-live)
-- [ ] Create Clerk **production** instance (separate from development)
-- [ ] Swap `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` to `sk_live_...` / `pk_live_...` on backend
-- [ ] Swap `VITE_CLERK_PUBLISHABLE_KEY` to `pk_live_...` on frontend (triggers rebuild)
-- [ ] Set up Clerk webhook endpoint pointing to `https://<backend-url>/webhooks/clerk`
-- [ ] Copy webhook signing secret to backend `CLERK_WEBHOOK_SECRET`
-- [ ] Copy PEM public key to backend `CLERK_PEM_PUBLIC_KEY`
-
-### Production Hardening (optional, post-launch)
-- [ ] Configure custom domains (if applicable)
-- [ ] Disable serverless on backend if cold starts are an issue
-- [ ] Review and tighten CORS for production domains only
-- [ ] Test full booking flow end-to-end
-- [ ] Set up monitoring/alerts in Railway
+### PostgreSQL
+- **Plugin:** Railway managed PostgreSQL
+- **Region:** US East
+- **Connection:** Internal URL auto-linked to backend `DATABASE_URL`
 
 ---
 
-## Task Checklist (completed)
+## TODOs
+
+### Clerk Webhook Setup (required for user sync)
+The backend has a webhook endpoint at `/webhooks/clerk` that syncs Clerk user events (signup, role changes) to the database. This needs to be wired up:
+
+1. Go to **Clerk Dashboard** → **Webhooks** → **Add Endpoint**
+2. Set endpoint URL to: `https://venuelink-backend-production.up.railway.app/webhooks/clerk`
+3. Subscribe to events: `user.created`, `user.updated`, `user.deleted`
+4. Copy the **Signing Secret** (`whsec_...`) from Clerk
+5. Add to Railway backend variables: `CLERK_WEBHOOK_SECRET` = the signing secret
+6. Backend will auto-redeploy with the new variable
+
+### Clerk PEM Public Key (required for JWT auth)
+Used by the backend to verify Clerk JWTs on authenticated API requests:
+
+1. Go to **Clerk Dashboard** → **API Keys** → scroll to **Advanced**
+2. Copy the **PEM Public Key** (starts with `-----BEGIN PUBLIC KEY-----`)
+3. Add to Railway backend variables: `CLERK_PEM_PUBLIC_KEY` = the full PEM key
+4. Backend will auto-redeploy
+
+### Clerk Production Keys (required for go-live)
+Currently using development/test keys. Before real users access the app:
+
+1. Create a **Clerk Production instance** (separate from development)
+2. On Railway backend, swap:
+   - `CLERK_SECRET_KEY` → `sk_live_...`
+   - `CLERK_PUBLISHABLE_KEY` → `pk_live_...`
+3. On Railway frontend, swap:
+   - `VITE_CLERK_PUBLISHABLE_KEY` → `pk_live_...` (triggers rebuild)
+4. Update the webhook endpoint URL in the new Clerk production instance
+5. **Important:** Users created in Clerk dev won't exist in Clerk prod — they'll need to sign up again
+
+### Custom Domains (optional)
+If you want `app.venuelink.com` / `api.venuelink.com` instead of Railway URLs:
+
+1. In Railway, go to each service → **Settings** → **Networking** → **Custom Domain**
+2. Add your domain and configure DNS (CNAME record pointing to Railway)
+3. Update backend `CORS_ORIGINS` to include the new frontend domain
+4. Update frontend `VITE_API_BASE_URL` to the new backend domain (triggers rebuild)
+5. Update Clerk webhook endpoint URL to new backend domain
+
+### Production Hardening (optional)
+- [ ] Disable serverless on backend if cold start latency is unacceptable
+- [ ] Set up monitoring/alerts in Railway dashboard
+- [ ] Review bundle size — frontend is 867KB uncompressed (267KB gzipped), consider code splitting
+- [ ] Test full booking flow end-to-end in production
+- [ ] Set up error tracking (e.g., Sentry)
+
+---
+
+## Completed Work
 
 ### Phase 1: Dockerfiles & Config
+- [x] `backend/Dockerfile` — multi-stage: Poetry 2.3.2 export → pip install in Python 3.11-slim (388MB)
+- [x] `backend/.dockerignore` — excludes tests, caches, env files
+- [x] `backend/app/core/config.py` — `model_validator` auto-converts `postgresql://` → `postgresql+asyncpg://`
+- [x] `frontend/Dockerfile` — multi-stage: Node 20 build with `ARG` for Vite vars → Nginx Alpine (98MB)
+- [x] `frontend/nginx.conf` — SPA fallback, gzip, immutable asset caching, `$PORT` envsubst
+- [x] `.dockerignore` — added `.env` exclusion
+- [x] Both images verified building locally
 
-- [x] **1.1** Create `backend/Dockerfile` (multi-stage: poetry export → pip install in slim image) — 388MB
-- [x] **1.2** Update backend `config.py` — `model_validator` auto-swaps `postgresql://` → `postgresql+asyncpg://`
-- [x] **1.3** Create `frontend/Dockerfile` (multi-stage: Node build → Nginx Alpine serve) — 98MB
-- [x] **1.4** Create `frontend/nginx.conf` (SPA fallback, gzip, asset caching, `$PORT` envsubst)
-- [x] **1.5** Verify both Dockerfiles build locally with `docker build`
-
-### Phase 2: Railway Project Setup
-
-- [x] **2.1** Create Railway project (Empty Project)
-- [x] **2.2** Provision PostgreSQL plugin (US East)
-- [x] **2.3** Create backend service — repo connected, root dir `/backend`, Dockerfile builder, Metal build, serverless enabled, healthcheck `/api/health`, watch path `backend/**`
-- [ ] **2.4** Create frontend service
-- [x] **2.5** Backend env vars set (DATABASE_URL linked, SECRET_KEY, ENVIRONMENT, Clerk test keys)
+### Phase 2: Railway Setup
+- [x] Railway project created (Empty Project)
+- [x] PostgreSQL provisioned (US East)
+- [x] Backend service created and deployed
+- [x] Frontend service created and deployed
+- [x] All current env vars configured
+- [x] CORS cross-wired between services
+- [x] Health check verified: `/api/health` returns `{"status":"healthy","service":"venuelink-api"}`
 
 ---
 
 ## Decisions & Notes
 
 ### DATABASE_URL Translation
-Railway provides `postgresql://user:pass@host:port/db`. SQLAlchemy async requires `postgresql+asyncpg://...`. The backend `config.py` `model_validator` auto-detects and replaces the scheme at startup.
+Railway provides `postgresql://`. SQLAlchemy async requires `postgresql+asyncpg://`. The backend `config.py` `model_validator` auto-converts at startup — no manual rewriting needed.
+
+### Frontend Build Args
+Vite env vars must be declared as `ARG` in the Dockerfile so Railway can pass them at build time. Without this, `import.meta.env.VITE_*` resolves to `undefined` in the bundle.
 
 ### Frontend Build Context
-The frontend imports from `@venuelink/shared` (path alias to `../shared/src`). The Docker build context must be the repo root (`/`). The Dockerfile path is `frontend/Dockerfile`.
+The frontend imports from `@venuelink/shared` via path alias. The Docker build context must be the repo root (`/`), not `frontend/`. The Dockerfile is at `frontend/Dockerfile`.
 
 ### Migration Strategy
-Migrations run inline before the server starts (`alembic upgrade head && uvicorn ...`). Idempotent and safe for Railway's deploy model.
-
-### Vite Env Vars
-`VITE_*` vars are embedded at build time. Changing them requires a redeploy/rebuild — they cannot be swapped at runtime.
-
-### Clerk Keys
-Currently using **development/test** Clerk keys (`sk_test_`, `pk_test_`). These work for testing but must be swapped to production keys (`sk_live_`, `pk_live_`) before going live. Clerk dev and prod instances are separate — users created in dev won't exist in prod.
+`alembic upgrade head` runs inline before uvicorn starts in the Dockerfile CMD. Idempotent and safe — runs on every deploy.
 
 ### Serverless
-Backend has serverless enabled (scales to zero when idle). Good for dev/staging to save costs. Disable for production if cold start latency is unacceptable.
+Backend has serverless enabled. Saves costs when idle but introduces cold start delay (~2-5s) on first request after sleeping. Disable for production.
 
 ---
 
@@ -127,4 +187,8 @@ Backend has serverless enabled (scales to zero when idle). Good for dev/staging 
 |------|------|
 | 2026-03-08 | Created deployment plan and tracker |
 | 2026-03-08 | Phase 1 complete: Dockerfiles, nginx.conf, config.py DATABASE_URL fix, local builds verified |
-| 2026-03-08 | Railway project created, Postgres provisioned, backend service configured with env vars, awaiting first deploy |
+| 2026-03-08 | Railway project created, Postgres provisioned, backend service configured with env vars |
+| 2026-03-08 | Backend deployed successfully — `https://venuelink-backend-production.up.railway.app` |
+| 2026-03-08 | Frontend deployed successfully — `https://venuelink.up.railway.app` |
+| 2026-03-08 | Fixed frontend Dockerfile: added `ARG` declarations for `VITE_*` build-time env vars |
+| 2026-03-08 | CORS configured, full deployment complete. Both services live and communicating. |
