@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Stack, Title, Text, Button, ThemeIcon,
 } from '@mantine/core';
-import { IconShieldOff } from '@tabler/icons-react';
+import { ShieldSlash } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { ADMIN_MESSAGES } from '../constants';
 
@@ -14,7 +14,7 @@ export const AccessDenied = memo(() => {
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size={64} radius="xl" variant="light" color="red">
-        <IconShieldOff size="2rem" stroke={1.5} />
+        <ShieldSlash size="2rem" />
       </ThemeIcon>
       <Title order={3}>{ADMIN_MESSAGES.ACCESS_DENIED_TITLE}</Title>
       <Text c="dimmed" ta="center" maw={400}>

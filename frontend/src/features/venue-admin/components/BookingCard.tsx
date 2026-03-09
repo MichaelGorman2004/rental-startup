@@ -3,8 +3,8 @@ import {
   Card, Group, Stack, Text, Badge, Button, Box,
 } from '@mantine/core';
 import {
-  IconCalendar, IconClock, IconUsers, IconCheck, IconX,
-} from '@tabler/icons-react';
+  Calendar, Clock, Users, Check, X,
+} from '@phosphor-icons/react';
 import { BookingStatus } from '../../bookings';
 import type { BookingCardProps } from '../types';
 import {
@@ -47,15 +47,15 @@ export const BookingCard = memo(({
 
         <Group gap="lg">
           <Group gap="xs">
-            <Box c="dimmed"><IconCalendar size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Calendar size="0.875rem" /></Box>
             <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconClock size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Clock size="0.875rem" /></Box>
             <Text size="sm">{formatBookingTime(booking.eventTime)}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconUsers size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Users size="0.875rem" /></Box>
             <Text size="sm">
               {booking.guestCount}
               {' '}
@@ -70,7 +70,7 @@ export const BookingCard = memo(({
               size="xs"
               color="green"
               variant="light"
-              leftSection={<IconCheck size="0.875rem" stroke={1.5} />}
+              leftSection={<Check size="0.875rem" />}
               onClick={handleAccept}
               loading={isActionPending}
               aria-label={`${ADMIN_MESSAGES.ACTION_ACCEPT} ${booking.eventName}`}
@@ -81,7 +81,7 @@ export const BookingCard = memo(({
               size="xs"
               color="red"
               variant="light"
-              leftSection={<IconX size="0.875rem" stroke={1.5} />}
+              leftSection={<X size="0.875rem" />}
               onClick={handleDecline}
               loading={isActionPending}
               aria-label={`${ADMIN_MESSAGES.ACTION_DECLINE} ${booking.eventName}`}
