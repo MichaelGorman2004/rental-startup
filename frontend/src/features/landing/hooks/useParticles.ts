@@ -98,10 +98,7 @@ export function useParticles() {
     if (!canvas) return undefined;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      if (import.meta.env.DEV) console.warn('[useParticles] Failed to acquire 2D canvas context');
-      return undefined;
-    }
+    if (!ctx) return undefined;
 
     function resize() {
       if (!canvas) return;
