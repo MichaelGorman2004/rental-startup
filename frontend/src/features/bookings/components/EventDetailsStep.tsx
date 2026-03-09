@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import type { Control, FieldErrors } from 'react-hook-form';
 import { Stack, TextInput, NumberInput } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
-import { IconCalendar, IconClock, IconUsers } from '@tabler/icons-react';
+import { Calendar, Clock, Users } from '@phosphor-icons/react';
 import type { BookingFormValues } from '../types';
 import { BOOKING_MESSAGES, MIN_GROUP_SIZE } from '../constants';
 import { getMinBookingDate, getMaxBookingDate } from '../utils';
@@ -41,7 +41,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           label={BOOKING_MESSAGES.EVENT_DATE_LABEL}
           description={BOOKING_MESSAGES.EVENT_DATE_DESCRIPTION}
           placeholder="Pick a date"
-          leftSection={<IconCalendar size="1rem" stroke={1.5} />}
+          leftSection={<Calendar size="1rem" />}
           minDate={getMinBookingDate()}
           maxDate={getMaxBookingDate()}
           error={errors.eventDate?.message}
@@ -58,7 +58,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           onChange={(e) => field.onChange(e.currentTarget.value)}
           label={BOOKING_MESSAGES.EVENT_TIME_LABEL}
           description={BOOKING_MESSAGES.EVENT_TIME_DESCRIPTION}
-          leftSection={<IconClock size="1rem" stroke={1.5} />}
+          leftSection={<Clock size="1rem" />}
           error={errors.eventTime?.message}
           withAsterisk
         />
@@ -80,7 +80,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           }}
           label={BOOKING_MESSAGES.GUEST_COUNT_LABEL}
           description={`${MIN_GROUP_SIZE} – ${maxCapacity} guests`}
-          leftSection={<IconUsers size="1rem" stroke={1.5} />}
+          leftSection={<Users size="1rem" />}
           min={MIN_GROUP_SIZE}
           max={maxCapacity}
           error={errors.guestCount?.message}
