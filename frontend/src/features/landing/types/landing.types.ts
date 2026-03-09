@@ -1,3 +1,5 @@
+import type React from 'react';
+
 /** A single step in the "How It Works" section. */
 export interface HowItWorksStep {
   icon: 'MagnifyingGlass' | 'CalendarCheck' | 'Confetti';
@@ -20,11 +22,11 @@ export interface Particle {
   vy: number;
   radius: number;
   opacity: number;
-  baseOpacity: number;
+  readonly baseOpacity: number;
 }
 
 /** Props for scroll-animated sections. */
 export interface ScrollAnimationState {
   isVisible: boolean;
-  ref: (node: HTMLElement | null) => void;
+  ref: React.RefObject<HTMLDivElement>;
 }

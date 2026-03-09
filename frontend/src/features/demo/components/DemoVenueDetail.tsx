@@ -47,7 +47,7 @@ export function DemoVenueDetail() {
     return (
       <>
         <LandingHeader />
-        <Container size="md" py="xl" mt={64}><VenueNotFound /></Container>
+        <Container size="md" py="xl" mt={64}><VenueNotFound backPath="/demo/venues" /></Container>
       </>
     );
   }

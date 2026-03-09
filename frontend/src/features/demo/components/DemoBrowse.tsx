@@ -22,11 +22,15 @@ export function DemoBrowse() {
             <Text c="dimmed">{DEMO_MESSAGES.BROWSE_SUBTITLE}</Text>
           </Stack>
           <VenueFilters activeType={activeType} onTypeChange={handleTypeChange} />
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-            {venues.map((venue) => (
-              <VenueCard key={venue.id} venue={venue} basePath="/demo/venues" />
-            ))}
-          </SimpleGrid>
+          {venues.length === 0 ? (
+            <Text c="dimmed" ta="center" py="xl">No venues match this filter.</Text>
+          ) : (
+            <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
+              {venues.map((venue) => (
+                <VenueCard key={venue.id} venue={venue} basePath="/demo/venues" />
+              ))}
+            </SimpleGrid>
+          )}
         </Stack>
       </Container>
     </>

@@ -18,11 +18,12 @@ function rand(min: number, max: number): number {
 /** Create a single particle with randomized properties. */
 function createParticle(width: number, height: number): Particle {
   const baseOpacity = rand(MIN_OPACITY, MAX_OPACITY);
+  const sign = () => (Math.random() < 0.5 ? -1 : 1);
   return {
     x: Math.random() * width,
     y: Math.random() * height,
-    vx: rand(-MAX_SPEED, MAX_SPEED) || MIN_SPEED,
-    vy: rand(-MAX_SPEED, MAX_SPEED) || MIN_SPEED,
+    vx: rand(MIN_SPEED, MAX_SPEED) * sign(),
+    vy: rand(MIN_SPEED, MAX_SPEED) * sign(),
     radius: rand(MIN_RADIUS, MAX_RADIUS),
     opacity: baseOpacity,
     baseOpacity,
@@ -87,7 +88,9 @@ export function useParticles() {
   const frameRef = useRef(0);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    mouseRef.current = { x: e.clientX, y: e.clientY };
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }, []);
 
   useEffect(() => {
@@ -95,12 +98,23 @@ export function useParticles() {
     if (!canvas) return undefined;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return undefined;
+    if (!ctx) {
+      if (import.meta.env.DEV) console.warn('[useParticles] Failed to acquire 2D canvas context');
+      return undefined;
+    }
 
     function resize() {
       if (!canvas) return;
+      const oldW = canvas.width || 1;
+      const oldH = canvas.height || 1;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      // Scale existing particle positions proportionally to new dimensions
+      particlesRef.current.forEach((p) => {
+        p.x *= canvas.width / oldW;
+        p.y *= canvas.height / oldH;
+      });
     }
 
     resize();
