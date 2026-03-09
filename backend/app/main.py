@@ -35,14 +35,14 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     Yields:
         None: Application runs during this yield
     """
-    # Startup: Test database connection
+    # Startup: Test database connection (non-fatal — app still starts if DB is slow)
     try:
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
         print("✓ Database connection established")
     except Exception as e:
         print(f"✗ Database connection failed: {e}")
-        raise
+        print("  App will start anyway — DB may become available later")
 
     yield  # Application runs here
 

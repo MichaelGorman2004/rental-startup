@@ -45,5 +45,5 @@ ENV PORT=8000
 
 # Run migrations then start the server
 # alembic upgrade head is idempotent — safe to run on every deploy
-CMD alembic upgrade head && \
+CMD alembic upgrade head; \
     uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
