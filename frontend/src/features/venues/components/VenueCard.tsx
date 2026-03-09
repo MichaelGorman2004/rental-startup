@@ -11,6 +11,7 @@ import { formatCapacity } from '../utils/format-capacity';
 import { formatAddress } from '../utils/format-address';
 import { VenueCardGradient } from './VenueCardGradient';
 import type { Venue } from '../types/venue.types';
+import classes from './VenueCard.module.css';
 
 interface VenueCardProps {
   venue: Venue;
@@ -21,15 +22,7 @@ export const VenueCard = memo(({ venue }: VenueCardProps) => (
     withBorder
     component={Link}
     to={`/venues/${venue.id}`}
-    styles={{
-      root: {
-        cursor: 'pointer',
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'transform 150ms ease, box-shadow 150ms ease',
-        '&:hover': { transform: 'translateY(-2px)', boxShadow: 'var(--mantine-shadow-md)' },
-      },
-    }}
+    className={classes['card']}
   >
     <VenueCardGradient venueType={venue.type} />
     <Stack gap="sm">
@@ -48,14 +41,14 @@ export const VenueCard = memo(({ venue }: VenueCardProps) => (
             {VENUE_MESSAGES.CAPACITY_UNIT}
           </Text>
         </Group>
-        <Text size="sm" fw={600} c="indigo.6">
+        <Text size="sm" fw={600} className={classes['price']}>
           {VENUE_MESSAGES.PRICE_PREFIX}
           {' '}
           {formatPrice(venue.basePriceCents)}
         </Text>
       </Group>
       <Group gap="xs">
-        <IconMapPin size="1rem" stroke={1.5} color="gray" />
+        <IconMapPin size="1rem" stroke={1.5} />
         <Text size="sm" c="dimmed" lineClamp={1}>
           {formatAddress(venue.addressStreet, venue.addressCity, venue.addressState)}
         </Text>

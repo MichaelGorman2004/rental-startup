@@ -3,6 +3,7 @@ import { Box } from '@mantine/core';
 import { VENUE_TYPE_GRADIENTS } from '../constants/venue-types';
 import { CARD_GRADIENT_HEIGHT } from '../constants/venue-defaults';
 import type { VenueType } from '../types/venue.types';
+import classes from './VenueCardGradient.module.css';
 
 interface VenueCardGradientProps {
   venueType: VenueType;
@@ -15,12 +16,8 @@ export const VenueCardGradient = memo(({ venueType }: VenueCardGradientProps) =>
   return (
     <Box
       h={CARD_GRADIENT_HEIGHT}
-      style={{
-        background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
-        borderRadius: 'var(--mantine-radius-md) var(--mantine-radius-md) 0 0',
-        margin: 'calc(var(--mantine-spacing-md) * -1)',
-        marginBottom: 'var(--mantine-spacing-md)',
-      }}
+      className={classes['gradient']}
+      style={{ '--gradient-from': gradient.from, '--gradient-to': gradient.to } as React.CSSProperties}
     />
   );
 });

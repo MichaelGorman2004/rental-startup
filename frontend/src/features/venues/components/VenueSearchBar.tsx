@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import { TextInput, CloseButton } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { VENUE_MESSAGES } from '../constants/venue-defaults';
+import classes from './VenueSearchBar.module.css';
 
 interface VenueSearchBarProps {
   value: string;
@@ -24,6 +25,7 @@ export const VenueSearchBar = memo(({ value, onChange, onClear }: VenueSearchBar
       value={value}
       onChange={handleChange}
       aria-label={VENUE_MESSAGES.SEARCH_PLACEHOLDER}
+      classNames={{ input: classes['input'] }}
     />
   );
 });
