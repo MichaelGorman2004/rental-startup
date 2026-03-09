@@ -1,5 +1,5 @@
 import {
-  Group, Text, Button, Box,
+  Group, Text, Button, Box, Badge,
 } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import classes from './LandingHeader.module.css';
@@ -9,11 +9,25 @@ export function LandingHeader() {
   return (
     <Box className={classes['header']}>
       <Group h="100%" px="xl" justify="space-between">
-        <Text className={classes['logo']}>
-          VENUE
-          <Text span className={classes['logoAccent']}>LINK</Text>
-        </Text>
         <Group gap="sm">
+          <Text className={classes['logo']}>
+            VENUE
+            <Text span className={classes['logoAccent']}>LINK</Text>
+          </Text>
+          <Badge color="copper" variant="filled" size="sm" radius="sm">
+            PRE-RELEASE
+          </Badge>
+        </Group>
+        <Group gap="sm">
+          <Button
+            component={Link}
+            to="/"
+            variant="subtle"
+            size="sm"
+            aria-label="About VenueLink"
+          >
+            About
+          </Button>
           <Button
             component={Link}
             to="/demo/venues"
@@ -22,6 +36,15 @@ export function LandingHeader() {
             aria-label="Browse demo venues"
           >
             Browse Venues
+          </Button>
+          <Button
+            component={Link}
+            to="/interest"
+            variant="subtle"
+            size="sm"
+            aria-label="Express interest in VenueLink"
+          >
+            Join Waitlist
           </Button>
           <Button
             component={Link}
