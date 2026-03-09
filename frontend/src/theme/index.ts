@@ -4,42 +4,42 @@ import {
 } from '@mantine/core';
 
 /**
- * VenueLink "Warm Night" theme.
+ * VenueLink "Flame Brutalist" theme.
  *
- * Design system: deep slate backgrounds, warm amber accents,
- * editorial serif headings (Playfair Display) + modern sans body (Plus Jakarta Sans).
+ * True black backgrounds, vivid orange-red flame accents,
+ * 0px radius everywhere, editorial serif + geometric sans.
  */
 export const theme = createTheme({
-  primaryColor: 'amber',
+  primaryColor: 'flame',
 
   colors: {
-    amber: [
-      '#fef7ed',
-      '#fdecd3',
-      '#fbd5a5',
-      '#f8bc6d',
-      '#f0a044',
-      '#e8892a',
-      '#e2a052',
-      '#c47d2e',
-      '#a36325',
-      '#7d4c1d',
+    flame: [
+      '#fff5f0',
+      '#ffe0d1',
+      '#ffc2a3',
+      '#ff9b6b',
+      '#ff6b1a',
+      '#f05a10',
+      '#e84118',
+      '#c43414',
+      '#9e2a10',
+      '#7a200c',
     ],
     surface: [
-      '#f0ece4',
-      '#d4d0c8',
-      '#8b8693',
-      '#5c5768',
-      '#2a2d38',
-      '#1e2230',
-      '#1a1d28',
-      '#151820',
-      '#111318',
-      '#0c0e14',
+      '#e8e5e0',
+      '#c0bdb8',
+      '#7a7580',
+      '#4a4550',
+      '#1e1e22',
+      '#141418',
+      '#0e0e12',
+      '#0a0a0e',
+      '#070709',
+      '#050507',
     ],
   },
 
-  primaryShade: 6,
+  primaryShade: 4,
 
   fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
   fontFamilyMonospace: '"JetBrains Mono", monospace',
@@ -66,36 +66,38 @@ export const theme = createTheme({
   },
 
   radius: {
-    xs: rem(4),
-    sm: rem(8),
-    md: rem(12),
-    lg: rem(16),
-    xl: rem(24),
+    xs: rem(0),
+    sm: rem(0),
+    md: rem(0),
+    lg: rem(0),
+    xl: rem(0),
   },
+
+  defaultRadius: 0,
 
   components: {
     Button: Button.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
         fw: 600,
       },
     }),
 
     TextInput: TextInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
     }),
 
     PasswordInput: PasswordInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
     }),
 
     Card: Card.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
         p: 'lg',
         withBorder: true,
       },
@@ -109,9 +111,16 @@ export const theme = createTheme({
 
     Badge: Badge.extend({
       defaultProps: {
-        radius: 'sm',
-        fw: 600,
+        radius: 0,
+        fw: 700,
+        tt: 'uppercase',
       },
+      styles: () => ({
+        root: {
+          letterSpacing: '0.06em',
+          fontSize: rem(11),
+        },
+      }),
     }),
 
     NavLink: NavLink.extend({
@@ -122,19 +131,19 @@ export const theme = createTheme({
 
     Stepper: Stepper.extend({
       defaultProps: {
-        color: 'amber',
+        color: 'flame',
       },
     }),
 
     Tabs: Tabs.extend({
       defaultProps: {
-        color: 'amber',
+        color: 'flame',
       },
     }),
 
     Modal: Modal.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
       styles: () => ({
         content: {
@@ -149,13 +158,13 @@ export const theme = createTheme({
 
     Alert: Alert.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
     }),
 
     Paper: Paper.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
       styles: () => ({
         root: {
@@ -166,7 +175,8 @@ export const theme = createTheme({
 
     Chip: Chip.extend({
       defaultProps: {
-        color: 'amber',
+        color: 'flame',
+        radius: 0,
       },
     }),
   },
