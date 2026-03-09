@@ -37,7 +37,8 @@ def upgrade() -> None:
         sa.Column(
             "respondent_type",
             postgresql.ENUM(
-                "student_org", "venue",
+                "student_org",
+                "venue",
                 name="respondent_type",
                 create_type=False,  # Already created above
             ),
