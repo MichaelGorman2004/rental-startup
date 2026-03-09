@@ -29,7 +29,7 @@ export const ActionCard = memo(({ action }: ActionCardProps) => {
     >
       <Stack align="center" gap="sm">
         <ThemeIcon size="xl" radius="md" color={action.color} variant="light">
-          <Icon size="1.5rem" stroke={1.5} />
+          <Icon size={24} weight="bold" />
         </ThemeIcon>
         <Text fw={500}>{action.title}</Text>
       </Stack>

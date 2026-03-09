@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Stack, Title, Alert, Button, Group,
 } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { WarningCircle } from '@phosphor-icons/react';
 import { useUpcomingEvents } from '../hooks/useUpcomingEvents';
 import { EventCard } from './EventCard';
 import { EventsEmptyState } from './EventsEmptyState';
@@ -31,7 +31,7 @@ export const UpcomingEvents = memo(() => {
     return (
       <Stack gap="md">
         <Title order={3}>Upcoming Events</Title>
-        <Alert color="red" icon={<IconAlertCircle size="1rem" />}>
+        <Alert color="red" icon={<WarningCircle size="1rem" />}>
           <Group justify="space-between">
             {DASHBOARD_CONSTANTS.MESSAGES.ERROR_LOADING}
             <Button size="xs" onClick={handleRetry}>

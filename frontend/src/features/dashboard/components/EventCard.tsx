@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Card, Group, Text, Stack,
 } from '@mantine/core';
-import { IconMapPin } from '@tabler/icons-react';
+import { MapPin } from '@phosphor-icons/react';
 import type { UpcomingEvent } from '../types/dashboard.types';
 import classes from './EventCard.module.css';
 
@@ -27,7 +27,7 @@ export const EventCard = memo(({ event }: EventCardProps) => (
       </Text>
       <Text fw={600}>{event.eventName}</Text>
       <Group gap="xs">
-        <IconMapPin size="1rem" stroke={1.5} />
+        <MapPin size="1rem" />
         <Text size="sm" c="dimmed">{event.venueName}</Text>
       </Group>
     </Stack>

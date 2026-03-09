@@ -1,7 +1,7 @@
 .card {
   background: var(--vl-bg-card);
   border: 1px solid var(--vl-border);
-  transition: border-color 200ms ease;
+  transition: border-color 150ms ease;
 }
 
 .card:hover {
@@ -9,7 +9,7 @@
 }
 
 .date {
-  color: var(--mantine-color-amber-6);
+  color: var(--mantine-color-flame-4);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
