@@ -23,6 +23,16 @@ COPY shared/ shared/
 # Copy frontend source
 COPY frontend/ frontend/
 
+# Declare build args for Vite env vars — Railway passes service variables
+# as build args automatically. Vite statically replaces import.meta.env.*
+# references during the build, so these must be available at build time.
+ARG VITE_API_BASE_URL
+ARG VITE_CLERK_PUBLISHABLE_KEY
+
+# Make build args available as env vars for the Vite build
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
+
 # Build the frontend — VITE_* env vars are baked in at this step
 WORKDIR /build/frontend
 RUN npm run build
