@@ -1,0 +1,14 @@
+.logo {
+  font-family: var(--mantine-font-family-headings);
+  letter-spacing: -0.02em;
+}
+
+.logoDot {
+  color: var(--mantine-color-amber-6);
+}
+
+.orgBadge {
+  background: var(--vl-amber-glow);
+  color: var(--mantine-color-amber-6);
+  border: 1px solid var(--vl-amber-border);
+}
