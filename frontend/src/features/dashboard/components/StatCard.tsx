@@ -1,5 +1,7 @@
 import { memo } from 'react';
-import { Card, Text, Stack, Box } from '@mantine/core';
+import {
+  Card, Text, Stack, Box,
+} from '@mantine/core';
 import classes from './StatCard.module.css';
 
 interface StatCardProps {
