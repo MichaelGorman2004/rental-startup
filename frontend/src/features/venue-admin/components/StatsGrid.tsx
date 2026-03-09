@@ -46,7 +46,7 @@ export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) =>
         icon={<CalendarBlank size="1.25rem" />}
         label={ADMIN_MESSAGES.STATS_BOOKINGS}
         value={stats.bookingsThisMonth.toString()}
-        color="flame"
+        color="copper"
       />
       <StatCard
         icon={<CurrencyDollar size="1.25rem" />}

@@ -5,7 +5,7 @@
 }
 
 .input:focus {
-  border-color: var(--mantine-color-flame-4);
-  box-shadow: 0 0 0 2px var(--vl-flame-glow),
-              0 0 12px -2px var(--vl-flame-glow);
+  border-color: var(--mantine-color-copper-4);
+  box-shadow: 0 0 0 2px var(--vl-accent-glow),
+              0 0 12px -2px var(--vl-accent-glow);
 }

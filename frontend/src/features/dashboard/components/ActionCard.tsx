@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import {
-  Card, Text, ThemeIcon, Stack,
+  Card, Text, Box, Stack,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import type { QuickAction } from '../types/dashboard.types';
@@ -27,11 +27,14 @@ export const ActionCard = memo(({ action }: ActionCardProps) => {
       className={classes['card']}
       aria-label={`Navigate to ${action.title}`}
     >
-      <Stack align="center" gap="sm">
-        <ThemeIcon size="xl" radius="md" color={action.color} variant="light">
-          <Icon size={24} weight="bold" />
-        </ThemeIcon>
-        <Text fw={500}>{action.title}</Text>
+      <Stack gap="md" align="flex-start">
+        <Box className={classes['iconBox']}>
+          <Icon size={22} weight="regular" />
+        </Box>
+        <Stack gap={4}>
+          <Text fw={500} size="sm">{action.title}</Text>
+          <Text size="xs" className={classes['desc']}>{action.description}</Text>
+        </Stack>
       </Stack>
     </Card>
   );

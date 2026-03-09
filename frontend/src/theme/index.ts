@@ -4,49 +4,49 @@ import {
 } from '@mantine/core';
 
 /**
- * VenueLink "Flame Brutalist" theme.
+ * VenueLink "Warm Night" theme.
  *
- * True black backgrounds, vivid orange-red flame accents,
- * 0px radius everywhere, editorial serif + geometric sans.
+ * Deep charcoal backgrounds, warm copper/bronze accents,
+ * soft rounded corners, editorial serif + geometric sans.
  */
 export const theme = createTheme({
-  primaryColor: 'flame',
+  primaryColor: 'copper',
 
   colors: {
-    flame: [
-      '#fff5f0',
-      '#ffe0d1',
-      '#ffc2a3',
-      '#ff9b6b',
-      '#ff6b1a',
-      '#f05a10',
-      '#e84118',
-      '#c43414',
-      '#9e2a10',
-      '#7a200c',
+    copper: [
+      '#fdf6f0',
+      '#f9e7d8',
+      '#f0ccaf',
+      '#e8a67a',
+      '#d4845a',
+      '#c06b40',
+      '#a85a35',
+      '#8c4a2c',
+      '#703b24',
+      '#5a301e',
     ],
     surface: [
       '#e8e5e0',
       '#c0bdb8',
-      '#7a7580',
-      '#4a4550',
-      '#1e1e22',
-      '#141418',
-      '#0e0e12',
-      '#0a0a0e',
-      '#070709',
-      '#050507',
+      '#8a8690',
+      '#5a5660',
+      '#1f1f26',
+      '#1a1a20',
+      '#16161a',
+      '#0e0e10',
+      '#0a0a0c',
+      '#060608',
     ],
   },
 
   primaryShade: 4,
 
-  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+  fontFamily: '"DM Sans", system-ui, sans-serif',
   fontFamilyMonospace: '"JetBrains Mono", monospace',
 
   headings: {
     fontFamily: '"Playfair Display", Georgia, serif',
-    fontWeight: '700',
+    fontWeight: '600',
   },
 
   fontSizes: {
@@ -66,38 +66,38 @@ export const theme = createTheme({
   },
 
   radius: {
-    xs: rem(0),
-    sm: rem(0),
-    md: rem(0),
-    lg: rem(0),
-    xl: rem(0),
+    xs: rem(6),
+    sm: rem(8),
+    md: rem(14),
+    lg: rem(20),
+    xl: rem(28),
   },
 
-  defaultRadius: 0,
+  defaultRadius: 'md',
 
   components: {
     Button: Button.extend({
       defaultProps: {
-        radius: 0,
-        fw: 600,
+        radius: 'sm',
+        fw: 500,
       },
     }),
 
     TextInput: TextInput.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'sm',
       },
     }),
 
     PasswordInput: PasswordInput.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'sm',
       },
     }),
 
     Card: Card.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'md',
         p: 'lg',
         withBorder: true,
       },
@@ -111,14 +111,14 @@ export const theme = createTheme({
 
     Badge: Badge.extend({
       defaultProps: {
-        radius: 0,
-        fw: 700,
+        radius: 'xl',
+        fw: 600,
         tt: 'uppercase',
       },
       styles: () => ({
         root: {
           letterSpacing: '0.06em',
-          fontSize: rem(11),
+          fontSize: rem(10),
         },
       }),
     }),
@@ -131,19 +131,19 @@ export const theme = createTheme({
 
     Stepper: Stepper.extend({
       defaultProps: {
-        color: 'flame',
+        color: 'copper',
       },
     }),
 
     Tabs: Tabs.extend({
       defaultProps: {
-        color: 'flame',
+        color: 'copper',
       },
     }),
 
     Modal: Modal.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'md',
       },
       styles: () => ({
         content: {
@@ -158,13 +158,13 @@ export const theme = createTheme({
 
     Alert: Alert.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'md',
       },
     }),
 
     Paper: Paper.extend({
       defaultProps: {
-        radius: 0,
+        radius: 'md',
       },
       styles: () => ({
         root: {
@@ -175,8 +175,8 @@ export const theme = createTheme({
 
     Chip: Chip.extend({
       defaultProps: {
-        color: 'flame',
-        radius: 0,
+        color: 'copper',
+        radius: 'xl',
       },
     }),
   },

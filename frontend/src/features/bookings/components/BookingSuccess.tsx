@@ -42,7 +42,7 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
         <Stack gap="sm">
           <Group justify="space-between">
             <Text size="sm" c="dimmed">{BOOKING_MESSAGES.SUCCESS_REFERENCE}</Text>
-            <Badge size="lg" variant="light" color="flame" fw={700}>
+            <Badge size="lg" variant="light" color="copper" fw={700}>
               {confirmation.referenceNumber}
             </Badge>
           </Group>

@@ -31,7 +31,7 @@ export const VENUE_TYPE_GRADIENTS: Record<VenueType, { from: string; to: string 
 
 /** Mantine color references for venue type badges. */
 export const VENUE_TYPE_BADGE_COLORS: Record<VenueType, string> = {
-  [VenueType.Bar]: 'flame',
+  [VenueType.Bar]: 'copper',
   [VenueType.Restaurant]: 'pink',
   [VenueType.EventSpace]: 'violet',
   [VenueType.Cafe]: 'orange',

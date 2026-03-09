@@ -1,9 +1,11 @@
 .header {
-  background: var(--vl-bg-elevated);
+  background: rgba(14, 14, 16, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--vl-border);
 }
 
 .main {
   background: var(--vl-bg-deep);
-  min-height: calc(100dvh - 60px);
+  min-height: calc(100dvh - 64px);
 }

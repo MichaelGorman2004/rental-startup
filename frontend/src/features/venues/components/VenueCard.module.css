@@ -11,11 +11,11 @@
 
 .card:hover {
   transform: translateY(-2px);
-  border-color: var(--vl-flame-border);
+  border-color: var(--vl-accent-border);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-              0 0 20px -4px var(--vl-flame-glow);
+              0 0 20px -4px var(--vl-accent-glow);
 }
 
 .price {
-  color: var(--mantine-color-flame-4);
+  color: var(--mantine-color-copper-4);
 }

@@ -90,7 +90,7 @@ export const BookingSummary = memo(({
             <ThemeIcon size="sm" variant="transparent" c="dimmed">
               <Receipt size="1rem" />
             </ThemeIcon>
-            <Text size="xl" fw={700} c="flame">
+            <Text size="xl" fw={700} c="copper">
               {formatPrice(estimatedCostCents)}
             </Text>
           </Group>

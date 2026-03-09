@@ -1,7 +1,7 @@
 .wrapper {
   min-height: 100vh;
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, var(--vl-flame-glow-subtle) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 0%, var(--vl-accent-glow) 0%, transparent 60%),
     var(--vl-bg-deep);
 }
 
@@ -17,5 +17,5 @@
 }
 
 .logoAccent {
-  color: var(--mantine-color-flame-4);
+  color: var(--mantine-color-copper-4);
 }

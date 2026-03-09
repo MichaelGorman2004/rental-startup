@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import {
-  Stack, Title, Alert, Button, Group,
+  Stack, Text, Alert, Button, Group,
 } from '@mantine/core';
 import { WarningCircle } from '@phosphor-icons/react';
 import { useUpcomingEvents } from '../hooks/useUpcomingEvents';
@@ -8,6 +8,12 @@ import { EventCard } from './EventCard';
 import { EventsEmptyState } from './EventsEmptyState';
 import { EventsLoadingSkeleton } from './EventsLoadingSkeleton';
 import { DASHBOARD_CONSTANTS } from '../constants/dashboard.constants';
+
+const SectionLabel = memo(() => (
+  <Text size="xs" fw={600} tt="uppercase" c="dimmed" lts="0.12em">
+    {DASHBOARD_CONSTANTS.LABELS.UPCOMING_EVENTS}
+  </Text>
+));
 
 export const UpcomingEvents = memo(() => {
   const {
@@ -21,7 +27,7 @@ export const UpcomingEvents = memo(() => {
   if (isLoading) {
     return (
       <Stack gap="md">
-        <Title order={3}>Upcoming Events</Title>
+        <SectionLabel />
         <EventsLoadingSkeleton />
       </Stack>
     );
@@ -30,7 +36,7 @@ export const UpcomingEvents = memo(() => {
   if (isError) {
     return (
       <Stack gap="md">
-        <Title order={3}>Upcoming Events</Title>
+        <SectionLabel />
         <Alert color="red" icon={<WarningCircle size="1rem" />}>
           <Group justify="space-between">
             {DASHBOARD_CONSTANTS.MESSAGES.ERROR_LOADING}
@@ -46,15 +52,15 @@ export const UpcomingEvents = memo(() => {
   if (events.length === 0) {
     return (
       <Stack gap="md">
-        <Title order={3}>Upcoming Events</Title>
+        <SectionLabel />
         <EventsEmptyState />
       </Stack>
     );
   }
 
   return (
-    <Stack gap="md">
-      <Title order={3}>Upcoming Events</Title>
+    <Stack gap="sm">
+      <SectionLabel />
       {events.map((event) => (
         <EventCard key={event.id} event={event} />
       ))}

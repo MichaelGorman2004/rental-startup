@@ -10,7 +10,7 @@ export function AppShell() {
 
   return (
     <MantineAppShell
-      header={{ height: 60 }}
+      header={{ height: 64 }}
       padding="md"
       withBorder={false}
     >

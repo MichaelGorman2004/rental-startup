@@ -1,15 +1,58 @@
 .card {
   background: var(--vl-bg-card);
   border: 1px solid var(--vl-border);
-  transition: border-color 150ms ease;
+  cursor: pointer;
+  transition: border-color 250ms ease, background 250ms ease, transform 250ms ease;
 }
 
 .card:hover {
   border-color: var(--vl-border-hover);
+  background: var(--vl-bg-card-hover);
+  transform: translateX(4px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: var(--mantine-spacing-lg);
 }
 
 .date {
-  color: var(--mantine-color-flame-4);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--mantine-color-copper-4);
+  letter-spacing: 0.06em;
+}
+
+.venue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vl-text-secondary);
+  opacity: 0.7;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  flex-shrink: 0;
+}
+
+.statusConfirmed {
+  color: var(--vl-success);
+  background: var(--vl-success-bg);
+  border-color: var(--vl-success-border);
+}
+
+.statusPending {
+  color: var(--vl-warning);
+  background: var(--vl-warning-bg);
+  border-color: var(--vl-warning-border);
+}
+
+@media (max-width: 48em) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--mantine-spacing-sm);
+  }
 }

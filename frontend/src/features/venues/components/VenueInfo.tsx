@@ -17,7 +17,7 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
   <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
     <Card withBorder>
       <Group gap="md">
-        <ThemeIcon size="lg" radius="md" variant="light" color="flame">
+        <ThemeIcon size="lg" radius="md" variant="light" color="copper">
           <Users size="1.25rem" />
         </ThemeIcon>
         <div>

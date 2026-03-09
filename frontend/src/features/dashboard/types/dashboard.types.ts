@@ -21,6 +21,8 @@ export interface QuickAction {
   id: string;
   /** Display title for the action card */
   title: string;
+  /** Short description shown below the title */
+  description: string;
   /** Route to navigate to when clicked */
   route: string;
   /** Phosphor icon component to display */

@@ -1,11 +1,15 @@
 .greeting {
   font-family: var(--mantine-font-family-headings);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .pageEnter > * {
-  animation: vl-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: vl-fade-up 0.5s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.pageEnter > *:nth-child(1) { animation-delay: 0ms; }
-.pageEnter > *:nth-child(2) { animation-delay: 80ms; }
-.pageEnter > *:nth-child(3) { animation-delay: 160ms; }
+.pageEnter > *:nth-child(1) { animation-delay: 50ms; }
+.pageEnter > *:nth-child(2) { animation-delay: 120ms; }
+.pageEnter > *:nth-child(3) { animation-delay: 180ms; }
+.pageEnter > *:nth-child(4) { animation-delay: 220ms; }

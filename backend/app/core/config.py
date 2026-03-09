@@ -42,18 +42,14 @@ class Settings(BaseSettings):
     CLERK_WEBHOOK_SECRET: str = ""
 
     # CORS origins (frontend URLs allowed to call this API)
-    CORS_ORIGINS: list[str] = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
+    # Stored as a plain string to avoid pydantic-settings JSON-decoding issues.
+    # Use comma-separated values: "https://example.com,http://localhost:3000"
+    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v: str | list[str]) -> list[str]:
-        """Accept both a JSON array and a comma-separated string."""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parse CORS_ORIGINS string into a list."""
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
     @model_validator(mode="after")
     def normalize_database_url(self) -> "Settings":

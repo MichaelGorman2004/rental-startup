@@ -1,0 +1,33 @@
+.card {
+  background: var(--vl-bg-card);
+  border: 1px solid var(--vl-border);
+  transition: border-color 250ms ease, background 250ms ease, transform 250ms ease;
+}
+
+.card:hover {
+  border-color: var(--vl-border-hover);
+  background: var(--vl-bg-card-hover);
+  transform: translateY(-1px);
+}
+
+.value {
+  font-family: var(--mantine-font-family-headings);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--vl-text-primary);
+}
+
+.trend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--vl-text-muted);
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--mantine-color-copper-4);
+  flex-shrink: 0;
+}

@@ -1,29 +1,33 @@
 .logo {
   font-family: var(--mantine-font-family-headings);
-  letter-spacing: -0.03em;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .logoAccent {
-  color: var(--mantine-color-flame-4);
+  color: var(--mantine-color-copper-4);
+  font-weight: 700;
 }
 
 .navLink {
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
   color: var(--vl-text-secondary);
   text-decoration: none;
-  font-size: var(--mantine-font-size-sm);
+  font-size: var(--mantine-font-size-xs);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-bottom: 2px solid transparent;
-  transition: color 150ms ease, border-color 150ms ease;
+  border-radius: var(--mantine-radius-sm);
+  transition: color 200ms ease, background 200ms ease;
 }
 
 .navLink:hover {
-  color: var(--mantine-color-white);
+  color: var(--vl-text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .navLinkActive {
-  color: var(--mantine-color-flame-4);
-  border-bottom-color: var(--mantine-color-flame-4);
+  color: var(--mantine-color-copper-4);
+  background: var(--vl-accent-glow);
 }

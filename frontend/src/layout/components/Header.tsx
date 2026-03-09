@@ -48,15 +48,15 @@ export function Header() {
   );
 
   return (
-    <Group h="100%" px="md" justify="space-between">
-      <Group gap="lg">
+    <Group h="100%" px="xl" justify="space-between">
+      <Group gap="xl">
         <Burger opened={sidebarOpen} onClick={toggleSidebar} hiddenFrom="sm" size="sm" />
-        <Text fw={800} size="lg" className={classes['logo']}>
+        <Text className={classes['logo']}>
           VENUE
           <Text span className={classes['logoAccent']}>LINK</Text>
         </Text>
 
-        <Group gap={0} visibleFrom="sm">
+        <Group gap={4} visibleFrom="sm">
           {visibleItems.map((item) => (
             <UnstyledButton
               key={item.route}

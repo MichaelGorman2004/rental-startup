@@ -7,13 +7,13 @@
 }
 
 .link[data-active='true'] {
-  --nl-bg: var(--vl-flame-glow);
-  --nl-hover: var(--vl-flame-glow-strong);
-  --nl-color: var(--mantine-color-flame-4);
+  --nl-bg: var(--vl-accent-glow);
+  --nl-hover: var(--vl-accent-glow-strong);
+  --nl-color: var(--mantine-color-copper-4);
 }
 
 .link[data-active='true'] .linkLabel {
-  color: var(--mantine-color-flame-4);
+  color: var(--mantine-color-copper-4);
   font-weight: 600;
 }
 
