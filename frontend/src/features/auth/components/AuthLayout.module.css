@@ -1,0 +1,21 @@
+.wrapper {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, var(--vl-amber-glow-subtle) 0%, transparent 60%),
+    var(--vl-bg-deep);
+}
+
+.card {
+  background: var(--vl-bg-card);
+  border: 1px solid var(--vl-border);
+  animation: vl-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.logo {
+  font-family: var(--mantine-font-family-headings);
+  letter-spacing: -0.02em;
+}
+
+.logoDot {
+  color: var(--mantine-color-amber-6);
+}
