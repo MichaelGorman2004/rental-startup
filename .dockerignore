@@ -11,9 +11,9 @@ dist/
 build/
 .vite/
 
-# Development files
-.env.local
-.env.development.local
+# Environment files (secrets — never include in Docker context)
+.env
+.env.*
 *.local
 
 # IDE
