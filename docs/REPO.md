@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-02-24
-> **Status**: Phase 3 - Supporting Systems (Most Complete)
+> **Last Updated**: 2026-03-08
+> **Status**: Phase 3 Complete + UI Redesign
 
 ---
 
@@ -29,8 +29,9 @@
 - ✅ **VL-019**: Database Schema Extension for New Features
 
 ### Current Phase
-**Phase 3: Supporting Systems** (Complete)
-- Progress: 19/19 tasks done (100%)
+**Phase 3: Supporting Systems** (Complete) + **UI Redesign** (In Progress)
+- Progress: 19/19 core tasks done (100%)
+- UI Redesign: "Warm Night" design system — copper/bronze accents, DM Sans + Playfair Display, rounded 14px corners
 - Next Phase: VL-020+ Phase 4 - Testing & Refinement
 
 ---
@@ -41,7 +42,9 @@
 **Frontend**
 - React 18 + TypeScript (strict mode)
 - Vite dev server
-- Mantine UI v7 (Configured)
+- Mantine UI v7 ("Warm Night" theme — copper primary, dark scheme forced)
+- Icons: Phosphor Icons (`@phosphor-icons/react`)
+- Typography: DM Sans (body) + Playfair Display (headings) via Google Fonts
 - State management: Zustand (Layout), React Query v5 (Server State)
 - Authentication: Clerk (React SDK)
 
@@ -74,10 +77,10 @@ rental-startup/
 │   │   │   │   ├── types/         # Auth interfaces
 │   │   │   │   └── constants/     # Validation rules
 │   │   │   ├── dashboard/ # ✅ Dashboard Feature
-│   │   │   │   ├── components/    # DashboardPage, ActionCard, EventCard, etc.
+│   │   │   │   ├── components/    # DashboardPage, DashboardStats, StatCard, ActionCard, EventCard, QuickActionsGrid, UpcomingEvents
 │   │   │   │   ├── hooks/         # useUpcomingEvents, useOrganization
-│   │   │   │   ├── types/         # Dashboard interfaces
-│   │   │   │   └── constants/     # Quick actions config
+│   │   │   │   ├── types/         # Dashboard interfaces (QuickAction, OrganizationData)
+│   │   │   │   └── constants/     # Quick actions config, stat definitions, labels
 │   │   │   ├── venues/    # ✅ Venue Discovery Feature (VL-008/009)
 │   │   │   │   ├── components/    # VenueBrowse, VenueCard, VenueDetail, etc.
 │   │   │   │   ├── hooks/         # useVenues, useVenueSearch, useVenueFilters, useVenueDetail
@@ -107,7 +110,7 @@ rental-startup/
 │   │   │       └── constants/     # Status colors, labels, mock data
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers (VL-018)
-│   │   │   ├── components/    # RoleGuard, HeaderUserMenu, Header, Sidebar
+│   │   │   ├── components/    # AppShell, Header (top-nav), Sidebar (mobile drawer), HeaderUserMenu, RoleGuard
 │   │   │   └── index.ts       # Layout exports
 │   │   ├── lib/
 │   │   │   ├── api/             # ✅ Type-Safe API Client (VL-013, VL-015, VL-016)
@@ -483,12 +486,15 @@ npm run format           # Format both
 - ✅ **Error handling**: Explicit, never silent failures
 
 ### Frontend (TypeScript)
-- ✅ **TypeScript strict mode**: Enabled
+- ✅ **TypeScript strict mode**: Enabled (`noImplicitAny`, `strictNullChecks`, `noPropertyAccessFromIndexSignature`)
 - ✅ **ESLint**: Airbnb + React Hooks rules
 - ✅ **Prettier**: Consistent formatting
-- ✅ **No `any` types**: Enforced (pending features)
-- ✅ **Component size**: < 200 lines (pending features)
-- ✅ **Function size**: < 50 lines (pending features)
+- ✅ **No `any` types**: Enforced
+- ✅ **Component size**: < 150 lines per FRONTEND_RULES.md
+- ✅ **Function size**: < 15 lines per FRONTEND_RULES.md
+- ✅ **No raw HTML**: Mantine primitives only (Box, Text, Button, etc.)
+- ✅ **No hardcoded colors/values**: Theme tokens + CSS variables
+- ✅ **CSS modules**: Component-scoped styles, no global overrides or `!important`
 
 ### Shared Standards
 - ✅ **Pre-commit hooks**: Block non-compliant code
@@ -572,8 +578,9 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Lines of code (Python)**: ~2500+ (venues, bookings, organizations modules)
 
 ### Dashboard Feature Stats
-- **Components**: 7 (DashboardPage, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
+- **Components**: 9 (DashboardPage, DashboardStats, StatCard, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
 - **Hooks**: 2 (useUpcomingEvents, useOrganization)
+- **Sections**: Stats row (3-column), Quick Actions (4-column with descriptions), Upcoming Events (horizontal cards with status)
 - **React Query**: Configured with 5-min stale time
 
 ### Venue Feature Stats (VL-008 + VL-009)
@@ -602,9 +609,21 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Integrations**: Clerk signOut, organization profile management
 
 ### Layout & RBAC Stats (VL-018)
-- **Components**: 2 (RoleGuard, HeaderUserMenu)
-- **Features**: Role-based route protection, user menu with account/signout
+- **Components**: 5 (AppShell, Header, Sidebar, RoleGuard, HeaderUserMenu)
+- **Layout**: Top-nav header (64px, sticky, backdrop blur) + mobile drawer sidebar
+- **Features**: Role-based route protection, role-filtered nav items, user avatar menu with account/signout
 - **Routes Protected**: student_org and venue_admin specific routes
+
+### UI Design System ("Warm Night")
+- **Theme file**: `frontend/src/theme/index.ts` — Mantine v7 `createTheme()` with custom `copper` + `surface` color palettes
+- **CSS variables**: `frontend/src/theme/css-variables.ts` — 17 custom `--vl-*` tokens via `cssVariablesResolver`
+- **Global styles**: `frontend/src/global.css` — noise grain overlay, fade-up keyframes, custom scrollbar
+- **Color scheme**: Forced dark mode, deep charcoal backgrounds (#0e0e10, #1a1a20), warm copper accents (#d4845a)
+- **Typography**: DM Sans (body, variable font), Playfair Display (headings, serif)
+- **Radius**: 14px default, consistent rounded corners via theme
+- **Icons**: Phosphor Icons (`@phosphor-icons/react`) — lightweight, consistent weight system
+- **Patterns**: CSS modules for component styles, `Component.extend()` for global defaults, CSS custom property pattern for dynamic values
+- **Animations**: Staggered `vl-fade-up` on page load, `translateY`/`translateX` hover transitions, gradient glow overlays on action cards
 
 ### Venue Admin Feature Stats (VL-011)
 - **Components**: 6 (AdminDashboard, StatsGrid, StatCard, BookingsList, BookingCard, AccessDenied)

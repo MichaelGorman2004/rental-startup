@@ -92,16 +92,6 @@
 
 ## TODOs
 
-### Clerk Webhook Setup (required for user sync)
-The backend has a webhook endpoint at `/webhooks/clerk` that syncs Clerk user events (signup, role changes) to the database. This needs to be wired up:
-
-1. Go to **Clerk Dashboard** → **Webhooks** → **Add Endpoint**
-2. Set endpoint URL to: `https://venuelink-backend-production.up.railway.app/webhooks/clerk`
-3. Subscribe to events: `user.created`, `user.updated`, `user.deleted`
-4. Copy the **Signing Secret** (`whsec_...`) from Clerk
-5. Add to Railway backend variables: `CLERK_WEBHOOK_SECRET` = the signing secret
-6. Backend will auto-redeploy with the new variable
-
 ### Clerk PEM Public Key (required for JWT auth)
 Used by the backend to verify Clerk JWTs on authenticated API requests:
 
