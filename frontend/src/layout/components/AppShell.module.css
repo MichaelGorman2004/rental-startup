@@ -1,0 +1,9 @@
+.header {
+  background: var(--vl-bg-elevated);
+  border-bottom: 1px solid var(--vl-border);
+}
+
+.main {
+  background: var(--vl-bg-deep);
+  min-height: calc(100dvh - 60px);
+}

@@ -1,0 +1,21 @@
+.card {
+  background: var(--vl-bg-card);
+  border: 1px solid var(--vl-border);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 200ms ease,
+              box-shadow 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--vl-flame-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
+              0 0 20px -4px var(--vl-flame-glow);
+}
+
+.price {
+  color: var(--mantine-color-flame-4);
+}

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import {
   Menu, Avatar, UnstyledButton,
 } from '@mantine/core';
-import { IconSettings, IconLogout } from '@tabler/icons-react';
+import { GearSix, SignOut } from '@phosphor-icons/react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -29,11 +29,11 @@ export function HeaderUserMenu() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item leftSection={<IconSettings size="0.875rem" />} onClick={() => navigate('/settings')}>
+        <Menu.Item leftSection={<GearSix size="0.875rem" />} onClick={() => navigate('/settings')}>
           Settings
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item color="red" leftSection={<IconLogout size="0.875rem" />} onClick={handleSignOut}>
+        <Menu.Item color="red" leftSection={<SignOut size="0.875rem" />} onClick={handleSignOut}>
           Sign Out
         </Menu.Item>
       </Menu.Dropdown>

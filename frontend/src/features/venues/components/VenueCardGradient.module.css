@@ -1,0 +1,6 @@
+.gradient {
+  background: linear-gradient(135deg, var(--gradient-from), var(--gradient-to));
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  margin: calc(var(--mantine-spacing-lg) * -1);
+  margin-bottom: var(--mantine-spacing-md);
+}

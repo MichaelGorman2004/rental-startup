@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Card, Group, Stack, Text, Badge, Button, Box,
 } from '@mantine/core';
-import { IconCalendar, IconClock, IconUsers } from '@tabler/icons-react';
+import { Calendar, Clock, Users } from '@phosphor-icons/react';
 import { BookingStatus } from '@venuelink/shared';
 import type { MyBooking } from '@/lib/api/endpoints';
 import { STATUS_BADGE_COLORS, STATUS_LABELS } from '@/lib/constants';
@@ -38,15 +38,15 @@ export const BookingHistoryCard = memo(({ booking, onCancel }: BookingHistoryCar
 
         <Group gap="lg">
           <Group gap="xs">
-            <Box c="dimmed"><IconCalendar size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Calendar size="0.875rem" /></Box>
             <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00Z`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconClock size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Clock size="0.875rem" /></Box>
             <Text size="sm">{formatBookingTime(booking.eventTime)}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconUsers size="0.875rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><Users size="0.875rem" /></Box>
             <Text size="sm">
               {`${booking.guestCount} ${MY_BOOKINGS_MESSAGES.GUESTS_LABEL}`}
             </Text>

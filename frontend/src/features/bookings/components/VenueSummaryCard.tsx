@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Card, Stack, Text, Group, Badge, ThemeIcon, Box,
 } from '@mantine/core';
-import { IconUsers, IconCash, IconMapPin } from '@tabler/icons-react';
+import { Users, CurrencyDollar, MapPin } from '@phosphor-icons/react';
 import type { Venue } from '../../venues';
 import {
   VENUE_TYPE_LABELS, VENUE_TYPE_BADGE_COLORS, VENUE_TYPE_GRADIENTS,
@@ -41,7 +41,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <IconUsers size="1rem" stroke={1.5} />
+            <Users size="1rem" />
           </ThemeIcon>
           <Text size="sm">
             {formatCapacity(venue.capacity)}
@@ -52,7 +52,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <IconCash size="1rem" stroke={1.5} />
+            <CurrencyDollar size="1rem" />
           </ThemeIcon>
           <Text size="sm">
             {formatPrice(venue.basePriceCents)}
@@ -62,7 +62,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <IconMapPin size="1rem" stroke={1.5} />
+            <MapPin size="1rem" />
           </ThemeIcon>
           <Text size="sm" c="dimmed">
             {formatAddress(venue.addressStreet, venue.addressCity, venue.addressState)}

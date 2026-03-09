@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 import { Stack, Textarea, Select } from '@mantine/core';
-import { IconNote, IconWallet } from '@tabler/icons-react';
+import { Notepad, Wallet } from '@phosphor-icons/react';
 import type { BookingFormValues } from '../types';
 import {
   BOOKING_MESSAGES, BUDGET_OPTIONS, MAX_SPECIAL_REQUESTS_LENGTH,
@@ -24,7 +24,7 @@ export const AdditionalInfoStep = memo(({ control }: AdditionalInfoStepProps) =>
           label={BOOKING_MESSAGES.SPECIAL_REQUESTS_LABEL}
           placeholder={BOOKING_MESSAGES.SPECIAL_REQUESTS_PLACEHOLDER}
           description={BOOKING_MESSAGES.SPECIAL_REQUESTS_DESCRIPTION}
-          leftSection={<IconNote size="1rem" stroke={1.5} />}
+          leftSection={<Notepad size="1rem" />}
           maxLength={MAX_SPECIAL_REQUESTS_LENGTH}
           minRows={4}
           autosize
@@ -41,7 +41,7 @@ export const AdditionalInfoStep = memo(({ control }: AdditionalInfoStepProps) =>
           label={BOOKING_MESSAGES.BUDGET_LABEL}
           placeholder={BOOKING_MESSAGES.BUDGET_PLACEHOLDER}
           description={BOOKING_MESSAGES.BUDGET_DESCRIPTION}
-          leftSection={<IconWallet size="1rem" stroke={1.5} />}
+          leftSection={<Wallet size="1rem" />}
           data={[...BUDGET_OPTIONS]}
           clearable
         />

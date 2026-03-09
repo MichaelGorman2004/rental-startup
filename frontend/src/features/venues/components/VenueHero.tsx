@@ -5,6 +5,7 @@ import {
 import { VENUE_TYPE_GRADIENTS, VENUE_TYPE_BADGE_COLORS, VENUE_TYPE_LABELS } from '../constants/venue-types';
 import { HERO_GRADIENT_HEIGHT } from '../constants/venue-defaults';
 import type { VenueType } from '../types/venue.types';
+import classes from './VenueHero.module.css';
 
 interface VenueHeroProps {
   name: string;
@@ -19,10 +20,8 @@ export const VenueHero = memo(({ name, venueType }: VenueHeroProps) => {
     <Stack gap="md">
       <Box
         h={HERO_GRADIENT_HEIGHT}
-        style={{
-          background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
-          borderRadius: 'var(--mantine-radius-md)',
-        }}
+        className={classes['gradient']}
+        style={{ '--gradient-from': gradient.from, '--gradient-to': gradient.to } as React.CSSProperties}
       />
       <Group justify="space-between" align="flex-start">
         <Title order={2}>{name}</Title>

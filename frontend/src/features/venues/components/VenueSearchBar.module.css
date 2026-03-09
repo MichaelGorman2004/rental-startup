@@ -1,0 +1,11 @@
+.input {
+  background: var(--vl-bg-card);
+  border: 1px solid var(--vl-border);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input:focus {
+  border-color: var(--mantine-color-flame-4);
+  box-shadow: 0 0 0 2px var(--vl-flame-glow),
+              0 0 12px -2px var(--vl-flame-glow);
+}

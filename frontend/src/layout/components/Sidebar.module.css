@@ -1,0 +1,28 @@
+.link {
+  --nl-bg: transparent;
+  --nl-hover: rgba(255, 255, 255, 0.04);
+  --nl-color: var(--vl-text-secondary);
+  transition: all 150ms ease;
+  margin-bottom: 2px;
+}
+
+.link[data-active='true'] {
+  --nl-bg: var(--vl-flame-glow);
+  --nl-hover: var(--vl-flame-glow-strong);
+  --nl-color: var(--mantine-color-flame-4);
+}
+
+.link[data-active='true'] .linkLabel {
+  color: var(--mantine-color-flame-4);
+  font-weight: 600;
+}
+
+.linkLabel {
+  font-size: var(--mantine-font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.wrapper {
+  padding: var(--mantine-spacing-md);
+}

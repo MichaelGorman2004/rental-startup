@@ -1,9 +1,9 @@
 import {
-  IconSearch,
-  IconCalendarEvent,
-  IconCreditCard,
-  IconSettings,
-} from '@tabler/icons-react';
+  MagnifyingGlass,
+  CalendarBlank,
+  CreditCard,
+  GearSix,
+} from '@phosphor-icons/react';
 import type { QuickAction } from '../types/dashboard.types';
 
 /**
@@ -15,28 +15,28 @@ export const QUICK_ACTIONS: QuickAction[] = [
     id: 'browse-venues',
     title: 'Browse Venues',
     route: '/venues',
-    icon: IconSearch,
-    color: 'blue',
+    icon: MagnifyingGlass,
+    color: 'flame',
   },
   {
     id: 'my-bookings',
     title: 'My Bookings',
     route: '/bookings',
-    icon: IconCalendarEvent,
+    icon: CalendarBlank,
     color: 'green',
   },
   {
     id: 'budget-tracker',
     title: 'Budget Tracker',
     route: '/budget',
-    icon: IconCreditCard,
+    icon: CreditCard,
     color: 'orange',
   },
   {
     id: 'settings',
     title: 'Settings',
     route: '/settings',
-    icon: IconSettings,
+    icon: GearSix,
     color: 'gray',
   },
 ];

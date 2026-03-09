@@ -3,8 +3,8 @@ import {
   Stack, Title, Text, Button, Card, Group, ThemeIcon, Badge, Box,
 } from '@mantine/core';
 import {
-  IconCircleCheck, IconCalendarEvent, IconBuildingStore,
-} from '@tabler/icons-react';
+  CheckCircle, CalendarBlank, Storefront,
+} from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import type { BookingConfirmation } from '../types';
 import { BOOKING_MESSAGES } from '../constants';
@@ -28,7 +28,7 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
   return (
     <Stack gap="xl" align="center" py="xl">
       <ThemeIcon size={80} radius="xl" variant="light" color="green">
-        <IconCircleCheck size="2.5rem" stroke={1.5} />
+        <CheckCircle size="2.5rem" />
       </ThemeIcon>
 
       <Stack gap="xs" align="center">
@@ -42,21 +42,21 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
         <Stack gap="sm">
           <Group justify="space-between">
             <Text size="sm" c="dimmed">{BOOKING_MESSAGES.SUCCESS_REFERENCE}</Text>
-            <Badge size="lg" variant="light" color="indigo" fw={700}>
+            <Badge size="lg" variant="light" color="flame" fw={700}>
               {confirmation.referenceNumber}
             </Badge>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconCalendarEvent size="1rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
             <Text size="sm">{confirmation.eventName}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><IconCalendarEvent size="1rem" stroke={1.5} /></Box>
+            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
             <Text size="sm">{confirmation.eventDate}</Text>
           </Group>
           {confirmation.venueName ? (
             <Group gap="xs">
-              <Box c="dimmed"><IconBuildingStore size="1rem" stroke={1.5} /></Box>
+              <Box c="dimmed"><Storefront size="1rem" /></Box>
               <Text size="sm" c="dimmed">{confirmation.venueName}</Text>
             </Group>
           ) : null}
@@ -66,14 +66,14 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
       <Group gap="md">
         <Button
           variant="filled"
-          leftSection={<IconCalendarEvent size="1rem" stroke={1.5} />}
+          leftSection={<CalendarBlank size="1rem" />}
           onClick={handleViewBookings}
         >
           {BOOKING_MESSAGES.VIEW_BOOKINGS}
         </Button>
         <Button
           variant="light"
-          leftSection={<IconBuildingStore size="1rem" stroke={1.5} />}
+          leftSection={<Storefront size="1rem" />}
           onClick={handleBrowseVenues}
         >
           {BOOKING_MESSAGES.BROWSE_VENUES}

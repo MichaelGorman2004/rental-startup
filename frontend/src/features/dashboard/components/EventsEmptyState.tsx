@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { Stack, Text, Button } from '@mantine/core';
-import { IconCalendarOff } from '@tabler/icons-react';
+import { CalendarX } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { DASHBOARD_CONSTANTS } from '../constants/dashboard.constants';
 
@@ -13,7 +13,7 @@ export const EventsEmptyState = memo(() => {
 
   return (
     <Stack align="center" py="xl" gap="md">
-      <IconCalendarOff size="3rem" stroke={1.5} color="gray" />
+      <CalendarX size="3rem" color="gray" />
       <Text fw={500}>{DASHBOARD_CONSTANTS.MESSAGES.NO_EVENTS}</Text>
       <Text size="sm" c="dimmed">{DASHBOARD_CONSTANTS.MESSAGES.NO_EVENTS_SUBTITLE}</Text>
       <Button onClick={handleBrowseClick}>Browse Venues</Button>

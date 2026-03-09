@@ -2,7 +2,7 @@ import type { Control } from 'react-hook-form';
 import {
   Container, Stack, Grid, Title, Text, Stepper, Group, Button,
 } from '@mantine/core';
-import { IconArrowLeft, IconArrowRight, IconSend } from '@tabler/icons-react';
+import { ArrowLeft, ArrowRight, PaperPlaneTilt } from '@phosphor-icons/react';
 import { useBookingPage } from '../hooks';
 import type { BookingFormValues } from '../types';
 import {
@@ -80,7 +80,7 @@ export function BookingForm() {
                 <Group justify="space-between">
                   <Button
                     variant="subtle"
-                    leftSection={<IconArrowLeft size="1rem" stroke={1.5} />}
+                    leftSection={<ArrowLeft size="1rem" />}
                     onClick={handleBack}
                     disabled={isFirstStep}
                   >
@@ -89,7 +89,7 @@ export function BookingForm() {
 
                   {isLastStep ? (
                     <Button
-                      leftSection={<IconSend size="1rem" stroke={1.5} />}
+                      leftSection={<PaperPlaneTilt size="1rem" />}
                       onClick={handleSubmit}
                       loading={isSubmitting}
                     >
@@ -97,7 +97,7 @@ export function BookingForm() {
                     </Button>
                   ) : (
                     <Button
-                      rightSection={<IconArrowRight size="1rem" stroke={1.5} />}
+                      rightSection={<ArrowRight size="1rem" />}
                       onClick={handleNext}
                     >
                       {BOOKING_MESSAGES.NEXT}

@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Stack, Text, Title, Skeleton, ThemeIcon,
 } from '@mantine/core';
-import { IconInbox } from '@tabler/icons-react';
+import { Tray } from '@phosphor-icons/react';
 import type { BookingsListProps } from '../types';
 import {
   ADMIN_MESSAGES,
@@ -27,7 +27,7 @@ function BookingsEmptyState() {
   return (
     <Stack align="center" gap="sm" py="xl">
       <ThemeIcon size={48} radius="xl" variant="light" color="gray">
-        <IconInbox size="1.5rem" stroke={1.5} />
+        <Tray size="1.5rem" />
       </ThemeIcon>
       <Text fw={500}>{ADMIN_MESSAGES.BOOKINGS_EMPTY}</Text>
       <Text size="sm" c="dimmed" ta="center" maw={300}>

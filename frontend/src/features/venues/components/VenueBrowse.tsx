@@ -6,6 +6,7 @@ import { useVenueBrowse } from '../hooks/useVenueBrowse';
 import { VenueSearchBar } from './VenueSearchBar';
 import { VenueFilters } from './VenueFilters';
 import { VenueGrid } from './VenueGrid';
+import classes from './VenueBrowse.module.css';
 
 /** Main venue discovery page composing search, filters, and grid. */
 export function VenueBrowse() {
@@ -16,7 +17,7 @@ export function VenueBrowse() {
 
   return (
     <Container size="lg" py="xl">
-      <Stack gap="lg">
+      <Stack gap="lg" className={classes['pageEnter']}>
         <Stack gap="xs">
           <Title order={2}>{VENUE_MESSAGES.PAGE_TITLE}</Title>
           <Text c="dimmed">{VENUE_MESSAGES.PAGE_SUBTITLE}</Text>

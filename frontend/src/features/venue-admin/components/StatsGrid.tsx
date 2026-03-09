@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { SimpleGrid, Skeleton } from '@mantine/core';
 import {
-  IconCalendarEvent, IconCash, IconStar, IconChartBar,
-} from '@tabler/icons-react';
+  CalendarBlank, CurrencyDollar, Star, ChartBar,
+} from '@phosphor-icons/react';
 import type { StatsGridProps } from '../types';
 import { ADMIN_MESSAGES, STATS_SKELETON_COUNT } from '../constants';
 import { formatPrice } from '../utils';
@@ -20,7 +20,7 @@ export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) =>
     return (
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         <StatCard
-          icon={<IconChartBar size="1.25rem" stroke={1.5} />}
+          icon={<ChartBar size="1.25rem" />}
           label="Stats"
           value="Failed to load"
           color="red"
@@ -43,25 +43,25 @@ export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) =>
   return (
     <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
       <StatCard
-        icon={<IconCalendarEvent size="1.25rem" stroke={1.5} />}
+        icon={<CalendarBlank size="1.25rem" />}
         label={ADMIN_MESSAGES.STATS_BOOKINGS}
         value={stats.bookingsThisMonth.toString()}
-        color="indigo"
+        color="flame"
       />
       <StatCard
-        icon={<IconCash size="1.25rem" stroke={1.5} />}
+        icon={<CurrencyDollar size="1.25rem" />}
         label={ADMIN_MESSAGES.STATS_REVENUE}
         value={formatPrice(stats.revenueCents)}
         color="green"
       />
       <StatCard
-        icon={<IconStar size="1.25rem" stroke={1.5} />}
+        icon={<Star size="1.25rem" />}
         label={ADMIN_MESSAGES.STATS_RATING}
         value={formatRating(stats.averageRating)}
         color="yellow"
       />
       <StatCard
-        icon={<IconChartBar size="1.25rem" stroke={1.5} />}
+        icon={<ChartBar size="1.25rem" />}
         label={ADMIN_MESSAGES.STATS_OCCUPANCY}
         value={`${stats.occupancyPercent}%`}
         color="cyan"

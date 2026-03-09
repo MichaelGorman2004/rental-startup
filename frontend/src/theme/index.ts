@@ -1,39 +1,62 @@
-import { createTheme, rem } from '@mantine/core';
+import {
+  createTheme, rem, NavLink, Card, Button, TextInput, Badge,
+  PasswordInput, Stepper, Tabs, Modal, Alert, Paper, Chip,
+} from '@mantine/core';
 
 /**
- * Custom application theme based on Mantine
- * enforcing strict design system values.
+ * VenueLink "Flame Brutalist" theme.
+ *
+ * True black backgrounds, vivid orange-red flame accents,
+ * 0px radius everywhere, editorial serif + geometric sans.
  */
 export const theme = createTheme({
-  /**
-   * Primary color used for main actions and highlights.
-   * Based on indigo scale for professional/modern look.
-   */
-  primaryColor: 'indigo',
+  primaryColor: 'flame',
 
-  /**
-   * Custom color palette extension.
-   * Can be used via `c="brand.5"` or `bg="brand.0"`.
-   */
   colors: {
-    brand: [
-      '#eef2ff', // 0
-      '#e0e7ff', // 1
-      '#c7d2fe', // 2
-      '#a5b4fc', // 3
-      '#818cf8', // 4
-      '#6366f1', // 5
-      '#4f46e5', // 6
-      '#4338ca', // 7
-      '#3730a3', // 8
-      '#312e81', // 9
+    flame: [
+      '#fff5f0',
+      '#ffe0d1',
+      '#ffc2a3',
+      '#ff9b6b',
+      '#ff6b1a',
+      '#f05a10',
+      '#e84118',
+      '#c43414',
+      '#9e2a10',
+      '#7a200c',
+    ],
+    surface: [
+      '#e8e5e0',
+      '#c0bdb8',
+      '#7a7580',
+      '#4a4550',
+      '#1e1e22',
+      '#141418',
+      '#0e0e12',
+      '#0a0a0e',
+      '#070709',
+      '#050507',
     ],
   },
 
-  /**
-   * Base spacing unit: 4px
-   * xs: 8px, sm: 12px, md: 16px, lg: 24px, xl: 32px
-   */
+  primaryShade: 4,
+
+  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+  fontFamilyMonospace: '"JetBrains Mono", monospace',
+
+  headings: {
+    fontFamily: '"Playfair Display", Georgia, serif',
+    fontWeight: '700',
+  },
+
+  fontSizes: {
+    xs: rem(12),
+    sm: rem(14),
+    md: rem(16),
+    lg: rem(18),
+    xl: rem(20),
+  },
+
   spacing: {
     xs: rem(8),
     sm: rem(12),
@@ -42,61 +65,121 @@ export const theme = createTheme({
     xl: rem(32),
   },
 
-  /**
-   * Typography scale using Inter font family.
-   */
-  fontFamily: 'Inter, system-ui, sans-serif',
-  fontSizes: {
-    xs: rem(12),
-    sm: rem(14),
-    md: rem(16),
-    lg: rem(18),
-    xl: rem(20),
-  },
-  headings: {
-    fontFamily: 'Inter, system-ui, sans-serif',
-    fontWeight: '700',
-  },
-
-  /**
-   * Border radius tokens.
-   */
   radius: {
-    xs: rem(4),
-    sm: rem(8),
-    md: rem(12),
-    lg: rem(16),
-    xl: rem(24),
+    xs: rem(0),
+    sm: rem(0),
+    md: rem(0),
+    lg: rem(0),
+    xl: rem(0),
   },
 
-  /**
-   * Component default props to enforce consistency.
-   */
+  defaultRadius: 0,
+
   components: {
-    Button: {
+    Button: Button.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
         fw: 600,
       },
-    },
-    TextInput: {
+    }),
+
+    TextInput: TextInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 0,
       },
-    },
-    Card: {
+    }),
+
+    PasswordInput: PasswordInput.extend({
       defaultProps: {
-        radius: 'md',
-        shadow: 'sm',
-        p: 'md',
+        radius: 0,
+      },
+    }),
+
+    Card: Card.extend({
+      defaultProps: {
+        radius: 0,
+        p: 'lg',
         withBorder: true,
       },
-    },
-    Badge: {
+      styles: () => ({
+        root: {
+          backgroundColor: 'var(--vl-bg-card)',
+          borderColor: 'var(--vl-border)',
+        },
+      }),
+    }),
+
+    Badge: Badge.extend({
       defaultProps: {
-        radius: 'sm',
-        fw: 600,
+        radius: 0,
+        fw: 700,
+        tt: 'uppercase',
       },
-    },
+      styles: () => ({
+        root: {
+          letterSpacing: '0.06em',
+          fontSize: rem(11),
+        },
+      }),
+    }),
+
+    NavLink: NavLink.extend({
+      defaultProps: {
+        variant: 'subtle',
+      },
+    }),
+
+    Stepper: Stepper.extend({
+      defaultProps: {
+        color: 'flame',
+      },
+    }),
+
+    Tabs: Tabs.extend({
+      defaultProps: {
+        color: 'flame',
+      },
+    }),
+
+    Modal: Modal.extend({
+      defaultProps: {
+        radius: 0,
+      },
+      styles: () => ({
+        content: {
+          backgroundColor: 'var(--vl-bg-elevated)',
+          borderColor: 'var(--vl-border)',
+        },
+        header: {
+          backgroundColor: 'var(--vl-bg-elevated)',
+        },
+      }),
+    }),
+
+    Alert: Alert.extend({
+      defaultProps: {
+        radius: 0,
+      },
+    }),
+
+    Paper: Paper.extend({
+      defaultProps: {
+        radius: 0,
+      },
+      styles: () => ({
+        root: {
+          backgroundColor: 'var(--vl-bg-card)',
+        },
+      }),
+    }),
+
+    Chip: Chip.extend({
+      defaultProps: {
+        color: 'flame',
+        radius: 0,
+      },
+    }),
   },
 });
+
+export { cssVariablesResolver } from './css-variables';

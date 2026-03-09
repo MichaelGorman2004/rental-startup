@@ -1,41 +1,37 @@
-import { AppShell as MantineAppShell, ScrollArea } from '@mantine/core';
+import { AppShell as MantineAppShell, Drawer } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
 import { useLayout } from '../hooks/useLayout';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import { Footer } from './Footer';
+import classes from './AppShell.module.css';
 
 export function AppShell() {
-  const { sidebarOpen } = useLayout();
+  const { sidebarOpen, closeSidebar } = useLayout();
 
   return (
     <MantineAppShell
       header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: 'sm',
-        collapsed: { mobile: !sidebarOpen },
-      }}
-      footer={{ height: 60 }}
       padding="md"
+      withBorder={false}
     >
-      <MantineAppShell.Header>
+      <MantineAppShell.Header className={classes['header']}>
         <Header />
       </MantineAppShell.Header>
 
-      <MantineAppShell.Navbar p="md">
-        <ScrollArea h="100%">
-          <Sidebar />
-        </ScrollArea>
-      </MantineAppShell.Navbar>
+      <Drawer
+        opened={sidebarOpen}
+        onClose={closeSidebar}
+        size="xs"
+        hiddenFrom="sm"
+        withCloseButton={false}
+        styles={{ body: { background: 'var(--vl-bg-elevated)', padding: 0 } }}
+      >
+        <Sidebar />
+      </Drawer>
 
-      <MantineAppShell.Main>
+      <MantineAppShell.Main className={classes['main']}>
         <Outlet />
       </MantineAppShell.Main>
-
-      <MantineAppShell.Footer p="md">
-        <Footer />
-      </MantineAppShell.Footer>
     </MantineAppShell>
   );
 }

@@ -5,7 +5,7 @@
  * This file maintains backward compatibility during migration.
  */
 
-import type { Icon } from '@tabler/icons-react';
+import type { Icon } from '@phosphor-icons/react';
 
 // Re-export shared types
 export { OrganizationType } from '@venuelink/shared';
@@ -23,7 +23,7 @@ export interface QuickAction {
   title: string;
   /** Route to navigate to when clicked */
   route: string;
-  /** Tabler icon component to display */
+  /** Phosphor icon component to display */
   icon: Icon;
   /** Mantine color for the icon background */
   color: string;

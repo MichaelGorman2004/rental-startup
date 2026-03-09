@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import {
   Card, Group, Text, Anchor, ThemeIcon,
 } from '@mantine/core';
-import { IconMapPin, IconExternalLink } from '@tabler/icons-react';
+import { MapPin, ArrowSquareOut } from '@phosphor-icons/react';
 import { VENUE_DETAIL_MESSAGES } from '../constants/venue-defaults';
 import { formatAddress } from '../utils/format-address';
 import { buildMapsUrl } from '../utils/build-maps-url';
@@ -28,7 +28,7 @@ export const VenueAddress = memo(({
       <Group justify="space-between" align="flex-start">
         <Group gap="md">
           <ThemeIcon size="lg" radius="md" variant="light" color="gray">
-            <IconMapPin size="1.25rem" stroke={1.5} />
+            <MapPin size="1.25rem" />
           </ThemeIcon>
           <div>
             <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.ADDRESS_LABEL}</Text>
@@ -44,7 +44,7 @@ export const VenueAddress = memo(({
           aria-label={VENUE_DETAIL_MESSAGES.OPEN_IN_MAPS}
         >
           <Group gap="xs">
-            <IconExternalLink size="0.875rem" stroke={1.5} />
+            <ArrowSquareOut size="0.875rem" />
             {VENUE_DETAIL_MESSAGES.OPEN_IN_MAPS}
           </Group>
         </Anchor>

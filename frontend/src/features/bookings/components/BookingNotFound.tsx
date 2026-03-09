@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import {
   Stack, Title, Text, Button, ThemeIcon,
 } from '@mantine/core';
-import { IconAlertTriangle } from '@tabler/icons-react';
+import { Warning } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { BOOKING_MESSAGES } from '../constants';
 
@@ -14,7 +14,7 @@ export const BookingNotFound = memo(() => {
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size={64} radius="xl" variant="light" color="red">
-        <IconAlertTriangle size="2rem" stroke={1.5} />
+        <Warning size="2rem" />
       </ThemeIcon>
       <Title order={3}>{BOOKING_MESSAGES.VENUE_NOT_FOUND}</Title>
       <Text c="dimmed" ta="center" maw={400}>{BOOKING_MESSAGES.VENUE_NOT_FOUND_SUBTITLE}</Text>

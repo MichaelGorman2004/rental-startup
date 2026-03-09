@@ -19,20 +19,20 @@ export const VENUE_TYPE_LABELS: Record<VenueType, string> = {
 };
 
 /**
- * Gradient pairs for venue card headers, keyed by venue type.
- * Each gradient creates a distinct visual identity for the category.
+ * Gradient pairs for venue card headers.
+ * Hot, saturated palette with flame-inspired tones.
  */
 export const VENUE_TYPE_GRADIENTS: Record<VenueType, { from: string; to: string }> = {
-  [VenueType.Bar]: { from: '#f59e0b', to: '#ef4444' },
-  [VenueType.Restaurant]: { from: '#06b6d4', to: '#3b82f6' },
-  [VenueType.EventSpace]: { from: '#8b5cf6', to: '#ec4899' },
-  [VenueType.Cafe]: { from: '#10b981', to: '#6ee7b7' },
+  [VenueType.Bar]: { from: '#ff6b1a', to: '#e8391c' },
+  [VenueType.Restaurant]: { from: '#ff3d71', to: '#a8174e' },
+  [VenueType.EventSpace]: { from: '#7b61ff', to: '#4318c4' },
+  [VenueType.Cafe]: { from: '#ff9f43', to: '#d35400' },
 };
 
 /** Mantine color references for venue type badges. */
 export const VENUE_TYPE_BADGE_COLORS: Record<VenueType, string> = {
-  [VenueType.Bar]: 'orange',
-  [VenueType.Restaurant]: 'cyan',
-  [VenueType.EventSpace]: 'grape',
-  [VenueType.Cafe]: 'teal',
+  [VenueType.Bar]: 'flame',
+  [VenueType.Restaurant]: 'pink',
+  [VenueType.EventSpace]: 'violet',
+  [VenueType.Cafe]: 'orange',
 };
