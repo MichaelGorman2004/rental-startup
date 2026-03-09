@@ -3,31 +3,31 @@ import { Stack, NavLink } from '@mantine/core';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import {
-  IconDashboard, IconBuilding, IconCalendarEvent, IconSettings,
-  IconChartBar,
-} from '@tabler/icons-react';
+  SquaresFour, Buildings, CalendarBlank, GearSix,
+  ChartBar,
+} from '@phosphor-icons/react';
 import classes from './Sidebar.module.css';
 
 interface NavItem {
   label: string;
-  icon: typeof IconDashboard;
+  icon: typeof SquaresFour;
   route: string;
   roles?: readonly string[];
 }
 
 /** Navigation items with optional role restrictions. */
 const NAV_ITEMS: readonly NavItem[] = [
-  { label: 'Dashboard', icon: IconDashboard, route: '/' },
+  { label: 'Dashboard', icon: SquaresFour, route: '/' },
   {
-    label: 'Venues', icon: IconBuilding, route: '/venues', roles: ['student_org'],
+    label: 'Venues', icon: Buildings, route: '/venues', roles: ['student_org'],
   },
   {
-    label: 'Bookings', icon: IconCalendarEvent, route: '/bookings', roles: ['student_org'],
+    label: 'Bookings', icon: CalendarBlank, route: '/bookings', roles: ['student_org'],
   },
   {
-    label: 'Venue Admin', icon: IconChartBar, route: '/admin', roles: ['venue_admin'],
+    label: 'Venue Admin', icon: ChartBar, route: '/admin', roles: ['venue_admin'],
   },
-  { label: 'Settings', icon: IconSettings, route: '/settings' },
+  { label: 'Settings', icon: GearSix, route: '/settings' },
 ];
 
 export function Sidebar() {
@@ -55,7 +55,7 @@ export function Sidebar() {
         <NavLink
           key={item.route}
           label={item.label}
-          leftSection={<item.icon size="1.125rem" stroke={1.5} />}
+          leftSection={<item.icon size="1.125rem" />}
           active={item.route === '/' ? location.pathname === '/' : location.pathname.startsWith(item.route)}
           onClick={handleNavClick(item.route)}
           classNames={{ root: classes['link'], label: classes['linkLabel'] }}

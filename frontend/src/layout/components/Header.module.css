@@ -1,14 +1,29 @@
 .logo {
   font-family: var(--mantine-font-family-headings);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
-.logoDot {
-  color: var(--mantine-color-amber-6);
+.logoAccent {
+  color: var(--mantine-color-flame-4);
 }
 
-.orgBadge {
-  background: var(--vl-amber-glow);
-  color: var(--mantine-color-amber-6);
-  border: 1px solid var(--vl-amber-border);
+.navLink {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  color: var(--vl-text-secondary);
+  text-decoration: none;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.navLink:hover {
+  color: var(--mantine-color-white);
+}
+
+.navLinkActive {
+  color: var(--mantine-color-flame-4);
+  border-bottom-color: var(--mantine-color-flame-4);
 }

@@ -3,16 +3,7 @@
   border-bottom: 1px solid var(--vl-border);
 }
 
-.navbar {
-  background: var(--vl-bg-elevated);
-  border-right: 1px solid var(--vl-border);
-}
-
 .main {
   background: var(--vl-bg-deep);
-}
-
-.footer {
-  background: var(--vl-bg-elevated);
-  border-top: 1px solid var(--vl-border);
+  min-height: calc(100dvh - 60px);
 }
