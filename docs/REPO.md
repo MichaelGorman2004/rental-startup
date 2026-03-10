@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-03-08
-> **Status**: Phase 3 Complete + UI Redesign
+> **Last Updated**: 2026-03-10
+> **Status**: Phase 3 Complete + UI Redesign + Prerelease Interest Form + Booking Backend Integration
 
 ---
 
@@ -29,10 +29,13 @@
 - ✅ **VL-019**: Database Schema Extension for New Features
 
 ### Current Phase
-**Phase 3: Supporting Systems** (Complete) + **UI Redesign** (In Progress)
+**Phase 3: Supporting Systems** (Complete) + **UI Redesign** + **Prerelease Interest Form** + **Booking Backend**
 - Progress: 19/19 core tasks done (100%)
 - UI Redesign: "Warm Night" design system — copper/bronze accents, DM Sans + Playfair Display, rounded 14px corners
-- Next Phase: VL-020+ Phase 4 - Testing & Refinement
+- Prerelease Interest Form: Landing page signup form for early access waitlist
+- Booking Backend: Full API implementation with `event_start_time`/`event_end_time`, time conflict detection
+- Blocker: Frontend venues still use mock data (booking fails UUID validation)
+- Next Phase: Wire venues to real API, then VL-020+ Phase 4 - Testing & Refinement
 
 ---
 
@@ -103,11 +106,16 @@ rental-startup/
 │   │   │   │   ├── hooks/         # useSettingsPage
 │   │   │   │   ├── types/         # Settings interfaces
 │   │   │   │   └── constants/     # Settings UI defaults
-│   │   │   └── venue-admin/ # ✅ Venue Admin Dashboard (VL-011)
-│   │   │       ├── components/    # AdminDashboard, StatsGrid, BookingCard, etc.
-│   │   │       ├── hooks/         # useVenueStats, useVenueBookings, useBookingActions
-│   │   │       ├── types/         # VenueStats, AdminBooking interfaces
-│   │   │       └── constants/     # Status colors, labels, mock data
+│   │   │   ├── venue-admin/ # ✅ Venue Admin Dashboard (VL-011)
+│   │   │   │   ├── components/    # AdminDashboard, StatsGrid, BookingCard, etc.
+│   │   │   │   ├── hooks/         # useVenueStats, useVenueBookings, useBookingActions
+│   │   │   │   ├── types/         # VenueStats, AdminBooking interfaces
+│   │   │   │   └── constants/     # Status colors, labels, mock data
+│   │   │   └── landing/     # ✅ Landing Page + Prerelease Interest Form
+│   │   │       ├── components/    # LandingPage, Hero, FeaturedVenues, InterestForm
+│   │   │       ├── hooks/         # useScrollAnimation, useInterestForm
+│   │   │       ├── types/         # Landing page interfaces
+│   │   │       └── constants/     # Landing page content, form config
 │   │   ├── components/    # Shared UI components
 │   │   ├── layout/        # Layout wrappers (VL-018)
 │   │   │   ├── components/    # AppShell, Header (top-nav), Sidebar (mobile drawer), HeaderUserMenu, RoleGuard
@@ -202,6 +210,7 @@ rental-startup/
 │
 ├── docs/
 │   ├── ui-mockup.html    # UI design mockups
+│   ├── BOOKINGS.md       # Booking system architecture documentation
 │   └── REPO.md           # This file
 │
 ├── .github/
@@ -243,9 +252,10 @@ rental-startup/
 
 **bookings**
 - Primary key: UUID v4
-- Columns: venue_id (FK), organization_id (FK), event_date, event_time, guest_count, status (enum)
+- Columns: venue_id (FK), organization_id (FK), event_date, event_start_time, event_end_time, guest_count, event_name, special_requests, status (enum)
+- Computed: event_duration (from start/end times)
 - Timestamps: created_at, updated_at
-- Constraints: UNIQUE(venue_id, event_date, event_time), guest_count > 0
+- Constraints: UNIQUE(venue_id, event_date, event_start_time), guest_count > 0, event_end_time > event_start_time
 - Relationships: ← venue, ← organization
 
 ### Enums (4 PostgreSQL types)
@@ -264,7 +274,8 @@ rental-startup/
 - bookings.organization_id
 - bookings.event_date
 - bookings.status
-- bookings(venue_id, event_date, event_time) (composite, unique)
+- bookings(venue_id, event_date, event_start_time) (composite, unique)
+- bookings(venue_id, event_date, event_start_time, event_end_time) (composite, for conflict detection)
 
 ---
 
@@ -569,8 +580,8 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Backend Python files**: ~65+ (venues, bookings, organizations modules)
 - **Frontend feature files**: ~150+ (auth, dashboard, venues, bookings, organization, settings, venue-admin)
 - **Database tables**: 4
-- **Migration count**: 2
-- **API endpoints**: 19 (auth: 1, venues: 5, bookings: 6, organizations: 3, plus utilities)
+- **Migration count**: 3 (includes booking start/end time migration)
+- **API endpoints**: 20 (auth: 1, venues: 6, bookings: 6, organizations: 3, plus utilities)
 - **Frontend API functions**: 16+ typed endpoints (venues, bookings, organizations)
 - **Type coverage**: 100% (mypy strict mode, TypeScript strict mode)
 - **Linting errors**: 0 (ruff + ESLint clean)
@@ -591,10 +602,12 @@ VITE_API_BASE_URL=http://localhost:8000
 ### Booking Feature Stats (VL-010 + VL-015)
 - **Components**: 14+ (BookingForm, EventDetailsStep, ReviewStep, BookingsPage, BookingHistoryCard, BookingsFilterBar, BookingsEmptyState, BookingsPageSkeleton, etc.)
 - **Hooks**: 6 (useBookingForm, useCreateBooking, useBookingPage, useBookingsPage, useMyBookings, useCancelBooking)
-- **Utilities**: 5 (calculateCost, getMinBookingDate, getMaxBookingDate, formatBookingDate, formatBookingTime)
+- **Utilities**: 6 (calculateCost, getMinBookingDate, getMaxBookingDate, formatBookingDate, formatBookingTime, formatDateToISO)
 - **Validation**: React Hook Form + Zod, progressive per-step validation
-- **Form**: 3-step Mantine Stepper with DatePickerInput, TimeInput, NumberInput
-- **API Functions**: getMyBookings (paginated list), cancelBooking (with optimistic update)
+- **Form**: 3-step Mantine Stepper with DatePickerInput, 2x TimeInput (start/end), NumberInput
+- **API Functions**: createBooking, getMyBookings (paginated), cancelBooking, acceptBooking, declineBooking, getVenueBookings
+- **Backend Integration**: All booking APIs wired to real endpoints (venues still mocked)
+- **Documentation**: See `docs/BOOKINGS.md` for full architecture details
 
 ### Organization Feature Stats (VL-016)
 - **Components**: 4 (OrgProfilePage, OrgProfileForm, OrgProfileCard, OrgProfileSkeleton)
@@ -624,6 +637,13 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Icons**: Phosphor Icons (`@phosphor-icons/react`) — lightweight, consistent weight system
 - **Patterns**: CSS modules for component styles, `Component.extend()` for global defaults, CSS custom property pattern for dynamic values
 - **Animations**: Staggered `vl-fade-up` on page load, `translateY`/`translateX` hover transitions, gradient glow overlays on action cards
+
+### Landing Page Feature Stats
+- **Components**: 8+ (LandingPage, Hero, FeaturedVenues, InterestForm, Footer, etc.)
+- **Hooks**: 2 (useScrollAnimation, useInterestForm)
+- **Features**: Prerelease interest form, featured venues showcase, scroll animations
+- **Form**: Email/name capture for early access waitlist
+- **Design**: "Warm Night" theme, responsive hero section, fade-up animations
 
 ### Venue Admin Feature Stats (VL-011)
 - **Components**: 6 (AdminDashboard, StatsGrid, StatCard, BookingsList, BookingCard, AccessDenied)
