@@ -52,7 +52,9 @@ export const BookingCard = memo(({
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><Clock size="0.875rem" /></Box>
-            <Text size="sm">{formatBookingTime(booking.eventTime)}</Text>
+            <Text size="sm">
+              {`${formatBookingTime(booking.eventStartTime)} – ${formatBookingTime(booking.eventEndTime)}`}
+            </Text>
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><Users size="0.875rem" /></Box>

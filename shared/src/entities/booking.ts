@@ -16,7 +16,11 @@ export interface Booking {
   /** Event date in ISO 8601 format (YYYY-MM-DD) */
   eventDate: string;
   /** Event start time in HH:MM:SS format */
-  eventTime: string;
+  eventStartTime: string;
+  /** Event end time in HH:MM:SS format */
+  eventEndTime: string;
+  /** Event duration in minutes (computed) */
+  eventDurationMinutes: number;
   /** Expected number of guests */
   guestCount: number;
   /** Current booking status */
@@ -57,8 +61,12 @@ export interface AdminBookingView {
   eventName: string;
   /** Event date in ISO 8601 format */
   eventDate: string;
-  /** Event time in HH:MM format */
-  eventTime: string;
+  /** Event start time in HH:MM format */
+  eventStartTime: string;
+  /** Event end time in HH:MM format */
+  eventEndTime: string;
+  /** Event duration in minutes */
+  eventDurationMinutes: number;
   /** Expected number of guests */
   guestCount: number;
   /** Current booking status */
@@ -83,8 +91,12 @@ export interface BookingConfirmation {
   eventName: string;
   /** Event date in ISO 8601 format */
   eventDate: string;
-  /** Event time in HH:MM format */
-  eventTime: string;
+  /** Event start time in HH:MM format */
+  eventStartTime: string;
+  /** Event end time in HH:MM format */
+  eventEndTime: string;
+  /** Event duration in minutes */
+  eventDurationMinutes: number;
   /** Expected number of guests */
   guestCount: number;
   /** Estimated total cost in cents */
@@ -103,8 +115,10 @@ export interface UpcomingEvent {
   id: string;
   /** Event date in ISO 8601 format */
   eventDate: string;
-  /** Event time in HH:MM format */
-  eventTime: string;
+  /** Event start time in HH:MM format */
+  eventStartTime: string;
+  /** Event end time in HH:MM format */
+  eventEndTime: string;
   /** Event name/title */
   eventName: string;
   /** Venue name */

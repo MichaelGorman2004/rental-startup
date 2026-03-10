@@ -11,7 +11,8 @@ const MOCK_EVENTS: UpcomingEvent[] = [
   {
     id: '1',
     eventDate: '2026-02-20',
-    eventTime: '20:00',
+    eventStartTime: '20:00',
+    eventEndTime: '23:00',
     eventName: 'Spring Rush Mixer',
     venueName: 'The Blue Dog Tavern',
     venueAddress: '123 Main St, College Town',
@@ -19,7 +20,8 @@ const MOCK_EVENTS: UpcomingEvent[] = [
   {
     id: '2',
     eventDate: '2026-02-28',
-    eventTime: '19:00',
+    eventStartTime: '19:00',
+    eventEndTime: '22:00',
     eventName: 'Brotherhood Dinner',
     venueName: "Mario's Pizza & Pub",
     venueAddress: '456 Oak Ave, College Town',
@@ -27,7 +29,8 @@ const MOCK_EVENTS: UpcomingEvent[] = [
   {
     id: '3',
     eventDate: '2026-03-06',
-    eventTime: '21:00',
+    eventStartTime: '21:00',
+    eventEndTime: '00:00',
     eventName: 'Alumni Reunion',
     venueName: 'Campus Sports Bar',
     venueAddress: '789 University Blvd',
@@ -35,8 +38,8 @@ const MOCK_EVENTS: UpcomingEvent[] = [
 ];
 
 const sortByDateAscending = (a: UpcomingEvent, b: UpcomingEvent): number => {
-  const dateA = new Date(`${a.eventDate}T${a.eventTime}`);
-  const dateB = new Date(`${b.eventDate}T${b.eventTime}`);
+  const dateA = new Date(`${a.eventDate}T${a.eventStartTime}`);
+  const dateB = new Date(`${b.eventDate}T${b.eventStartTime}`);
   return dateA.getTime() - dateB.getTime();
 };
 

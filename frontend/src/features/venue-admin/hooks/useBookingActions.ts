@@ -1,27 +1,22 @@
 import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { acceptBooking, declineBooking } from '@/lib/api/endpoints';
 import { BookingStatus } from '../../bookings';
-import type {
-  AdminBooking, BookingAction, ActionPayload,
-} from '../types';
-import {
-  ADMIN_QUERY_KEYS,
-  MOCK_ACTION_DELAY_MS,
-} from '../constants';
+import type { AdminBooking, BookingAction, ActionPayload } from '../types';
+import { ADMIN_QUERY_KEYS } from '../constants';
 
 /** Map action type to the resulting booking status. */
 function getNewStatus(action: BookingAction): BookingStatus {
-  return action === 'accept'
-    ? BookingStatus.Confirmed
-    : BookingStatus.Rejected;
+  return action === 'accept' ? BookingStatus.Confirmed : BookingStatus.Rejected;
 }
 
-/** Simulate booking action API call. Replace with PATCH /api/v1/bookings/:id/(accept|decline). */
-async function performBookingAction(
-  payload: ActionPayload,
-): Promise<ActionPayload> {
-  await new Promise((resolve) => { setTimeout(resolve, MOCK_ACTION_DELAY_MS); });
-  return payload;
+/** Call the appropriate API based on action type. */
+async function performBookingAction(payload: ActionPayload): Promise<void> {
+  if (payload.action === 'accept') {
+    await acceptBooking(payload.bookingId);
+  } else {
+    await declineBooking(payload.bookingId);
+  }
 }
 
 /**
@@ -54,9 +49,6 @@ export function useBookingActions(venueId: string) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: bookingsKey });
-      queryClient.invalidateQueries({
-        queryKey: ADMIN_QUERY_KEYS.STATS(venueId),
-      });
     },
   });
 

@@ -1,4 +1,4 @@
-# Backend Rules - S-Tier Quality Standards
+C# Backend Rules - S-Tier Quality Standards
 > **Philosophy**: Clean architecture. Explicit > Implicit. Fail fast & loud. Type safety everywhere. If it's not testable, it's not acceptable.
 
 ---

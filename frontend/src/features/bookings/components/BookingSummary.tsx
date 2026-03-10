@@ -58,7 +58,9 @@ export const BookingSummary = memo(({
         <SummaryRow
           icon={<Clock size="1rem" />}
           label="Time"
-          value={formValues.eventTime ? formatBookingTime(formValues.eventTime) : '—'}
+          value={formValues.eventStartTime && formValues.eventEndTime
+            ? `${formatBookingTime(formValues.eventStartTime)} – ${formatBookingTime(formValues.eventEndTime)}`
+            : '—'}
         />
         <SummaryRow
           icon={<Users size="1rem" />}

@@ -1,10 +1,8 @@
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type {
-  CreateBookingRequest,
-  BookingConfirmation,
-} from '@/features/bookings/types';
+import type { CreateBookingRequest } from '@/features/bookings/types';
 import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
+import type { MyBooking } from '../../api/endpoints/bookings';
 import {
   createBooking,
   getVenueBookings,
@@ -22,7 +20,7 @@ import { STALE_TIMES, REFETCH_INTERVALS } from '../constants';
 export function useCreateBookingMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation<BookingConfirmation, unknown, CreateBookingRequest>({
+  return useMutation<MyBooking, unknown, CreateBookingRequest>({
     mutationFn: createBooking,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });

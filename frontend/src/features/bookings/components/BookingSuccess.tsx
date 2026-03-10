@@ -1,20 +1,21 @@
 import { memo, useCallback } from 'react';
 import {
-  Stack, Title, Text, Button, Card, Group, ThemeIcon, Badge, Box,
+  Stack, Title, Text, Button, Card, Group, ThemeIcon, Box,
 } from '@mantine/core';
 import {
-  CheckCircle, CalendarBlank, Storefront,
+  CheckCircle, CalendarBlank, Storefront, Clock,
 } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
-import type { BookingConfirmation } from '../types';
+import type { MyBooking } from '@/lib/api/endpoints';
 import { BOOKING_MESSAGES } from '../constants';
+import { formatBookingDate, formatBookingTime } from '../utils';
 
 interface BookingSuccessProps {
-  confirmation: BookingConfirmation;
+  booking: MyBooking;
 }
 
 /** Success state displayed after a booking is submitted. */
-export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
+export const BookingSuccess = memo(({ booking }: BookingSuccessProps) => {
   const navigate = useNavigate();
 
   const handleViewBookings = useCallback(() => {
@@ -40,26 +41,24 @@ export const BookingSuccess = memo(({ confirmation }: BookingSuccessProps) => {
 
       <Card withBorder p="lg" w="100%" maw={420}>
         <Stack gap="sm">
-          <Group justify="space-between">
-            <Text size="sm" c="dimmed">{BOOKING_MESSAGES.SUCCESS_REFERENCE}</Text>
-            <Badge size="lg" variant="light" color="copper" fw={700}>
-              {confirmation.referenceNumber}
-            </Badge>
+          <Group gap="xs">
+            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
+            <Text size="sm" fw={500}>{booking.eventName}</Text>
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
-            <Text size="sm">{confirmation.eventName}</Text>
+            <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
-            <Text size="sm">{confirmation.eventDate}</Text>
+            <Box c="dimmed"><Clock size="1rem" /></Box>
+            <Text size="sm">
+              {`${formatBookingTime(booking.eventStartTime)} – ${formatBookingTime(booking.eventEndTime)}`}
+            </Text>
           </Group>
-          {confirmation.venueName ? (
-            <Group gap="xs">
-              <Box c="dimmed"><Storefront size="1rem" /></Box>
-              <Text size="sm" c="dimmed">{confirmation.venueName}</Text>
-            </Group>
-          ) : null}
+          <Group gap="xs">
+            <Box c="dimmed"><Storefront size="1rem" /></Box>
+            <Text size="sm" c="dimmed">{booking.venueName}</Text>
+          </Group>
         </Stack>
       </Card>
 

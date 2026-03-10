@@ -25,7 +25,9 @@ export interface AdminBooking {
   organizationName: string;
   eventName: string;
   eventDate: string;
-  eventTime: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  eventDurationMinutes: number;
   guestCount: number;
   status: BookingStatus;
   createdAt: string;

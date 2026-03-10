@@ -1,7 +1,9 @@
 import { memo } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Control, FieldErrors } from 'react-hook-form';
-import { Stack, TextInput, NumberInput } from '@mantine/core';
+import {
+  Stack, TextInput, NumberInput, Group,
+} from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { Calendar, Clock, Users } from '@phosphor-icons/react';
 import type { BookingFormValues } from '../types';
@@ -40,7 +42,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           onChange={field.onChange}
           label={BOOKING_MESSAGES.EVENT_DATE_LABEL}
           description={BOOKING_MESSAGES.EVENT_DATE_DESCRIPTION}
-          placeholder="Pick a date"
+          placeholder={BOOKING_MESSAGES.EVENT_DATE_PLACEHOLDER}
           leftSection={<Calendar size="1rem" />}
           minDate={getMinBookingDate()}
           maxDate={getMaxBookingDate()}
@@ -49,21 +51,38 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
         />
       )}
     />
-    <Controller
-      name="eventTime"
-      control={control}
-      render={({ field }) => (
-        <TimeInput
-          value={field.value}
-          onChange={(e) => field.onChange(e.currentTarget.value)}
-          label={BOOKING_MESSAGES.EVENT_TIME_LABEL}
-          description={BOOKING_MESSAGES.EVENT_TIME_DESCRIPTION}
-          leftSection={<Clock size="1rem" />}
-          error={errors.eventTime?.message}
-          withAsterisk
-        />
-      )}
-    />
+    <Group grow>
+      <Controller
+        name="eventStartTime"
+        control={control}
+        render={({ field }) => (
+          <TimeInput
+            value={field.value}
+            onChange={(e) => field.onChange(e.currentTarget.value)}
+            label={BOOKING_MESSAGES.EVENT_START_TIME_LABEL}
+            description={BOOKING_MESSAGES.EVENT_START_TIME_DESCRIPTION}
+            leftSection={<Clock size="1rem" />}
+            error={errors.eventStartTime?.message}
+            withAsterisk
+          />
+        )}
+      />
+      <Controller
+        name="eventEndTime"
+        control={control}
+        render={({ field }) => (
+          <TimeInput
+            value={field.value}
+            onChange={(e) => field.onChange(e.currentTarget.value)}
+            label={BOOKING_MESSAGES.EVENT_END_TIME_LABEL}
+            description={BOOKING_MESSAGES.EVENT_END_TIME_DESCRIPTION}
+            leftSection={<Clock size="1rem" />}
+            error={errors.eventEndTime?.message}
+            withAsterisk
+          />
+        )}
+      />
+    </Group>
     <Controller
       name="guestCount"
       control={control}
