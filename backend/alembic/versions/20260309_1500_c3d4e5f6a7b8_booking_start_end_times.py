@@ -40,9 +40,7 @@ def upgrade() -> None:
     )
 
     # Set default value for existing rows: end_time = start_time + 1 hour
-    op.execute(
-        "UPDATE bookings SET event_end_time = event_start_time + INTERVAL '1 hour'"
-    )
+    op.execute("UPDATE bookings SET event_end_time = event_start_time + INTERVAL '1 hour'")
 
     # Make event_end_time non-nullable after populating existing rows
     op.alter_column(

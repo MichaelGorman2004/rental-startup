@@ -117,7 +117,7 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
     # Event details
     event_name: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,\
+        nullable=False,
         default="",
     )
 

@@ -129,8 +129,11 @@ class BookingService:
         if booking_data.event_end_time <= booking_data.event_start_time:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.END_BEFORE_START)
         has_conflict = await BookingRepository.has_time_conflict(
-            db, booking_data.venue_id, booking_data.event_date,
-            booking_data.event_start_time, booking_data.event_end_time,
+            db,
+            booking_data.venue_id,
+            booking_data.event_date,
+            booking_data.event_start_time,
+            booking_data.event_end_time,
         )
         if has_conflict:
             raise HTTPException(status.HTTP_409_CONFLICT, BookingError.TIME_CONFLICT)
