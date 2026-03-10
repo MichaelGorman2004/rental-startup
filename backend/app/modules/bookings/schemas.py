@@ -6,7 +6,35 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from app.core.constants.enums import BookingStatus
-from app.modules.bookings.constants import DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE
+from app.modules.bookings.constants import (
+    DEFAULT_PAGE_SIZE,
+    EVENT_DURATION_MIN_MINUTES,
+    EVENT_NAME_MAX_LENGTH,
+    EVENT_NAME_MIN_LENGTH,
+    GUEST_COUNT_MIN,
+    MAX_PAGE_SIZE,
+    MIN_PAGE,
+    SPECIAL_REQUESTS_MAX_LENGTH,
+)
+
+
+class BookingCreate(BaseModel):
+    """Schema for creating a new booking request."""
+
+    venue_id: UUID
+    event_name: str = Field(
+        ...,
+        min_length=EVENT_NAME_MIN_LENGTH,
+        max_length=EVENT_NAME_MAX_LENGTH,
+    )
+    event_date: date
+    event_start_time: time
+    event_end_time: time
+    guest_count: int = Field(..., ge=GUEST_COUNT_MIN)
+    special_requests: str | None = Field(
+        default=None,
+        max_length=SPECIAL_REQUESTS_MAX_LENGTH,
+    )
 
 
 class BookingResponse(BaseModel):
@@ -17,8 +45,10 @@ class BookingResponse(BaseModel):
     organization_id: UUID
     event_name: str
     event_date: date
-    event_time: time
-    guest_count: int
+    event_start_time: time
+    event_end_time: time
+    event_duration_minutes: int = Field(..., ge=EVENT_DURATION_MIN_MINUTES)
+    guest_count: int = Field(..., ge=GUEST_COUNT_MIN)
     status: BookingStatus
     special_requests: str | None = None
     created_at: datetime

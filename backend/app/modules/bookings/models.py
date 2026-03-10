@@ -5,8 +5,9 @@ organizations and venues. Implements a workflow state machine through the
 BookingStatus enum.
 
 Database constraints:
-- Unique constraint prevents double-booking (venue_id, event_date, event_time)
+- Unique constraint prevents double-booking (venue_id, event_date, event_start_time)
 - Guest count must be positive (> 0)
+- Event end time must be after start time
 - Foreign keys restrict deletion to preserve historical data
 - Event date indexed for date range queries
 
@@ -18,7 +19,7 @@ Booking workflow:
     PENDING -> CANCELLED (org cancels before confirmation)
 """
 
-from datetime import date, time
+from datetime import date, time, timedelta
 from typing import TYPE_CHECKING
 from uuid import UUID
 
@@ -56,6 +57,7 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
     Business rules:
     - One venue can only have one booking per date/time slot
     - Guest count must be positive
+    - Event end time must be after start time
     - Event date/time must be in the future (enforced at application level)
     - Bookings cannot be deleted, only cancelled (audit trail)
 
@@ -64,7 +66,9 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
         venue_id: Foreign key to venue being booked
         organization_id: Foreign key to organization making booking
         event_date: Date of the event
-        event_time: Start time of the event
+        event_start_time: Start time of the event
+        event_end_time: End time of the event
+        event_duration: Computed duration of the event
         guest_count: Expected number of guests (must be > 0)
         status: Booking workflow state (PENDING, CONFIRMED, etc.)
         created_at: Booking request creation timestamp (UTC)
@@ -95,7 +99,12 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
         index=True,  # Index for date range queries (e.g., "bookings this month")
     )
 
-    event_time: Mapped[time] = mapped_column(
+    event_start_time: Mapped[time] = mapped_column(
+        Time,
+        nullable=False,
+    )
+
+    event_end_time: Mapped[time] = mapped_column(
         Time,
         nullable=False,
     )
@@ -108,7 +117,7 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
     # Event details
     event_name: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
+        nullable=False,\
         default="",
     )
 
@@ -140,18 +149,44 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
 
     # Table-level constraints and indexes
     __table_args__ = (
-        # Prevent double-booking: same venue cannot have two bookings at same date/time
+        # Prevent double-booking: same venue cannot have two bookings at same date/start time
         UniqueConstraint(
             "venue_id",
             "event_date",
-            "event_time",
+            "event_start_time",
             name="unique_venue_datetime_booking",
         ),
         # Guest count must be positive
         CheckConstraint("guest_count > 0", name="booking_guest_count_positive_check"),
+        # Event end time must be after start time
+        CheckConstraint(
+            "event_end_time > event_start_time",
+            name="booking_end_after_start_check",
+        ),
         # Composite index for venue availability queries
-        Index("ix_bookings_venue_date_time", "venue_id", "event_date", "event_time"),
+        Index(
+            "ix_bookings_venue_date_time",
+            "venue_id",
+            "event_date",
+            "event_start_time",
+            "event_end_time",
+        ),
     )
+
+    @property
+    def event_duration(self) -> timedelta:
+        """Calculate the duration of the event from start and end times."""
+        start_seconds = (
+            self.event_start_time.hour * 3600
+            + self.event_start_time.minute * 60
+            + self.event_start_time.second
+        )
+        end_seconds = (
+            self.event_end_time.hour * 3600
+            + self.event_end_time.minute * 60
+            + self.event_end_time.second
+        )
+        return timedelta(seconds=end_seconds - start_seconds)
 
     def __repr__(self) -> str:
         """String representation for debugging."""
