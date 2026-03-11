@@ -1,48 +1,36 @@
-"""Webhook router for handling external service callbacks."""
+"""Webhook router for handling external service callbacks.
 
-import httpx
-from fastapi import APIRouter, HTTPException, Request, status
+Thin controller layer - delegates all business logic to services.
+"""
+
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy.ext.asyncio import AsyncSession
 from svix.webhooks import Webhook, WebhookVerificationError
 
 from app.core.config import settings
+from app.core.database.session import get_db
+from app.modules.webhooks.constants import EVENT_USER_CREATED, WebhookError
 from app.modules.webhooks.schemas import ClerkWebhookEvent
+from app.modules.webhooks.services import webhook_service
 
 router = APIRouter(prefix="/clerk", tags=["Webhooks"])
 
-# Clerk API constants
-CLERK_API_BASE = "https://api.clerk.com/v1"
-CLERK_EVENT_USER_CREATED = "user.created"
-
-
-async def sync_role_to_public_metadata(user_id: str, role: str) -> None:
-    """
-    Sync role from unsafeMetadata to publicMetadata via Clerk Backend API.
-
-    Args:
-        user_id: Clerk user ID.
-        role: Role value to set in publicMetadata.
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.patch(
-            f"{CLERK_API_BASE}/users/{user_id}/metadata",
-            headers={
-                "Authorization": f"Bearer {settings.CLERK_SECRET_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={"public_metadata": {"role": role}},
-        )
-        response.raise_for_status()
-
 
 @router.post("", status_code=status.HTTP_204_NO_CONTENT)
-async def handle_clerk_webhook(request: Request) -> None:
+async def handle_clerk_webhook(
+    request: Request,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> None:
     """
     Handle Clerk webhook events.
 
-    Listens for user.created events and syncs the role from
-    unsafeMetadata to publicMetadata.
+    Listens for user.created events and:
+    1. Syncs role from unsafeMetadata to publicMetadata in Clerk.
+    2. Creates user record in local database.
     """
-    # Verify webhook signature (raw body required for cryptographic verification)
+    # Verify webhook signature
     payload = await request.body()
     headers = dict(request.headers)
 
@@ -52,14 +40,19 @@ async def handle_clerk_webhook(request: Request) -> None:
     except WebhookVerificationError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid webhook signature.",
+            detail=WebhookError.INVALID_SIGNATURE,
         ) from e
 
     # Parse and validate payload
     event = ClerkWebhookEvent.model_validate(verified_payload)
 
     # Handle user.created event
-    if event.type == CLERK_EVENT_USER_CREATED:
+    if event.type == EVENT_USER_CREATED:
         role = event.data.unsafe_metadata.get("role")
+
+        # Sync role to Clerk publicMetadata
         if role:
-            await sync_role_to_public_metadata(event.data.id, role)
+            await webhook_service.sync_role_to_clerk(event.data.id, role)
+
+        # Create user in local database
+        await webhook_service.sync_user_to_database(db, event.data)
