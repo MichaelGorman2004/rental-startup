@@ -5,10 +5,11 @@ student organization bookings. Venues are owned by venue administrators and
 can be soft-deleted to preserve booking history.
 
 Database constraints:
-- Capacity must be positive (> 0)
-- Base price must be non-negative (>= 0)
+- Name is required
+- Type, capacity, base_price are optional (can be completed after signup)
+- Capacity must be positive when set (> 0)
+- Base price must be non-negative when set (>= 0)
 - Soft delete pattern preserves booking references
-- Address fields are optional (not all venues may provide full addresses initially)
 
 Relationships:
 - Belongs to one user (owner with VENUE_ADMIN role)
@@ -78,19 +79,20 @@ class Venue(BaseModel, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         nullable=False,
     )
 
-    type: Mapped[VenueType] = mapped_column(
+    # Optional fields (can be completed after signup)
+    type: Mapped[VenueType | None] = mapped_column(
         Enum(VenueType, name="venue_type", native_enum=True),
-        nullable=False,
+        nullable=True,
     )
 
-    capacity: Mapped[int] = mapped_column(
+    capacity: Mapped[int | None] = mapped_column(
         Integer,
-        nullable=False,
+        nullable=True,
     )
 
-    base_price_cents: Mapped[int] = mapped_column(
+    base_price_cents: Mapped[int | None] = mapped_column(
         Integer,
-        nullable=False,
+        nullable=True,
     )
 
     # Address fields (optional - venues can be added without complete addresses)
@@ -134,12 +136,18 @@ class Venue(BaseModel, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         lazy="selectin",  # Eager load bookings
     )
 
-    # Table-level constraints
+    # Table-level constraints (allow NULL but validate when present)
     __table_args__ = (
-        # Capacity must be positive
-        CheckConstraint("capacity > 0", name="venue_capacity_positive_check"),
-        # Price must be non-negative
-        CheckConstraint("base_price_cents >= 0", name="venue_price_non_negative_check"),
+        # Capacity must be positive when set
+        CheckConstraint(
+            "capacity IS NULL OR capacity > 0",
+            name="venue_capacity_positive_check",
+        ),
+        # Price must be non-negative when set
+        CheckConstraint(
+            "base_price_cents IS NULL OR base_price_cents >= 0",
+            name="venue_price_non_negative_check",
+        ),
     )
 
     def __repr__(self) -> str:

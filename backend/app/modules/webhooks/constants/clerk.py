@@ -11,3 +11,4 @@ EVENT_USER_CREATED = "user.created"
 
 # Metadata keys
 ROLE_METADATA_KEY = "role"
+ORG_NAME_METADATA_KEY = "orgName"

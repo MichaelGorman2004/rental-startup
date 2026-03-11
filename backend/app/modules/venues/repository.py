@@ -103,6 +103,66 @@ class VenueRepository:
         return venues, total
 
     @staticmethod
+    async def get_by_owner_id(
+        db: AsyncSession,
+        owner_id: UUID,
+    ) -> Venue | None:
+        """
+        Retrieve the first venue owned by a user.
+
+        Args:
+            db: Database session.
+            owner_id: Owner user ID.
+
+        Returns:
+            First venue found, or None.
+        """
+        query = (
+            select(Venue)
+            .where(
+                and_(
+                    Venue.owner_id == owner_id,
+                    Venue.deleted_at.is_(None),
+                )
+            )
+            .limit(1)
+        )
+
+        result = await db.execute(query)
+        return result.scalar_one_or_none()
+
+    @staticmethod
+    async def create_minimal(
+        db: AsyncSession,
+        name: str,
+        owner_id: UUID,
+    ) -> Venue:
+        """
+        Create a new venue with minimal required fields.
+
+        Used during signup when only name is provided. Users can
+        complete their profile (type, capacity, etc.) later.
+
+        Args:
+            db: Database session.
+            name: Venue name.
+            owner_id: Owner user ID.
+
+        Returns:
+            Created venue.
+        """
+        venue = Venue(
+            name=name,
+            owner_id=owner_id,
+        )
+
+        db.add(venue)
+        await db.commit()
+        await db.refresh(venue)
+
+        return venue
+
+    @staticmethod
     async def create(
         db: AsyncSession,
         venue_data: VenueCreate,

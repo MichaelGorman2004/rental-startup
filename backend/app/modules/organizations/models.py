@@ -6,8 +6,8 @@ multiple bookings.
 
 Database constraints:
 - Must have a valid owner (FK to users table)
-- Organization type categorizes the group
-- University name required for filtering/search
+- Name is required
+- Type and university are optional (can be completed after signup)
 
 Relationships:
 - Belongs to one user (owner)
@@ -68,14 +68,15 @@ class Organization(BaseModel, UUIDMixin, TimestampMixin):
         nullable=False,
     )
 
-    type: Mapped[OrganizationType] = mapped_column(
+    # Optional fields (can be completed after signup)
+    type: Mapped[OrganizationType | None] = mapped_column(
         Enum(OrganizationType, name="organization_type", native_enum=True),
-        nullable=False,
+        nullable=True,
     )
 
-    university: Mapped[str] = mapped_column(
+    university: Mapped[str | None] = mapped_column(
         String(UNIVERSITY_MAX_LENGTH),
-        nullable=False,
+        nullable=True,
     )
 
     # Profile fields (optional)
