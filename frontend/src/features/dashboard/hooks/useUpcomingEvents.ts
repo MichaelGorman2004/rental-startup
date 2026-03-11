@@ -10,7 +10,7 @@ import type { UpcomingEvent } from '../types/dashboard.types';
 const MOCK_EVENTS: UpcomingEvent[] = [
   {
     id: '1',
-    eventDate: '2026-02-20',
+    eventDate: '2026-03-20',
     eventStartTime: '20:00',
     eventEndTime: '23:00',
     eventName: 'Spring Rush Mixer',
@@ -19,7 +19,7 @@ const MOCK_EVENTS: UpcomingEvent[] = [
   },
   {
     id: '2',
-    eventDate: '2026-02-28',
+    eventDate: '2026-03-28',
     eventStartTime: '19:00',
     eventEndTime: '22:00',
     eventName: 'Brotherhood Dinner',
@@ -28,9 +28,9 @@ const MOCK_EVENTS: UpcomingEvent[] = [
   },
   {
     id: '3',
-    eventDate: '2026-03-06',
+    eventDate: '2026-04-06',
     eventStartTime: '21:00',
-    eventEndTime: '00:00',
+    eventEndTime: '23:30',
     eventName: 'Alumni Reunion',
     venueName: 'Campus Sports Bar',
     venueAddress: '789 University Blvd',
