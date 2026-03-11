@@ -3,11 +3,12 @@
 from datetime import date, datetime, time
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.core.constants.enums import BookingStatus
 from app.modules.bookings.constants import (
     DEFAULT_PAGE_SIZE,
+    EVENT_DURATION_MAX_MINUTES,
     EVENT_DURATION_MIN_MINUTES,
     EVENT_NAME_MAX_LENGTH,
     EVENT_NAME_MIN_LENGTH,
@@ -35,6 +36,32 @@ class BookingCreate(BaseModel):
         default=None,
         max_length=SPECIAL_REQUESTS_MAX_LENGTH,
     )
+
+    @field_validator("event_date")
+    @classmethod
+    def event_date_not_in_past(cls, v: date) -> date:
+        """Ensure event date is not in the past (same-day bookings allowed)."""
+        if v < date.today():
+            msg = "Event date must not be in the past"
+            raise ValueError(msg)
+        return v
+
+    @model_validator(mode="after")
+    def validate_time_range(self) -> "BookingCreate":
+        """Validate end > start and duration is within allowed range."""
+        if self.event_end_time <= self.event_start_time:
+            msg = "Event end time must be after start time."
+            raise ValueError(msg)
+        start_mins = self.event_start_time.hour * 60 + self.event_start_time.minute
+        end_mins = self.event_end_time.hour * 60 + self.event_end_time.minute
+        duration = end_mins - start_mins
+        if duration < EVENT_DURATION_MIN_MINUTES:
+            msg = f"Event must be at least {EVENT_DURATION_MIN_MINUTES} minutes."
+            raise ValueError(msg)
+        if duration > EVENT_DURATION_MAX_MINUTES:
+            msg = f"Event must not exceed {EVENT_DURATION_MAX_MINUTES} minutes."
+            raise ValueError(msg)
+        return self
 
 
 class BookingResponse(BaseModel):

@@ -106,9 +106,9 @@ class BookingService:
         current_user: User,
     ) -> BookingResponse:
         """Cancel a booking (org owner only, pending/confirmed only)."""
+        org = await _require_student_org(db, current_user)
         booking = await _get_booking_or_404(db, booking_id)
-        org = await OrganizationRepository.get_by_owner_id(db, current_user.id)
-        if not org or org.id != booking.organization_id:
+        if org.id != booking.organization_id:
             raise HTTPException(status.HTTP_403_FORBIDDEN, BookingError.NOT_ORG_OWNER)
         if booking.status not in CANCELLABLE_STATUSES:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.CANNOT_CANCEL_STATUS)
@@ -126,8 +126,6 @@ class BookingService:
         venue = await VenueRepository.get_by_id(db, booking_data.venue_id)
         if not venue:
             raise HTTPException(status.HTTP_404_NOT_FOUND, BookingError.VENUE_NOT_FOUND)
-        if booking_data.event_end_time <= booking_data.event_start_time:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.END_BEFORE_START)
         has_conflict = await BookingRepository.has_time_conflict(
             db,
             booking_data.venue_id,
@@ -173,11 +171,19 @@ class BookingService:
         db: AsyncSession,
         venue_id: UUID,
         current_user: User,
-    ) -> list[BookingResponse]:
-        """List all bookings for a venue (venue owner only)."""
+        filters: BookingFilters,
+    ) -> BookingListResponse:
+        """List bookings for a venue with pagination (venue owner only)."""
         await _require_venue_owner(db, current_user, venue_id)
-        bookings = await BookingRepository.get_by_venue_id(db, venue_id)
-        return [_to_booking_response(b) for b in bookings]
+        bookings, total = await BookingRepository.get_by_venue_id(db, venue_id, filters)
+        total_pages = ceil(total / filters.page_size) if total > 0 else 0
+        return BookingListResponse(
+            items=[_to_booking_response(b) for b in bookings],
+            total=total,
+            page=filters.page,
+            page_size=filters.page_size,
+            total_pages=total_pages,
+        )
 
 
 booking_service = BookingService()

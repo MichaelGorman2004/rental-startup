@@ -5,8 +5,8 @@ organizations and venues. Implements a workflow state machine through the
 BookingStatus enum.
 
 Database constraints:
-- Unique constraint prevents double-booking (venue_id, event_date, event_start_time)
-- Guest count must be positive (> 0)
+- Overlap detection via has_time_conflict (application-level, status-aware)
+- Guest count must meet minimum group size (>= 10)
 - Event end time must be after start time
 - Foreign keys restrict deletion to preserve historical data
 - Event date indexed for date range queries
@@ -33,7 +33,6 @@ from sqlalchemy import (
     String,
     Text,
     Time,
-    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -56,9 +55,9 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
 
     Business rules:
     - One venue can only have one booking per date/time slot
-    - Guest count must be positive
+    - Guest count must meet minimum group size (>= 10)
     - Event end time must be after start time
-    - Event date/time must be in the future (enforced at application level)
+    - Event date must not be in the past (enforced in BookingCreate schema)
     - Bookings cannot be deleted, only cancelled (audit trail)
 
     Attributes:
@@ -118,7 +117,6 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
     event_name: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
-        default="",
     )
 
     special_requests: Mapped[str | None] = mapped_column(
@@ -149,16 +147,12 @@ class Booking(BaseModel, UUIDMixin, TimestampMixin):
 
     # Table-level constraints and indexes
     __table_args__ = (
-        # Prevent double-booking: same venue cannot have two bookings at same date/start time
-        UniqueConstraint(
-            "venue_id",
-            "event_date",
-            "event_start_time",
-            name="unique_venue_datetime_booking",
-        ),
-        # Guest count must be positive
-        CheckConstraint("guest_count > 0", name="booking_guest_count_positive_check"),
+        # Event name must not be empty
+        CheckConstraint("length(event_name) > 0", name="booking_event_name_not_empty"),
+        # Guest count must meet minimum group size
+        CheckConstraint("guest_count >= 10", name="booking_guest_count_positive_check"),
         # Event end time must be after start time
+        # Note: overnight events (crossing midnight) not supported in MVP
         CheckConstraint(
             "event_end_time > event_start_time",
             name="booking_end_after_start_check",

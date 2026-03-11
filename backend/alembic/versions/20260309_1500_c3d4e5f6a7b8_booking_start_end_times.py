@@ -50,13 +50,6 @@ def upgrade() -> None:
         nullable=False,
     )
 
-    # Recreate unique constraint with event_start_time
-    op.create_unique_constraint(
-        "unique_venue_datetime_booking",
-        "bookings",
-        ["venue_id", "event_date", "event_start_time"],
-    )
-
     # Create new composite index with start and end times
     op.create_index(
         "ix_bookings_venue_date_time",
@@ -77,7 +70,6 @@ def downgrade() -> None:
     # Drop new constraints and indexes
     op.drop_constraint("booking_end_after_start_check", "bookings", type_="check")
     op.drop_index("ix_bookings_venue_date_time", table_name="bookings")
-    op.drop_constraint("unique_venue_datetime_booking", "bookings", type_="unique")
 
     # Drop event_end_time column
     op.drop_column("bookings", "event_end_time")
@@ -89,13 +81,6 @@ def downgrade() -> None:
         new_column_name="event_time",
         existing_type=sa.Time(),
         existing_nullable=False,
-    )
-
-    # Recreate original unique constraint
-    op.create_unique_constraint(
-        "unique_venue_datetime_booking",
-        "bookings",
-        ["venue_id", "event_date", "event_time"],
     )
 
     # Recreate original composite index

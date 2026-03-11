@@ -2,4 +2,4 @@
 
 from app.modules.venues.models import Venue
 
-__all__ = ["Venue", "router"]
+__all__ = ["Venue"]

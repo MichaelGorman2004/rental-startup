@@ -72,18 +72,31 @@ class BookingRepository:
     async def get_by_venue_id(
         db: AsyncSession,
         venue_id: UUID,
-    ) -> list[Booking]:
-        """Retrieve all bookings for a venue, pending first."""
-        query = (
-            select(Booking)
-            .where(Booking.venue_id == venue_id)
-            .order_by(
-                Booking.status != BookingStatus.pending,
-                Booking.created_at.desc(),
-            )
+        filters: BookingFilters,
+    ) -> tuple[list[Booking], int]:
+        """Retrieve bookings for a venue with filtering and pagination."""
+        query = select(Booking).where(Booking.venue_id == venue_id)
+
+        if filters.status:
+            query = query.where(Booking.status == filters.status)
+
+        # Get total count before pagination
+        count_query = select(func.count()).select_from(query.subquery())
+        total_result = await db.execute(count_query)
+        total = total_result.scalar_one()
+
+        # Apply pagination and ordering
+        offset = (filters.page - 1) * filters.page_size
+        query = query.order_by(
+            Booking.status != BookingStatus.pending,
+            Booking.created_at.desc(),
         )
+        query = query.offset(offset).limit(filters.page_size)
+
         result = await db.execute(query)
-        return list(result.scalars().all())
+        bookings = list(result.scalars().all())
+
+        return bookings, total
 
     @staticmethod
     async def get_by_org_id(

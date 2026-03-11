@@ -2,4 +2,4 @@
 
 from app.modules.bookings.models import Booking
 
-__all__ = ["Booking", "router"]
+__all__ = ["Booking"]
