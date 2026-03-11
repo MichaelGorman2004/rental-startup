@@ -142,7 +142,6 @@ export async function createBooking(
       event_end_time: request.eventEndTime,
       guest_count: request.guestCount,
       special_requests: request.specialRequests,
-      budget_cents: request.budgetCents,
     },
   );
   return toMyBooking(data);

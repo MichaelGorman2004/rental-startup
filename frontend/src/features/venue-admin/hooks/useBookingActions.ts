@@ -54,11 +54,11 @@ export function useBookingActions(venueId: string) {
 
   const handleAccept = useCallback((bookingId: string) => {
     mutation.mutate({ bookingId, action: 'accept', venueId });
-  }, [mutation, venueId]);
+  }, [mutation.mutate, venueId]);
 
   const handleDecline = useCallback((bookingId: string) => {
     mutation.mutate({ bookingId, action: 'decline', venueId });
-  }, [mutation, venueId]);
+  }, [mutation.mutate, venueId]);
 
   return {
     handleAccept,

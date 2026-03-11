@@ -35,7 +35,6 @@ export function useBookingPage() {
         eventEndTime: data.eventEndTime,
         guestCount: data.guestCount,
         specialRequests: data.specialRequests,
-        budgetCents: data.budgetCents ?? null,
       });
     })();
   }, [bookingForm, createBooking, id]);
