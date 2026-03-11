@@ -127,14 +127,24 @@ class VenueUpdate(BaseModel):
         return v
 
 
-class VenueResponse(VenueBase):
+class VenueResponse(BaseModel):
     """Schema for venue responses.
 
-    Includes all base fields plus metadata (id, timestamps, owner).
+    Includes all fields plus metadata (id, timestamps, owner).
+    Note: type, capacity, base_price_cents are nullable for venues
+    created during signup with minimal data.
     """
 
     id: UUID
     owner_id: UUID
+    name: str
+    type: VenueType | None = None
+    capacity: int | None = None
+    base_price_cents: int | None = None
+    address_street: str | None = None
+    address_city: str | None = None
+    address_state: str | None = None
+    address_zip: str | None = None
     created_at: datetime
     updated_at: datetime
     deleted_at: datetime | None = None

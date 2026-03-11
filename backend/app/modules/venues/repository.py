@@ -108,14 +108,14 @@ class VenueRepository:
         owner_id: UUID,
     ) -> Venue | None:
         """
-        Retrieve the first venue owned by a user.
+        Retrieve the first venue owned by a user (oldest by creation date).
 
         Args:
             db: Database session.
             owner_id: Owner user ID.
 
         Returns:
-            First venue found, or None.
+            First venue found (by created_at), or None.
         """
         query = (
             select(Venue)
@@ -125,6 +125,7 @@ class VenueRepository:
                     Venue.deleted_at.is_(None),
                 )
             )
+            .order_by(Venue.created_at.asc())
             .limit(1)
         )
 

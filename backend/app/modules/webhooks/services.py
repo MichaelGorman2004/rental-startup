@@ -5,6 +5,7 @@ and database operations through the auth service layer.
 """
 
 import httpx
+from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -18,6 +19,7 @@ from app.modules.webhooks.constants import (
     CLERK_API_BASE,
     ORG_NAME_METADATA_KEY,
     ROLE_METADATA_KEY,
+    WebhookError,
 )
 from app.modules.webhooks.schemas import ClerkUserData
 
@@ -26,7 +28,77 @@ class WebhookService:
     """Service layer for webhook business logic."""
 
     @staticmethod
-    async def sync_role_to_clerk(user_id: str, role: str) -> None:
+    async def handle_user_created(
+        db: AsyncSession,
+        user_data: ClerkUserData,
+    ) -> User:
+        """
+        Handle user.created webhook event.
+
+        Orchestrates the full user creation flow:
+        1. Validate required data (email, role)
+        2. Create user in local database (fail-fast)
+        3. Create organization or venue based on role
+        4. Sync role to Clerk publicMetadata
+
+        Order matters: DB operations first (reversible via rollback),
+        then Clerk API call (external, harder to compensate).
+
+        Args:
+            db: Database session.
+            user_data: User data from Clerk webhook.
+
+        Returns:
+            Created User.
+
+        Raises:
+            HTTPException: If required data is missing or invalid.
+        """
+        # 1. Validate required fields (fail-fast)
+        email = user_data.primary_email
+        role_str = user_data.unsafe_metadata.get(ROLE_METADATA_KEY)
+        org_name = user_data.unsafe_metadata.get(ORG_NAME_METADATA_KEY)
+
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=WebhookError.MISSING_EMAIL,
+            )
+
+        if not role_str:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=WebhookError.MISSING_ROLE,
+            )
+
+        # Validate role enum
+        try:
+            role = UserRole(role_str)
+        except ValueError as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=WebhookError.INVALID_ROLE,
+            ) from e
+
+        # 2. Create user in database (do this first - can rollback on failure)
+        user_create = UserCreate(
+            id=user_data.id,
+            email=email,
+            role=role,
+        )
+        user = await auth_service.get_or_create_user(db, user_create)
+
+        # 3. Create organization or venue based on role (idempotent)
+        if org_name:
+            await WebhookService._create_org_or_venue(db, user, role, org_name)
+
+        # 4. Sync role to Clerk publicMetadata (external call last)
+        await WebhookService._sync_role_to_clerk(user_data.id, role_str)
+
+        return user
+
+    @staticmethod
+    async def _sync_role_to_clerk(user_id: str, role: str) -> None:
         """
         Sync role from unsafeMetadata to publicMetadata via Clerk Backend API.
 
@@ -37,63 +109,24 @@ class WebhookService:
             role: Role value to set in publicMetadata.
 
         Raises:
-            httpx.HTTPStatusError: If Clerk API call fails.
+            HTTPException: If Clerk API call fails.
         """
-        async with httpx.AsyncClient() as client:
-            response = await client.patch(
-                f"{CLERK_API_BASE}/users/{user_id}/metadata",
-                headers={
-                    "Authorization": f"Bearer {settings.CLERK_SECRET_KEY}",
-                    "Content-Type": "application/json",
-                },
-                json={"public_metadata": {ROLE_METADATA_KEY: role}},
-            )
-            response.raise_for_status()
-
-    @staticmethod
-    async def sync_user_to_database(
-        db: AsyncSession,
-        user_data: ClerkUserData,
-    ) -> User | None:
-        """
-        Create user and their organization/venue in local database.
-
-        For student_org users, creates an Organization.
-        For venue_admin users, creates a Venue.
-
-        Args:
-            db: Database session.
-            user_data: User data from Clerk webhook.
-
-        Returns:
-            Created/existing User, or None if email/role missing.
-        """
-        email = user_data.primary_email
-        role_str = user_data.unsafe_metadata.get(ROLE_METADATA_KEY)
-        org_name = user_data.unsafe_metadata.get(ORG_NAME_METADATA_KEY)
-
-        if not email or not role_str:
-            return None
-
-        # Validate role enum
         try:
-            role = UserRole(role_str)
-        except ValueError:
-            return None
-
-        # Create user
-        user_create = UserCreate(
-            id=user_data.id,
-            email=email,
-            role=role,
-        )
-        user = await auth_service.get_or_create_user(db, user_create)
-
-        # Create organization or venue based on role (idempotent)
-        if org_name:
-            await WebhookService._create_org_or_venue(db, user, role, org_name)
-
-        return user
+            async with httpx.AsyncClient() as client:
+                response = await client.patch(
+                    f"{CLERK_API_BASE}/users/{user_id}/metadata",
+                    headers={
+                        "Authorization": f"Bearer {settings.CLERK_SECRET_KEY}",
+                        "Content-Type": "application/json",
+                    },
+                    json={"public_metadata": {ROLE_METADATA_KEY: role}},
+                )
+                response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=WebhookError.CLERK_SYNC_FAILED,
+            ) from e
 
     @staticmethod
     async def _create_org_or_venue(

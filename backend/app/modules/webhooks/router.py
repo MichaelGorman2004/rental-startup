@@ -26,9 +26,7 @@ async def handle_clerk_webhook(
     """
     Handle Clerk webhook events.
 
-    Listens for user.created events and:
-    1. Syncs role from unsafeMetadata to publicMetadata in Clerk.
-    2. Creates user record in local database.
+    Listens for user.created events and delegates to service layer.
     """
     # Verify webhook signature
     payload = await request.body()
@@ -46,13 +44,6 @@ async def handle_clerk_webhook(
     # Parse and validate payload
     event = ClerkWebhookEvent.model_validate(verified_payload)
 
-    # Handle user.created event
+    # Delegate to service layer (all business logic there)
     if event.type == EVENT_USER_CREATED:
-        role = event.data.unsafe_metadata.get("role")
-
-        # Sync role to Clerk publicMetadata
-        if role:
-            await webhook_service.sync_role_to_clerk(event.data.id, role)
-
-        # Create user in local database
-        await webhook_service.sync_user_to_database(db, event.data)
+        await webhook_service.handle_user_created(db, event.data)
