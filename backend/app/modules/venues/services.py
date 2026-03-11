@@ -64,6 +64,37 @@ class VenueService:
         return VenueResponse.model_validate(venue)
 
     @staticmethod
+    async def get_my_venue(
+        db: AsyncSession,
+        current_user: User,
+    ) -> VenueResponse:
+        """
+        Retrieve the venue owned by the current user.
+
+        Args:
+            db: Database session.
+            current_user: Authenticated user.
+
+        Returns:
+            Venue response owned by the user.
+
+        Raises:
+            HTTPException: If user has no venue.
+        """
+        venue = await VenueRepository.get_by_owner_id(
+            db=db,
+            owner_id=current_user.id,
+        )
+
+        if not venue:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=VenueError.VENUE_NOT_FOUND,
+            )
+
+        return VenueResponse.model_validate(venue)
+
+    @staticmethod
     async def get_venue_by_id(
         db: AsyncSession,
         venue_id: UUID,
