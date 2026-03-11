@@ -51,11 +51,18 @@ class OrganizationUpdate(BaseModel):
     website_url: str | None = Field(None, max_length=WEBSITE_URL_MAX_LENGTH)
 
 
-class OrganizationResponse(OrganizationBase):
-    """Schema for organization responses with all profile fields."""
+class OrganizationResponse(BaseModel):
+    """Schema for organization responses with all profile fields.
+
+    Note: type and university are nullable for organizations
+    created during signup with minimal data.
+    """
 
     id: UUID
     owner_id: UUID
+    name: str
+    type: OrganizationType | None = None
+    university: str | None = None
     description: str | None = None
     contact_email: str | None = None
     contact_phone: str | None = None

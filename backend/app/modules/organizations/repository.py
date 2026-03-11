@@ -13,6 +13,37 @@ class OrganizationRepository:
     """Repository for organization data access operations."""
 
     @staticmethod
+    async def create(
+        db: AsyncSession,
+        name: str,
+        owner_id: UUID,
+    ) -> Organization:
+        """
+        Create a new organization with minimal required fields.
+
+        Used during signup when only name is provided. Users can
+        complete their profile (type, university, etc.) later.
+
+        Args:
+            db: Database session.
+            name: Organization name.
+            owner_id: Owner user ID.
+
+        Returns:
+            Created organization.
+        """
+        org = Organization(
+            name=name,
+            owner_id=owner_id,
+        )
+
+        db.add(org)
+        await db.commit()
+        await db.refresh(org)
+
+        return org
+
+    @staticmethod
     async def get_by_id(
         db: AsyncSession,
         org_id: UUID,

@@ -1,7 +1,7 @@
 # VenueLink Repository Context
 
-> **Last Updated**: 2026-03-10
-> **Status**: Phase 3 Complete + UI Redesign + Prerelease Interest Form + Booking Backend Integration
+> **Last Updated**: 2026-03-11
+> **Status**: Phase 3 Complete + Signup Webhook Integration + UI Redesign
 
 ---
 
@@ -27,15 +27,17 @@
 - ✅ **VL-017**: Settings & User Account Management
 - ✅ **VL-018**: Role-Based Access Control (Frontend)
 - ✅ **VL-019**: Database Schema Extension for New Features
+- ✅ **VL-020**: Clerk Webhook Integration & Signup Sync
 
 ### Current Phase
-**Phase 3: Supporting Systems** (Complete) + **UI Redesign** + **Prerelease Interest Form** + **Booking Backend**
-- Progress: 19/19 core tasks done (100%)
+**Phase 3: Supporting Systems** (Complete) + **Signup Webhook Integration**
+- Progress: 20/20 core tasks done (100%)
+- **NEW**: Clerk webhook refactored to BACKEND_RULES.md standards
+- **NEW**: Users, Organizations, and Venues auto-created on signup
 - UI Redesign: "Warm Night" design system — copper/bronze accents, DM Sans + Playfair Display, rounded 14px corners
-- Prerelease Interest Form: Landing page signup form for early access waitlist
 - Booking Backend: Full API implementation with `event_start_time`/`event_end_time`, time conflict detection
 - Blocker: Frontend venues still use mock data (booking fails UUID validation)
-- Next Phase: Wire venues to real API, then VL-020+ Phase 4 - Testing & Refinement
+- Next Phase: Wire venues to real API, then Phase 4 - Testing & Refinement
 
 ---
 
@@ -182,18 +184,26 @@ rental-startup/
 │   │   │   │   │   ├── errors.py     # ✅ Error messages
 │   │   │   │   │   └── validation.py # ✅ Validation rules
 │   │   │   │   └── __init__.py
-│   │   │   └── organizations/        # ✅ Organization Module (VL-016)
-│   │   │       ├── models.py         # ✅ Organization model (updated)
-│   │   │       ├── schemas.py        # ✅ Pydantic schemas
-│   │   │       ├── services.py       # ✅ Business logic
-│   │   │       ├── repository.py     # ✅ Data access layer
-│   │   │       ├── router.py         # ✅ API endpoints
-│   │   │       ├── dependencies.py   # ✅ Dependency injection
+│   │   │   ├── organizations/        # ✅ Organization Module (VL-016)
+│   │   │   │   ├── models.py         # ✅ Organization model (type/university nullable)
+│   │   │   │   ├── schemas.py        # ✅ Pydantic schemas
+│   │   │   │   ├── services.py       # ✅ Business logic
+│   │   │   │   ├── repository.py     # ✅ Data access layer + create()
+│   │   │   │   ├── router.py         # ✅ API endpoints
+│   │   │   │   ├── dependencies.py   # ✅ Dependency injection
+│   │   │   │   ├── constants/
+│   │   │   │   │   ├── errors.py     # ✅ Error messages
+│   │   │   │   │   └── validation.py # ✅ Validation rules
+│   │   │   │   └── __init__.py
+│   │   │   └── webhooks/             # ✅ Clerk Webhook Module (VL-020)
+│   │   │       ├── router.py         # ✅ Thin controller, POST /clerk
+│   │   │       ├── services.py       # ✅ Business logic (sync user/org/venue)
+│   │   │       ├── schemas.py        # ✅ ClerkWebhookEvent, ClerkUserData
 │   │   │       ├── constants/
-│   │   │       │   ├── errors.py     # ✅ Error messages
-│   │   │       │   └── validation.py # ✅ Validation rules
+│   │   │       │   ├── clerk.py      # ✅ Clerk API constants
+│   │   │       │   └── errors.py     # ✅ Webhook error messages
 │   │   │       └── __init__.py
-│   │   └── main.py                   # ✅ FastAPI app with bookings/organizations routers
+│   │   └── main.py                   # ✅ FastAPI app with all routers
 │   ├── alembic/                      # ✅ Migration infrastructure
 │   ├── scripts.py                    # ✅ QA automation scripts
 │   ├── pyproject.toml                # ✅ Poetry config + scripts
@@ -239,16 +249,18 @@ rental-startup/
 
 **organizations**
 - Primary key: UUID v4
-- Columns: name, type (enum), university, owner_id (FK → users)
+- Columns: name (required), type (enum, nullable), university (nullable), owner_id (FK → users)
 - Timestamps: created_at, updated_at
 - Relationships: ← user (owner), → bookings
+- Note: type/university nullable for minimal signup, completed in profile
 
 **venues**
 - Primary key: UUID v4
-- Columns: name, type (enum), capacity, base_price_cents, address fields, owner_id (FK → users)
+- Columns: name (required), type (enum, nullable), capacity (nullable), base_price_cents (nullable), address fields, owner_id (FK → users)
 - Timestamps: created_at, updated_at, deleted_at (soft delete)
-- Constraints: capacity > 0, base_price_cents >= 0
+- Constraints: capacity > 0 when set, base_price_cents >= 0 when set
 - Relationships: ← user (owner), → bookings
+- Note: type/capacity/price nullable for minimal signup, completed in profile
 
 **bookings**
 - Primary key: UUID v4
@@ -436,6 +448,58 @@ import { VenueType, Venue } from '@/features/venues/types';
 
 ---
 
+## 🔗 Clerk Webhook Integration (VL-020)
+
+### Overview
+Clerk webhook handles `user.created` events to:
+1. Sync role from `unsafeMetadata` to `publicMetadata` in Clerk (for JWT claims)
+2. Create User record in PostgreSQL database
+3. Create Organization (student_org) or Venue (venue_admin) based on role
+
+### Architecture
+**Follows BACKEND_RULES.md pattern:**
+- **Router** (`router.py`): Thin controller, webhook signature verification
+- **Service** (`services.py`): Business logic for syncing to Clerk API and database
+- **Schemas** (`schemas.py`): Pydantic models for Clerk webhook payload
+- **Constants** (`constants/`): Clerk API URLs, metadata keys, error messages
+
+### Webhook Flow
+```
+Clerk user.created → POST /api/v1/webhooks/clerk
+  ├── Verify svix signature
+  ├── Parse ClerkWebhookEvent
+  ├── Sync role to Clerk publicMetadata (API call)
+  └── Create in PostgreSQL:
+      ├── User record
+      └── Organization (student_org) OR Venue (venue_admin)
+```
+
+### Files Created
+```
+backend/app/modules/webhooks/
+├── __init__.py              # Module export
+├── router.py                # ~50 lines - Webhook endpoint
+├── services.py              # ~130 lines - Sync logic
+├── schemas.py               # ~45 lines - Payload models
+└── constants/
+    ├── __init__.py         # Barrel export
+    ├── clerk.py            # API URL, event types, metadata keys
+    └── errors.py           # Error message enum
+```
+
+### Database Changes
+**Migration**: `make_org_venue_fields_nullable`
+- Organizations: `type`, `university` → nullable
+- Venues: `type`, `capacity`, `base_price_cents` → nullable
+- Check constraints updated to allow NULL
+
+### Repository Methods Added
+- `OrganizationRepository.create(db, name, owner_id)` - Minimal creation
+- `VenueRepository.create_minimal(db, name, owner_id)` - Minimal creation
+- `VenueRepository.get_by_owner_id(db, owner_id)` - Lookup for idempotency
+
+---
+
 ## 🛠️ Development Workflow
 
 ### Backend Commands
@@ -564,29 +628,30 @@ VITE_API_BASE_URL=http://localhost:8000
 - ~~**VL-017**: Settings & User Account Management~~ ✅
 - ~~**VL-018**: Role-Based Access Control (Frontend)~~ ✅
 - ~~**VL-019**: Database Schema Extension for New Features~~ ✅
+- ~~**VL-020**: Clerk Webhook Integration & Signup Sync~~ ✅
 
 ### Phase 4: Testing & Refinement (Next)
-- **VL-020**: Unit Tests - Backend API
-- **VL-021**: Unit Tests - Frontend Components
-- **VL-022**: Integration Tests - API Flows
-- **VL-023**: E2E Tests - Critical User Paths
-- **VL-024**: Performance & Error Handling Refinement
+- **VL-021**: Unit Tests - Backend API
+- **VL-022**: Unit Tests - Frontend Components
+- **VL-023**: Integration Tests - API Flows
+- **VL-024**: E2E Tests - Critical User Paths
+- **VL-025**: Performance & Error Handling Refinement
 
 ---
 
 ## 📊 Key Metrics
 
 ### Codebase Stats
-- **Backend Python files**: ~65+ (venues, bookings, organizations modules)
+- **Backend Python files**: ~70+ (venues, bookings, organizations, webhooks modules)
 - **Frontend feature files**: ~150+ (auth, dashboard, venues, bookings, organization, settings, venue-admin)
 - **Database tables**: 4
-- **Migration count**: 3 (includes booking start/end time migration)
-- **API endpoints**: 20 (auth: 1, venues: 6, bookings: 6, organizations: 3, plus utilities)
+- **Migration count**: 4 (includes make_org_venue_fields_nullable)
+- **API endpoints**: 21 (auth: 1, venues: 6, bookings: 6, organizations: 3, webhooks: 1, plus utilities)
 - **Frontend API functions**: 16+ typed endpoints (venues, bookings, organizations)
 - **Type coverage**: 100% (mypy strict mode, TypeScript strict mode)
 - **Linting errors**: 0 (ruff + ESLint clean)
 - **Test coverage**: 0% (no tests yet)
-- **Lines of code (Python)**: ~2500+ (venues, bookings, organizations modules)
+- **Lines of code (Python)**: ~2700+ (venues, bookings, organizations, webhooks modules)
 
 ### Dashboard Feature Stats
 - **Components**: 9 (DashboardPage, DashboardStats, StatCard, ActionCard, QuickActionsGrid, EventCard, UpcomingEvents, EventsEmptyState, EventsLoadingSkeleton)
@@ -679,6 +744,13 @@ VITE_API_BASE_URL=http://localhost:8000
 - **Type guards**: 10 (isVenueType, isUserRole, isApiError, etc. + assert variants)
 - **Package size**: ~1,700 lines TypeScript
 - **Exports**: ~150 named exports via barrel files
+
+### Webhook Module Stats (VL-020)
+- **Files**: 6 (router, services, schemas, 3 constants files)
+- **Lines of code**: ~225 Python
+- **Features**: Svix signature verification, idempotent user/org/venue creation
+- **External APIs**: Clerk Backend API (PATCH /users/{id}/metadata)
+- **Database operations**: User, Organization, Venue creation via repositories
 
 ### Quality Gates
 - ✅ All commits pass pre-commit hooks
