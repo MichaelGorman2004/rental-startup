@@ -1,2 +1,2 @@
 export { formatPrice } from '../../venues';
-export { formatBookingDate, formatBookingTime } from '../../bookings';
+export { formatBookingDate, formatTimeRange } from '../../bookings';

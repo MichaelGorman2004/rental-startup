@@ -12,8 +12,8 @@ import {
   MAX_SPECIAL_REQUESTS_LENGTH,
   MIN_GROUP_SIZE,
   BOOKING_MESSAGES,
-  getGuestCountMaxMessage,
 } from '../constants';
+import { getGuestCountMaxMessage } from '../utils';
 
 /**
  * Create a Zod schema that accepts nullable form inputs but validates them as required.

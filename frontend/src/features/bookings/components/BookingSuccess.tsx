@@ -8,7 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import type { MyBooking } from '@/lib/api/endpoints';
 import { BOOKING_MESSAGES } from '../constants';
-import { formatBookingDate, formatBookingTime } from '../utils';
+import { formatBookingDate, formatTimeRange } from '../utils';
 
 interface BookingSuccessProps {
   booking: MyBooking;
@@ -52,13 +52,15 @@ export const BookingSuccess = memo(({ booking }: BookingSuccessProps) => {
           <Group gap="xs">
             <Box c="dimmed"><Clock size="1rem" /></Box>
             <Text size="sm">
-              {`${formatBookingTime(booking.eventStartTime)} – ${formatBookingTime(booking.eventEndTime)}`}
+              {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
             </Text>
           </Group>
-          <Group gap="xs">
-            <Box c="dimmed"><Storefront size="1rem" /></Box>
-            <Text size="sm" c="dimmed">{booking.venueName}</Text>
-          </Group>
+          {booking.venueName ? (
+            <Group gap="xs">
+              <Box c="dimmed"><Storefront size="1rem" /></Box>
+              <Text size="sm" c="dimmed">{booking.venueName}</Text>
+            </Group>
+          ) : null}
         </Stack>
       </Card>
 

@@ -12,7 +12,7 @@ import {
   STATUS_LABELS,
   ADMIN_MESSAGES,
 } from '../constants';
-import { formatBookingDate, formatBookingTime } from '../utils';
+import { formatBookingDate, formatTimeRange } from '../utils';
 
 /** Single booking request card with status badge and action buttons. */
 export const BookingCard = memo(({
@@ -53,7 +53,7 @@ export const BookingCard = memo(({
           <Group gap="xs">
             <Box c="dimmed"><Clock size="0.875rem" /></Box>
             <Text size="sm">
-              {`${formatBookingTime(booking.eventStartTime)} – ${formatBookingTime(booking.eventEndTime)}`}
+              {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
             </Text>
           </Group>
           <Group gap="xs">

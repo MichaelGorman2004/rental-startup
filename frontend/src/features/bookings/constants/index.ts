@@ -16,5 +16,4 @@ export {
   STEP_FIELDS,
   BOOKING_FORM_DEFAULTS,
   BOOKING_MESSAGES,
-  getGuestCountMaxMessage,
 } from './booking-defaults';

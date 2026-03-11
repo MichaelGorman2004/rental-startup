@@ -3,5 +3,4 @@ export type {
   BookingFormValues,
   ValidatedBookingData,
   CreateBookingRequest,
-  BookingConfirmation,
 } from './booking.types';

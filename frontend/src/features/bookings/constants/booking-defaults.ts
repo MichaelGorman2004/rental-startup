@@ -118,7 +118,6 @@ export const BOOKING_MESSAGES = {
 
   SUCCESS_TITLE: 'Booking Request Submitted',
   SUCCESS_SUBTITLE: 'The venue will review your request and respond within 48 hours.',
-  SUCCESS_REFERENCE: 'Reference',
   VIEW_BOOKINGS: 'View My Bookings',
   BROWSE_VENUES: 'Browse More Venues',
 
@@ -136,8 +135,3 @@ export const BOOKING_MESSAGES = {
   VALIDATION_GUEST_COUNT_REQUIRED: 'Guest count is required',
   VALIDATION_GUEST_COUNT_MIN: `Minimum ${MIN_GROUP_SIZE} guests`,
 } as const;
-
-/** Generate validation message for max guest count (dynamic per venue). */
-export function getGuestCountMaxMessage(maxCapacity: number): string {
-  return `Maximum ${maxCapacity} guests for this venue`;
-}
