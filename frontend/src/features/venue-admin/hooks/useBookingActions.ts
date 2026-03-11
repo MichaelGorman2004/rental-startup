@@ -52,13 +52,15 @@ export function useBookingActions(venueId: string) {
     },
   });
 
+  const { mutate } = mutation;
+
   const handleAccept = useCallback((bookingId: string) => {
-    mutation.mutate({ bookingId, action: 'accept', venueId });
-  }, [mutation.mutate, venueId]);
+    mutate({ bookingId, action: 'accept', venueId });
+  }, [mutate, venueId]);
 
   const handleDecline = useCallback((bookingId: string) => {
-    mutation.mutate({ bookingId, action: 'decline', venueId });
-  }, [mutation.mutate, venueId]);
+    mutate({ bookingId, action: 'decline', venueId });
+  }, [mutate, venueId]);
 
   return {
     handleAccept,
