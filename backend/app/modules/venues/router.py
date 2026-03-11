@@ -50,6 +50,20 @@ async def create_venue(
 
 
 @router.get(
+    "/me",
+    response_model=VenueResponse,
+    summary="Get current user's venue",
+    description="Retrieve the venue owned by the authenticated user.",
+)
+async def get_my_venue(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> VenueResponse:
+    """Get the current user's venue."""
+    return await venue_service.get_my_venue(db=db, current_user=current_user)
+
+
+@router.get(
     "/{venue_id}",
     response_model=VenueResponse,
     summary="Get venue by ID",

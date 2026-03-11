@@ -1,26 +1,29 @@
 import { useUser } from '@clerk/clerk-react';
+import { useMyVenue } from './useMyVenue';
 import { useVenueStats } from './useVenueStats';
 import { useVenueBookings } from './useVenueBookings';
 import { useBookingActions } from './useBookingActions';
 
-/** Placeholder venue ID for development. Replace with real venue ownership lookup. */
-const MOCK_VENUE_ID = '1';
-
 /**
- * Orchestrates the venue admin dashboard: auth check, stats, bookings, actions.
+ * Orchestrates the venue admin dashboard: auth check, venue lookup, stats, bookings, actions.
  * Extracts all logic from AdminDashboard component.
  */
 export function useAdminDashboard() {
   const { user } = useUser();
   const isVenueAdmin = user?.unsafeMetadata?.['role'] === 'venue_admin';
 
-  const venueId = MOCK_VENUE_ID;
+  const myVenue = useMyVenue();
+  const venueId = myVenue.venueId ?? '';
+
   const stats = useVenueStats(venueId);
   const bookings = useVenueBookings(venueId);
   const actions = useBookingActions(venueId);
 
   return {
     isVenueAdmin,
+    venue: myVenue.venue,
+    isVenueLoading: myVenue.isLoading,
+    isVenueNotFound: myVenue.isNotFound,
     stats: stats.stats,
     isStatsLoading: stats.isLoading,
     isStatsError: stats.isError,

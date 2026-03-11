@@ -108,6 +108,12 @@ export async function getVenue(id: string): Promise<Venue> {
   return toVenue(data);
 }
 
+/** GET /venues/me — Get the current user's venue. */
+export async function getMyVenue(): Promise<Venue> {
+  const { data } = await apiClient.get<VenueApiResponse>('/venues/me');
+  return toVenue(data);
+}
+
 /** POST /venues — Create a new venue. */
 export async function createVenue(
   payload: CreateVenuePayload,
