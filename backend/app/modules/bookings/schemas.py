@@ -1,6 +1,6 @@
 """Pydantic schemas for booking management API."""
 
-from datetime import date, datetime, time
+from datetime import UTC, date, datetime, time
 from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -41,7 +41,7 @@ class BookingCreate(BaseModel):
     @classmethod
     def event_date_not_in_past(cls, v: date) -> date:
         """Ensure event date is not in the past (same-day bookings allowed)."""
-        if v < date.today():
+        if v < datetime.now(tz=UTC).date():
             msg = "Event date must not be in the past"
             raise ValueError(msg)
         return v
