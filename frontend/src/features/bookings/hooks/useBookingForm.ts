@@ -13,6 +13,7 @@ import {
   MIN_GROUP_SIZE,
   BOOKING_MESSAGES,
 } from '../constants';
+import { getGuestCountMaxMessage } from '../utils';
 
 /**
  * Create a Zod schema that accepts nullable form inputs but validates them as required.
@@ -28,10 +29,11 @@ function createBookingSchema(maxCapacity: number) {
       (d): d is Date => d !== null,
       { message: BOOKING_MESSAGES.VALIDATION_DATE_REQUIRED },
     ),
-    eventTime: z.string().min(1, BOOKING_MESSAGES.VALIDATION_TIME_REQUIRED),
+    eventStartTime: z.string().min(1, BOOKING_MESSAGES.VALIDATION_START_TIME_REQUIRED),
+    eventEndTime: z.string().min(1, BOOKING_MESSAGES.VALIDATION_END_TIME_REQUIRED),
     guestCount: z.number()
       .min(MIN_GROUP_SIZE, BOOKING_MESSAGES.VALIDATION_GUEST_COUNT_MIN)
-      .max(maxCapacity, `Maximum ${maxCapacity} guests for this venue`)
+      .max(maxCapacity, getGuestCountMaxMessage(maxCapacity))
       .optional()
       .refine(
         (n): n is number => n !== undefined,
@@ -39,7 +41,10 @@ function createBookingSchema(maxCapacity: number) {
       ),
     specialRequests: z.string().max(MAX_SPECIAL_REQUESTS_LENGTH).default(''),
     budgetCents: z.number().nullable().default(null),
-  });
+  }).refine(
+    (data) => !data.eventStartTime || !data.eventEndTime || data.eventEndTime > data.eventStartTime,
+    { message: BOOKING_MESSAGES.VALIDATION_END_AFTER_START, path: ['eventEndTime'] },
+  );
 }
 
 /**

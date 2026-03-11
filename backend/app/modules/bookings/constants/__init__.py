@@ -3,6 +3,8 @@
 from app.modules.bookings.constants.errors import BookingError
 from app.modules.bookings.constants.validation import (
     DEFAULT_PAGE_SIZE,
+    EVENT_DURATION_MAX_MINUTES,
+    EVENT_DURATION_MIN_MINUTES,
     EVENT_NAME_MAX_LENGTH,
     EVENT_NAME_MIN_LENGTH,
     GUEST_COUNT_MIN,
@@ -13,6 +15,8 @@ from app.modules.bookings.constants.validation import (
 
 __all__ = [
     "BookingError",
+    "EVENT_DURATION_MAX_MINUTES",
+    "EVENT_DURATION_MIN_MINUTES",
     "EVENT_NAME_MIN_LENGTH",
     "EVENT_NAME_MAX_LENGTH",
     "GUEST_COUNT_MIN",

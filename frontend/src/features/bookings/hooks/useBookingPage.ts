@@ -4,7 +4,7 @@ import { useVenueDetail } from '../../venues';
 import type { ValidatedBookingData } from '../types';
 import { useBookingForm } from './useBookingForm';
 import { useCreateBooking } from './useCreateBooking';
-import { calculateEstimatedCost } from '../utils';
+import { calculateEstimatedCost, formatDateToISO } from '../utils';
 
 /**
  * Orchestrates the booking page: route params, venue data, form state, and submission.
@@ -30,11 +30,11 @@ export function useBookingPage() {
       createBooking.mutate({
         venueId: id,
         eventName: data.eventName,
-        eventDate: `${data.eventDate.getFullYear()}-${String(data.eventDate.getMonth() + 1).padStart(2, '0')}-${String(data.eventDate.getDate()).padStart(2, '0')}`,
-        eventTime: data.eventTime,
+        eventDate: formatDateToISO(data.eventDate),
+        eventStartTime: data.eventStartTime,
+        eventEndTime: data.eventEndTime,
         guestCount: data.guestCount,
         specialRequests: data.specialRequests,
-        budgetCents: data.budgetCents ?? null,
       });
     })();
   }, [bookingForm, createBooking, id]);

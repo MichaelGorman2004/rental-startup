@@ -1,8 +1,5 @@
 import type { BookingStatus } from '@/features/bookings/types';
-import type {
-  CreateBookingRequest,
-  BookingConfirmation,
-} from '@/features/bookings/types/booking.types';
+import type { CreateBookingRequest } from '@/features/bookings/types/booking.types';
 import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
 import { apiClient } from '../client';
 
@@ -13,7 +10,9 @@ export interface MyBooking {
   organizationId: string;
   eventName: string;
   eventDate: string;
-  eventTime: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  eventDurationMinutes: number;
   guestCount: number;
   status: BookingStatus;
   specialRequests?: string;
@@ -39,7 +38,9 @@ interface MyBookingApiResponse {
   organization_id: string;
   event_name: string;
   event_date: string;
-  event_time: string;
+  event_start_time: string;
+  event_end_time: string;
+  event_duration_minutes: number;
   guest_count: number;
   status: BookingStatus;
   special_requests: string | null;
@@ -57,26 +58,16 @@ interface PaginatedApiResponse<T> {
   total_pages: number;
 }
 
-/** Backend snake_case booking shape returned from the API. */
-interface BookingApiResponse {
-  id: string;
-  reference_number: string;
-  venue_name: string;
-  event_name: string;
-  event_date: string;
-  event_time: string;
-  guest_count: number;
-  estimated_cost_cents: number;
-  status: BookingStatus;
-}
-
 /** Backend snake_case admin booking shape. */
 interface AdminBookingApiResponse {
   id: string;
+  organization_id: string;
   organization_name: string;
   event_name: string;
   event_date: string;
-  event_time: string;
+  event_start_time: string;
+  event_end_time: string;
+  event_duration_minutes: number;
   guest_count: number;
   status: BookingStatus;
   created_at: string;
@@ -90,21 +81,6 @@ interface VenueStatsApiResponse {
   occupancy_percent: number;
 }
 
-/** Transform a backend booking response to frontend shape. */
-function toBookingConfirmation(raw: BookingApiResponse): BookingConfirmation {
-  return {
-    id: raw.id,
-    referenceNumber: raw.reference_number,
-    venueName: raw.venue_name,
-    eventName: raw.event_name,
-    eventDate: raw.event_date,
-    eventTime: raw.event_time,
-    guestCount: raw.guest_count,
-    estimatedCostCents: raw.estimated_cost_cents,
-    status: raw.status,
-  };
-}
-
 /** Transform a backend admin booking to frontend shape. */
 function toAdminBooking(raw: AdminBookingApiResponse): AdminBooking {
   return {
@@ -112,7 +88,9 @@ function toAdminBooking(raw: AdminBookingApiResponse): AdminBooking {
     organizationName: raw.organization_name,
     eventName: raw.event_name,
     eventDate: raw.event_date,
-    eventTime: raw.event_time,
+    eventStartTime: raw.event_start_time,
+    eventEndTime: raw.event_end_time,
+    eventDurationMinutes: raw.event_duration_minutes,
     guestCount: raw.guest_count,
     status: raw.status,
     createdAt: raw.created_at,
@@ -129,23 +107,44 @@ function toVenueStats(raw: VenueStatsApiResponse): VenueStats {
   };
 }
 
+/** Transform a backend my booking to frontend shape. */
+function toMyBooking(raw: MyBookingApiResponse): MyBooking {
+  return {
+    id: raw.id,
+    venueId: raw.venue_id,
+    organizationId: raw.organization_id,
+    eventName: raw.event_name,
+    eventDate: raw.event_date,
+    eventStartTime: raw.event_start_time,
+    eventEndTime: raw.event_end_time,
+    eventDurationMinutes: raw.event_duration_minutes,
+    guestCount: raw.guest_count,
+    status: raw.status,
+    specialRequests: raw.special_requests ?? undefined,
+    venueName: raw.venue_name,
+    organizationName: raw.organization_name,
+    createdAt: raw.created_at,
+    updatedAt: raw.updated_at,
+  };
+}
+
 /** POST /bookings — Create a new booking request. */
 export async function createBooking(
   request: CreateBookingRequest,
-): Promise<BookingConfirmation> {
-  const { data } = await apiClient.post<BookingApiResponse>(
+): Promise<MyBooking> {
+  const { data } = await apiClient.post<MyBookingApiResponse>(
     '/bookings',
     {
       venue_id: request.venueId,
       event_name: request.eventName,
       event_date: request.eventDate,
-      event_time: request.eventTime,
+      event_start_time: request.eventStartTime,
+      event_end_time: request.eventEndTime,
       guest_count: request.guestCount,
       special_requests: request.specialRequests,
-      budget_cents: request.budgetCents,
     },
   );
-  return toBookingConfirmation(data);
+  return toMyBooking(data);
 }
 
 /** GET /venues/:id/bookings — List bookings for a venue (admin). */
@@ -174,25 +173,6 @@ export async function acceptBooking(bookingId: string): Promise<void> {
 /** PATCH /bookings/:id/decline — Decline a booking request. */
 export async function declineBooking(bookingId: string): Promise<void> {
   await apiClient.patch(`/bookings/${bookingId}/decline`);
-}
-
-/** Transform a backend my booking to frontend shape. */
-function toMyBooking(raw: MyBookingApiResponse): MyBooking {
-  return {
-    id: raw.id,
-    venueId: raw.venue_id,
-    organizationId: raw.organization_id,
-    eventName: raw.event_name,
-    eventDate: raw.event_date,
-    eventTime: raw.event_time,
-    guestCount: raw.guest_count,
-    status: raw.status,
-    specialRequests: raw.special_requests ?? undefined,
-    venueName: raw.venue_name,
-    organizationName: raw.organization_name,
-    createdAt: raw.created_at,
-    updatedAt: raw.updated_at,
-  };
 }
 
 /** GET /bookings/me — List current user's org bookings. */

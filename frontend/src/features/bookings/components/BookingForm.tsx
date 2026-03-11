@@ -34,7 +34,7 @@ export function BookingForm() {
 
   if (isError) return <Container size="md" py="xl"><VenueErrorState onRetry={refetch} /></Container>;
   if (isNotFound) return <Container size="md" py="xl"><BookingNotFound /></Container>;
-  if (isSuccess && confirmation) return <Container size="sm" py="xl"><BookingSuccess confirmation={confirmation} /></Container>;
+  if (isSuccess && confirmation) return <Container size="sm" py="xl"><BookingSuccess booking={confirmation} /></Container>;
 
   const control = castControl(form.control);
   const { errors } = form.formState;

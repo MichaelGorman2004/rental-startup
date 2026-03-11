@@ -7,7 +7,7 @@
 
 // Re-export shared types
 export { BookingStatus } from '@venuelink/shared';
-export type { BookingConfirmation, UpcomingEvent } from '@venuelink/shared';
+export type { UpcomingEvent } from '@venuelink/shared';
 
 // Local types not in shared package (form-specific)
 
@@ -15,7 +15,8 @@ export type { BookingConfirmation, UpcomingEvent } from '@venuelink/shared';
 export interface BookingFormValues {
   eventName: string;
   eventDate: Date | null;
-  eventTime: string;
+  eventStartTime: string;
+  eventEndTime: string;
   guestCount: number | undefined;
   specialRequests: string;
   budgetCents: number | null;
@@ -25,7 +26,8 @@ export interface BookingFormValues {
 export interface ValidatedBookingData {
   eventName: string;
   eventDate: Date;
-  eventTime: string;
+  eventStartTime: string;
+  eventEndTime: string;
   guestCount: number;
   specialRequests: string;
   budgetCents: number | null;
@@ -36,8 +38,8 @@ export interface CreateBookingRequest {
   venueId: string;
   eventName: string;
   eventDate: string;
-  eventTime: string;
+  eventStartTime: string;
+  eventEndTime: string;
   guestCount: number;
   specialRequests: string;
-  budgetCents: number | null;
 }

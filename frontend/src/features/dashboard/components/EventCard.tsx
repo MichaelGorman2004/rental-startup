@@ -22,7 +22,7 @@ function useFormattedDate(dateStr: string, timeStr: string) {
 }
 
 export const EventCard = memo(({ event }: EventCardProps) => {
-  const { dateLabel, timeLabel } = useFormattedDate(event.eventDate, event.eventTime);
+  const { dateLabel, timeLabel } = useFormattedDate(event.eventDate, event.eventStartTime);
 
   return (
     <Card withBorder className={classes['card']}>

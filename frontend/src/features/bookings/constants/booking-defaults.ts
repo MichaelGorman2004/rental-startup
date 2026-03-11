@@ -65,7 +65,7 @@ export const BUDGET_OPTIONS = [
 
 /** Fields validated at each step for progressive validation. */
 export const STEP_FIELDS: Record<number, string[]> = {
-  0: ['eventName', 'eventDate', 'eventTime', 'guestCount'],
+  0: ['eventName', 'eventDate', 'eventStartTime', 'eventEndTime', 'guestCount'],
   1: [],
   2: [],
 };
@@ -74,7 +74,8 @@ export const STEP_FIELDS: Record<number, string[]> = {
 export const BOOKING_FORM_DEFAULTS: BookingFormValues = {
   eventName: '',
   eventDate: null,
-  eventTime: '',
+  eventStartTime: '',
+  eventEndTime: '',
   guestCount: undefined,
   specialRequests: '',
   budgetCents: null,
@@ -94,9 +95,12 @@ export const BOOKING_MESSAGES = {
   EVENT_NAME_PLACEHOLDER: 'e.g. Spring Formal, Fundraiser Gala',
   EVENT_NAME_DESCRIPTION: 'A descriptive name for your event',
   EVENT_DATE_LABEL: 'Event Date',
+  EVENT_DATE_PLACEHOLDER: 'Pick a date',
   EVENT_DATE_DESCRIPTION: `Must be at least ${MIN_NOTICE_DAYS} days from today`,
-  EVENT_TIME_LABEL: 'Event Start Time',
-  EVENT_TIME_DESCRIPTION: 'When your event begins',
+  EVENT_START_TIME_LABEL: 'Event Start Time',
+  EVENT_START_TIME_DESCRIPTION: 'When your event begins',
+  EVENT_END_TIME_LABEL: 'Event End Time',
+  EVENT_END_TIME_DESCRIPTION: 'When your event ends',
   GUEST_COUNT_LABEL: 'Expected Guests',
   SPECIAL_REQUESTS_LABEL: 'Special Requests',
   SPECIAL_REQUESTS_PLACEHOLDER: 'Dietary requirements, AV needs, decoration preferences...',
@@ -114,7 +118,6 @@ export const BOOKING_MESSAGES = {
 
   SUCCESS_TITLE: 'Booking Request Submitted',
   SUCCESS_SUBTITLE: 'The venue will review your request and respond within 48 hours.',
-  SUCCESS_REFERENCE: 'Reference',
   VIEW_BOOKINGS: 'View My Bookings',
   BROWSE_VENUES: 'Browse More Venues',
 
@@ -126,7 +129,9 @@ export const BOOKING_MESSAGES = {
   VALIDATION_EVENT_NAME_MIN: `Must be at least ${MIN_EVENT_NAME_LENGTH} characters`,
   VALIDATION_EVENT_NAME_MAX: `Must be at most ${MAX_EVENT_NAME_LENGTH} characters`,
   VALIDATION_DATE_REQUIRED: 'Event date is required',
-  VALIDATION_TIME_REQUIRED: 'Event time is required',
+  VALIDATION_START_TIME_REQUIRED: 'Start time is required',
+  VALIDATION_END_TIME_REQUIRED: 'End time is required',
+  VALIDATION_END_AFTER_START: 'End time must be after start time',
   VALIDATION_GUEST_COUNT_REQUIRED: 'Guest count is required',
   VALIDATION_GUEST_COUNT_MIN: `Minimum ${MIN_GROUP_SIZE} guests`,
 } as const;

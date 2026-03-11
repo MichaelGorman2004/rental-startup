@@ -11,7 +11,7 @@ import {
 } from '../../venues';
 import type { BookingFormValues } from '../types';
 import { BOOKING_MESSAGES } from '../constants';
-import { formatBookingDate, formatBookingTime } from '../utils';
+import { formatBookingDate, formatTimeRange } from '../utils';
 
 interface BookingSummaryProps {
   formValues: BookingFormValues;
@@ -58,7 +58,9 @@ export const BookingSummary = memo(({
         <SummaryRow
           icon={<Clock size="1rem" />}
           label="Time"
-          value={formValues.eventTime ? formatBookingTime(formValues.eventTime) : '—'}
+          value={formValues.eventStartTime && formValues.eventEndTime
+            ? formatTimeRange(formValues.eventStartTime, formValues.eventEndTime)
+            : '—'}
         />
         <SummaryRow
           icon={<Users size="1rem" />}

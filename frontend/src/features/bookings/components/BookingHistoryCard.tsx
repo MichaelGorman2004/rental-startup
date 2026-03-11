@@ -6,7 +6,7 @@ import { Calendar, Clock, Users } from '@phosphor-icons/react';
 import { BookingStatus } from '@venuelink/shared';
 import type { MyBooking } from '@/lib/api/endpoints';
 import { STATUS_BADGE_COLORS, STATUS_LABELS } from '@/lib/constants';
-import { formatBookingDate, formatBookingTime } from '../utils';
+import { formatBookingDate, formatTimeRange } from '../utils';
 import { MY_BOOKINGS_MESSAGES } from '../constants/bookings-page-defaults';
 
 interface BookingHistoryCardProps {
@@ -43,7 +43,9 @@ export const BookingHistoryCard = memo(({ booking, onCancel }: BookingHistoryCar
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><Clock size="0.875rem" /></Box>
-            <Text size="sm">{formatBookingTime(booking.eventTime)}</Text>
+            <Text size="sm">
+              {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
+            </Text>
           </Group>
           <Group gap="xs">
             <Box c="dimmed"><Users size="0.875rem" /></Box>
