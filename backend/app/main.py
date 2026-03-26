@@ -3,12 +3,14 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.database import engine
+from app.core.exceptions import AuthorizationError, BusinessRuleError, ResourceNotFoundError
 from app.modules.auth.router import router as auth_router
 from app.modules.bookings.router import router as bookings_router
 from app.modules.organizations.router import router as organizations_router
@@ -61,6 +63,25 @@ app = FastAPI(
     redoc_url="/api/redoc",  # ReDoc at /api/redoc
     lifespan=lifespan,  # Database lifecycle management
 )
+
+
+@app.exception_handler(ResourceNotFoundError)
+async def not_found_handler(_request: Request, exc: ResourceNotFoundError) -> JSONResponse:
+    """Convert ResourceNotFoundError to a 404 JSON response."""
+    return JSONResponse(status_code=404, content={"error": exc.message, "code": exc.code})
+
+
+@app.exception_handler(AuthorizationError)
+async def authorization_handler(_request: Request, exc: AuthorizationError) -> JSONResponse:
+    """Convert AuthorizationError to a 403 JSON response."""
+    return JSONResponse(status_code=403, content={"error": exc.message, "code": exc.code})
+
+
+@app.exception_handler(BusinessRuleError)
+async def business_rule_handler(_request: Request, exc: BusinessRuleError) -> JSONResponse:
+    """Convert BusinessRuleError to a 400 JSON response."""
+    return JSONResponse(status_code=400, content={"error": exc.message, "code": exc.code})
+
 
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(bookings_router, prefix="/api/v1")

@@ -23,7 +23,7 @@ async function performBookingAction(payload: ActionPayload): Promise<void> {
  * Provides accept/decline mutation for venue booking requests.
  * Uses optimistic updates for instant UI feedback.
  */
-export function useBookingActions(venueId: string) {
+export function useBookingActions(venueId: string | null) {
   const queryClient = useQueryClient();
   const bookingsKey = ADMIN_QUERY_KEYS.BOOKINGS(venueId);
 
@@ -55,10 +55,12 @@ export function useBookingActions(venueId: string) {
   const { mutate } = mutation;
 
   const handleAccept = useCallback((bookingId: string) => {
+    if (!venueId) return;
     mutate({ bookingId, action: 'accept', venueId });
   }, [mutate, venueId]);
 
   const handleDecline = useCallback((bookingId: string) => {
+    if (!venueId) return;
     mutate({ bookingId, action: 'decline', venueId });
   }, [mutate, venueId]);
 

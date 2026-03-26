@@ -13,7 +13,9 @@ export function useVenues(filters: VenueFilters) {
   } = filters;
 
   const query = useQuery({
-    queryKey: VENUE_QUERY_KEYS.list({ type, search, page }),
+    queryKey: VENUE_QUERY_KEYS.list({
+      type, search, page, pageSize,
+    }),
     queryFn: () => getVenues({
       type: type ?? undefined,
       search: search || undefined,

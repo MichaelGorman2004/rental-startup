@@ -13,7 +13,7 @@ export function useAdminDashboard() {
   const isVenueAdmin = user?.unsafeMetadata?.['role'] === 'venue_admin';
 
   const myVenue = useMyVenue();
-  const venueId = myVenue.venueId ?? '';
+  const { venueId } = myVenue;
 
   const stats = useVenueStats(venueId);
   const bookings = useVenueBookings(venueId);
