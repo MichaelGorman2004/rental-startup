@@ -6,12 +6,15 @@ All error strings are defined here to prevent hardcoded strings in business logi
 
 from enum import Enum
 
+VENUE_RESOURCE = "Venue"
+
 
 class VenueError(str, Enum):
     """Venue-specific error messages for consistent API responses."""
 
     # Not found errors
     VENUE_NOT_FOUND = "Venue not found."
+    NO_VENUE_OWNED = "You have not created a venue yet."
     VENUE_ALREADY_DELETED = "Venue has already been deleted."
 
     # Authorization errors

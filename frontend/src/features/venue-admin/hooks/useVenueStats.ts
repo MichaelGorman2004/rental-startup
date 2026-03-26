@@ -17,7 +17,7 @@ async function fetchVenueStats(): Promise<VenueStats> {
  * Fetches venue performance stats with auto-refresh.
  * Polls every 60 seconds for near-real-time data.
  */
-export function useVenueStats(venueId: string) {
+export function useVenueStats(venueId: string | null) {
   const query = useQuery({
     queryKey: ADMIN_QUERY_KEYS.STATS(venueId),
     queryFn: fetchVenueStats,

@@ -1,6 +1,7 @@
 export {
   getVenues,
   getVenue,
+  getMyVenue,
   createVenue,
   updateVenue,
   deleteVenue,

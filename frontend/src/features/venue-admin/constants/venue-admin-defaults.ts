@@ -23,8 +23,8 @@ export const MOCK_ACTION_DELAY_MS = 800;
 
 /** Query key hierarchy for venue admin caches. */
 export const ADMIN_QUERY_KEYS = {
-  STATS: (venueId: string) => ['venue-admin', 'stats', venueId] as const,
-  BOOKINGS: (venueId: string) => ['venue-admin', 'bookings', venueId] as const,
+  STATS: (venueId: string | null) => ['venue-admin', 'stats', venueId] as const,
+  BOOKINGS: (venueId: string | null) => ['venue-admin', 'bookings', venueId] as const,
 };
 
 /** UI messages for the venue admin dashboard. */

@@ -8,12 +8,12 @@ mocking the database.
 from math import ceil
 from uuid import UUID
 
-from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants.enums import UserRole
+from app.core.exceptions import AuthorizationError, BusinessRuleError, ResourceNotFoundError
 from app.modules.users.models import User
-from app.modules.venues.constants import VenueError
+from app.modules.venues.constants import VENUE_RESOURCE, VenueError
 from app.modules.venues.repository import VenueRepository
 from app.modules.venues.schemas import (
     VenueCreate,
@@ -45,14 +45,11 @@ class VenueService:
             Created venue response
 
         Raises:
-            HTTPException: If user is not a venue admin
+            AuthorizationError: If user is not a venue admin.
         """
         # Verify user is venue admin
         if current_user.role != UserRole.venue_admin:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=VenueError.VENUE_ADMIN_REQUIRED,
-            )
+            raise AuthorizationError(VenueError.VENUE_ADMIN_REQUIRED)
 
         # Create venue
         venue = await VenueRepository.create(
@@ -60,6 +57,38 @@ class VenueService:
             venue_data=venue_data,
             owner_id=current_user.id,
         )
+
+        return VenueResponse.model_validate(venue)
+
+    @staticmethod
+    async def get_my_venue(
+        db: AsyncSession,
+        current_user: User,
+    ) -> VenueResponse:
+        """
+        Retrieve the venue owned by the current user.
+
+        Args:
+            db: Database session.
+            current_user: Authenticated user.
+
+        Returns:
+            Venue response owned by the user.
+
+        Raises:
+            AuthorizationError: If user is not a venue admin.
+            ResourceNotFoundError: If user has no venue.
+        """
+        if current_user.role != UserRole.venue_admin:
+            raise AuthorizationError(VenueError.VENUE_ADMIN_REQUIRED)
+
+        venue = await VenueRepository.get_by_owner_id(
+            db=db,
+            owner_id=current_user.id,
+        )
+
+        if not venue:
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.NO_VENUE_OWNED)
 
         return VenueResponse.model_validate(venue)
 
@@ -79,15 +108,12 @@ class VenueService:
             Venue response
 
         Raises:
-            HTTPException: If venue not found
+            ResourceNotFoundError: If venue not found.
         """
         venue = await VenueRepository.get_by_id(db=db, venue_id=venue_id)
 
         if not venue:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=VenueError.VENUE_NOT_FOUND,
-            )
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.VENUE_NOT_FOUND)
 
         return VenueResponse.model_validate(venue)
 
@@ -139,7 +165,9 @@ class VenueService:
             Updated venue response
 
         Raises:
-            HTTPException: If venue not found, already deleted, or user not owner
+            ResourceNotFoundError: If venue not found.
+            BusinessRuleError: If venue is already deleted.
+            AuthorizationError: If user does not own the venue.
         """
         # Get venue
         venue = await VenueRepository.get_by_id(
@@ -149,24 +177,15 @@ class VenueService:
         )
 
         if not venue:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=VenueError.VENUE_NOT_FOUND,
-            )
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.VENUE_NOT_FOUND)
 
         # Check if already deleted
         if venue.deleted_at:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=VenueError.CANNOT_UPDATE_DELETED,
-            )
+            raise BusinessRuleError(VenueError.CANNOT_UPDATE_DELETED)
 
         # Verify ownership
         if venue.owner_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=VenueError.NOT_VENUE_OWNER,
-            )
+            raise AuthorizationError(VenueError.NOT_VENUE_OWNER)
 
         # Update venue
         updated_venue = await VenueRepository.update(
@@ -192,7 +211,9 @@ class VenueService:
             current_user: Authenticated user
 
         Raises:
-            HTTPException: If venue not found, already deleted, or user not owner
+            ResourceNotFoundError: If venue not found.
+            BusinessRuleError: If venue is already deleted.
+            AuthorizationError: If user does not own the venue.
         """
         # Get venue
         venue = await VenueRepository.get_by_id(
@@ -202,24 +223,15 @@ class VenueService:
         )
 
         if not venue:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=VenueError.VENUE_NOT_FOUND,
-            )
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.VENUE_NOT_FOUND)
 
         # Check if already deleted
         if venue.deleted_at:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=VenueError.CANNOT_DELETE_DELETED,
-            )
+            raise BusinessRuleError(VenueError.CANNOT_DELETE_DELETED)
 
         # Verify ownership
         if venue.owner_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=VenueError.NOT_VENUE_OWNER,
-            )
+            raise AuthorizationError(VenueError.NOT_VENUE_OWNER)
 
         # Soft delete
         await VenueRepository.soft_delete(db=db, venue=venue)

@@ -2,6 +2,7 @@ import type { BookingStatus } from '@/features/bookings/types';
 import type { CreateBookingRequest } from '@/features/bookings/types/booking.types';
 import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
 import { apiClient } from '../client';
+import type { PaginatedApiResponse } from '../types';
 
 /** Frontend shape for a booking with details (my bookings list). */
 export interface MyBooking {
@@ -48,14 +49,6 @@ interface MyBookingApiResponse {
   organization_name: string;
   created_at: string;
   updated_at: string;
-}
-
-interface PaginatedApiResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  page_size: number;
-  total_pages: number;
 }
 
 /** Backend snake_case admin booking shape. */

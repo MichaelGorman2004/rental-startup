@@ -1,6 +1,6 @@
 """Venue constants barrel exports."""
 
-from app.modules.venues.constants.errors import VenueError
+from app.modules.venues.constants.errors import VENUE_RESOURCE, VenueError
 from app.modules.venues.constants.validation import (
     BASE_PRICE_MAX_CENTS,
     BASE_PRICE_MIN_CENTS,
@@ -16,6 +16,7 @@ from app.modules.venues.constants.validation import (
 )
 
 __all__ = [
+    "VENUE_RESOURCE",
     "VenueError",
     "NAME_MIN_LENGTH",
     "NAME_MAX_LENGTH",
