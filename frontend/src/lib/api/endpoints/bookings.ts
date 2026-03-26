@@ -144,10 +144,10 @@ export async function createBooking(
 export async function getVenueBookings(
   venueId: string,
 ): Promise<AdminBooking[]> {
-  const { data } = await apiClient.get<AdminBookingApiResponse[]>(
+  const { data } = await apiClient.get<PaginatedApiResponse<AdminBookingApiResponse>>(
     `/venues/${venueId}/bookings`,
   );
-  return data.map(toAdminBooking);
+  return data.items.map(toAdminBooking);
 }
 
 /** GET /venues/:id/stats — Get venue performance stats (admin). */
