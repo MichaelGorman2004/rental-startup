@@ -10,6 +10,7 @@ export const DASHBOARD_CONSTANTS = {
   QUERY_KEYS: {
     UPCOMING_EVENTS: 'upcomingEvents',
     ORGANIZATION: 'organization',
+    DASHBOARD_SUMMARY: 'dashboardSummary',
   },
   LABELS: {
     QUICK_ACTIONS: 'Quick Actions',
@@ -24,11 +25,8 @@ export const DASHBOARD_CONSTANTS = {
     ERROR_LOADING: 'Failed to load events',
     RETRY: 'Try again',
   },
-  STATS: [
-    { label: 'Upcoming Events', value: '3', trend: '+1 this week' },
-    { label: 'Total Bookings', value: '12', trend: '2 pending' },
-    { label: 'Budget Used', value: '$4,280', trend: '68% of total' },
-  ],
+  /** @deprecated Stats are now fetched via useDashboardStats hook. */
+  STATS: [] as { label: string; value: string; trend: string }[],
   API: {
     BOOKINGS_ENDPOINT: '/api/v1/bookings',
   },
