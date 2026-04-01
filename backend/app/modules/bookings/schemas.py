@@ -96,9 +96,19 @@ class BookingListResponse(BaseModel):
     total_pages: int
 
 
+class BookingSummaryResponse(BaseModel):
+    """Schema for org booking summary stats (dashboard)."""
+
+    upcoming_events_count: int = Field(..., ge=0)
+    total_bookings: int = Field(..., ge=0)
+    budget_used_cents: int = Field(..., ge=0)
+
+
 class BookingFilters(BaseModel):
     """Schema for booking filtering and pagination query parameters."""
 
     status: BookingStatus | None = None
+    from_date: date | None = None
+    sort_by: str | None = None
     page: int = Field(MIN_PAGE, ge=MIN_PAGE)
     page_size: int = Field(DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE)
