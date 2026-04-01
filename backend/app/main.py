@@ -2,19 +2,28 @@
 
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.database import engine
-from app.core.exceptions import AuthorizationError, BusinessRuleError, ResourceNotFoundError
+from app.core.exceptions import (
+    AuthorizationError,
+    BusinessRuleError,
+    ConflictError,
+    ResourceNotFoundError,
+)
+from app.core.uploads import UPLOAD_DIR
 from app.modules.auth.router import router as auth_router
 from app.modules.bookings.router import router as bookings_router
 from app.modules.organizations.router import router as organizations_router
 from app.modules.prerelease.router import router as prerelease_router
+from app.modules.ratings.router import router as ratings_router
 from app.modules.venues.router import router as venues_router
 from app.modules.webhooks.router import router as webhooks_router
 
@@ -83,12 +92,26 @@ async def business_rule_handler(_request: Request, exc: BusinessRuleError) -> JS
     return JSONResponse(status_code=400, content={"error": exc.message, "code": exc.code})
 
 
+@app.exception_handler(ConflictError)
+async def conflict_handler(_request: Request, exc: ConflictError) -> JSONResponse:
+    """Convert ConflictError to a 409 JSON response."""
+    return JSONResponse(status_code=409, content={"error": exc.message, "code": exc.code})
+
+
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(bookings_router, prefix="/api/v1")
 app.include_router(organizations_router, prefix="/api/v1")
 app.include_router(prerelease_router, prefix="/api/v1")
+app.include_router(ratings_router, prefix="/api/v1")
 app.include_router(venues_router, prefix="/api/v1")
 app.include_router(webhooks_router, prefix="/webhooks")
+
+# Serve uploaded files (logos, etc.) as static assets.
+# The directory is created lazily by the upload utility; ensure it exists
+# here so StaticFiles does not raise on startup.
+uploads_path = Path(UPLOAD_DIR)
+uploads_path.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_path)), name="uploads")
 
 # CORS middleware configuration
 # Allows frontend to make API requests during development
@@ -96,8 +119,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 

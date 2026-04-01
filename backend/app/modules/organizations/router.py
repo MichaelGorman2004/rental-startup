@@ -3,7 +3,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database.session import get_db
@@ -39,10 +39,14 @@ async def get_my_organization(
 async def get_organization(
     org_id: UUID,
     db: Annotated[AsyncSession, Depends(get_db)],
-    _current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ) -> OrganizationResponse:
-    """Get a single organization by ID."""
-    return await organization_service.get_org_by_id(db=db, org_id=org_id)
+    """Get a single organization by ID (owner only)."""
+    return await organization_service.get_org_by_id(
+        db=db,
+        org_id=org_id,
+        current_user=current_user,
+    )
 
 
 @router.patch(
@@ -61,5 +65,25 @@ async def update_organization(
         db=db,
         org_id=org_id,
         update_data=update_data,
+        current_user=current_user,
+    )
+
+
+@router.post(
+    "/{org_id}/logo",
+    response_model=OrganizationResponse,
+    summary="Upload organization logo",
+)
+async def upload_organization_logo(
+    org_id: UUID,
+    file: UploadFile,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> OrganizationResponse:
+    """Upload a logo image for an organization (owner only)."""
+    return await organization_service.upload_logo(
+        db=db,
+        org_id=org_id,
+        file=file,
         current_user=current_user,
     )

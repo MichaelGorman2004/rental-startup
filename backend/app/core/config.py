@@ -1,7 +1,15 @@
 """Application configuration using Pydantic Settings."""
 
+import os
+
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Default secret key used only in non-production environments
+_DEV_SECRET_KEY = "dev-secret-key-change-in-production"
+
+# Environment value that triggers production-level validation
+PRODUCTION_ENV = "production"
 
 
 class Settings(BaseSettings):
@@ -30,9 +38,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/venuelink"
 
     # Security settings
-    # TODO: Generate a secure random key for production
+    # In production, SECRET_KEY must be set via environment variable.
     # Use: openssl rand -hex 32
-    SECRET_KEY: str = "dev-secret-key-change-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", _DEV_SECRET_KEY)
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
@@ -64,6 +72,31 @@ class Settings(BaseSettings):
             self.DATABASE_URL = url.replace("postgresql://", "postgresql+asyncpg://", 1)
         elif url.startswith("postgres://"):
             self.DATABASE_URL = url.replace("postgres://", "postgresql+asyncpg://", 1)
+        return self
+
+    @model_validator(mode="after")
+    def validate_production_settings(self) -> "Settings":
+        """Enforce strict security requirements in production.
+
+        Ensures that SECRET_KEY and CLERK_PEM_PUBLIC_KEY are explicitly set
+        when ENVIRONMENT is 'production'. Missing either value would allow
+        insecure JWT handling, so we fail fast at startup.
+        """
+        if self.ENVIRONMENT != PRODUCTION_ENV:
+            return self
+
+        if not self.SECRET_KEY or self.SECRET_KEY == _DEV_SECRET_KEY:
+            raise ValueError(
+                "SECRET_KEY must be set to a secure value in production. "
+                "Generate one with: openssl rand -hex 32"
+            )
+
+        if not os.getenv("CLERK_PEM_PUBLIC_KEY"):
+            raise ValueError(
+                "CLERK_PEM_PUBLIC_KEY must be set in production. "
+                "Without it, JWT signatures are not verified."
+            )
+
         return self
 
     model_config = SettingsConfigDict(

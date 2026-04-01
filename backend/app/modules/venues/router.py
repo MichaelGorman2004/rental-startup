@@ -7,7 +7,7 @@ No business logic in routers - everything delegates to the service layer.
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database.session import get_db
@@ -15,6 +15,9 @@ from app.modules.auth.dependencies import get_current_user
 from app.modules.bookings.router import parse_booking_filters
 from app.modules.bookings.schemas import BookingFilters, BookingListResponse
 from app.modules.bookings.services import booking_service
+from app.modules.ratings.router import parse_rating_filters
+from app.modules.ratings.schemas import RatingFilters, RatingListResponse
+from app.modules.ratings.services import rating_service
 from app.modules.users.models import User
 from app.modules.venues.dependencies import parse_venue_filters
 from app.modules.venues.schemas import (
@@ -22,6 +25,7 @@ from app.modules.venues.schemas import (
     VenueFilters,
     VenueListResponse,
     VenueResponse,
+    VenueStatsResponse,
     VenueUpdate,
 )
 from app.modules.venues.services import venue_service
@@ -64,6 +68,25 @@ async def get_my_venue(
 
 
 @router.get(
+    "/{venue_id}/stats",
+    response_model=VenueStatsResponse,
+    summary="Get venue stats",
+    description="Get performance stats for a venue. Requires ownership.",
+)
+async def get_venue_stats(
+    venue_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> VenueStatsResponse:
+    """Get venue performance stats (owner only)."""
+    return await venue_service.get_venue_stats(
+        db=db,
+        venue_id=venue_id,
+        current_user=current_user,
+    )
+
+
+@router.get(
     "/{venue_id}",
     response_model=VenueResponse,
     summary="Get venue by ID",
@@ -74,7 +97,12 @@ async def get_venue(
     db: Annotated[AsyncSession, Depends(get_db)],
     _current_user: Annotated[User, Depends(get_current_user)],
 ) -> VenueResponse:
-    """Get a single venue by ID."""
+    """Get a single venue by ID.
+
+    This endpoint is intentionally accessible to any authenticated user
+    (no ownership check) so that student organizations can browse and
+    discover venues before making a booking request.
+    """
     return await venue_service.get_venue_by_id(db=db, venue_id=venue_id)
 
 
@@ -119,6 +147,27 @@ async def update_venue(
     )
 
 
+@router.post(
+    "/{venue_id}/logo",
+    response_model=VenueResponse,
+    summary="Upload venue logo",
+    description="Upload a logo image for a venue. Requires ownership.",
+)
+async def upload_venue_logo(
+    venue_id: UUID,
+    file: UploadFile,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> VenueResponse:
+    """Upload a logo image for a venue (owner only)."""
+    return await venue_service.upload_logo(
+        db=db,
+        venue_id=venue_id,
+        file=file,
+        current_user=current_user,
+    )
+
+
 @router.delete(
     "/{venue_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -158,5 +207,24 @@ async def list_venue_bookings(
         db=db,
         venue_id=venue_id,
         current_user=current_user,
+        filters=filters,
+    )
+
+
+@router.get(
+    "/{venue_id}/ratings",
+    response_model=RatingListResponse,
+    summary="List venue ratings",
+    description="List ratings for a venue with pagination. Public endpoint.",
+)
+async def list_venue_ratings(
+    venue_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    filters: Annotated[RatingFilters, Depends(parse_rating_filters)],
+) -> RatingListResponse:
+    """List ratings for a venue (public, paginated)."""
+    return await rating_service.list_venue_ratings(
+        db=db,
+        venue_id=venue_id,
         filters=filters,
     )
