@@ -245,6 +245,20 @@ class VenueRepository:
         await db.commit()
 
     @staticmethod
+    async def update_logo_url(
+        db: AsyncSession,
+        venue: Venue,
+        logo_url: str,
+    ) -> Venue:
+        """Update the logo URL for a venue."""
+        venue.logo_url = logo_url
+
+        await db.commit()
+        await db.refresh(venue)
+
+        return venue
+
+    @staticmethod
     async def verify_ownership(
         db: AsyncSession,
         venue_id: UUID,

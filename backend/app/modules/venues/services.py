@@ -5,13 +5,17 @@ access - they call repository methods. This makes them fully testable without
 mocking the database.
 """
 
+from datetime import UTC, datetime
 from math import ceil
 from uuid import UUID
 
+from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants.enums import UserRole
 from app.core.exceptions import AuthorizationError, BusinessRuleError, ResourceNotFoundError
+from app.core.uploads import save_upload
+from app.modules.bookings.repository import BookingRepository
 from app.modules.users.models import User
 from app.modules.venues.constants import VENUE_RESOURCE, VenueError
 from app.modules.venues.repository import VenueRepository
@@ -20,8 +24,17 @@ from app.modules.venues.schemas import (
     VenueFilters,
     VenueListResponse,
     VenueResponse,
+    VenueStatsResponse,
     VenueUpdate,
 )
+
+VENUE_UPLOAD_SUBFOLDER = "venues"
+
+# Occupancy calculation: 12 available hours/day, 30 days/month
+AVAILABLE_HOURS_PER_DAY = 12
+DAYS_PER_MONTH = 30
+TOTAL_AVAILABLE_HOURS_PER_MONTH = AVAILABLE_HOURS_PER_DAY * DAYS_PER_MONTH
+MAX_OCCUPANCY_PERCENT = 100.0
 
 
 class VenueService:
@@ -197,6 +210,50 @@ class VenueService:
         return VenueResponse.model_validate(updated_venue)
 
     @staticmethod
+    async def get_venue_stats(
+        db: AsyncSession,
+        venue_id: UUID,
+        current_user: User,
+    ) -> VenueStatsResponse:
+        """Get performance stats for a venue (owner only)."""
+        venue = await VenueRepository.get_by_id(db=db, venue_id=venue_id)
+        if not venue:
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.VENUE_NOT_FOUND)
+        if venue.owner_id != current_user.id:
+            raise AuthorizationError(VenueError.NOT_VENUE_OWNER)
+
+        now = datetime.now(UTC)
+        year, month = now.year, now.month
+
+        bookings_count = await BookingRepository.count_venue_bookings_this_month(
+            db,
+            venue_id,
+            year,
+            month,
+        )
+        revenue = await BookingRepository.sum_venue_revenue_cents(
+            db,
+            venue_id,
+            year,
+            month,
+        )
+        booked_hours = await BookingRepository.sum_venue_booked_hours(
+            db,
+            venue_id,
+            year,
+            month,
+        )
+        occupancy = min(
+            booked_hours / TOTAL_AVAILABLE_HOURS_PER_MONTH * MAX_OCCUPANCY_PERCENT,
+            MAX_OCCUPANCY_PERCENT,
+        )
+        return VenueStatsResponse(
+            bookings_this_month=bookings_count,
+            revenue_cents=revenue,
+            occupancy_percent=round(occupancy, 1),
+        )
+
+    @staticmethod
     async def delete_venue(
         db: AsyncSession,
         venue_id: UUID,
@@ -235,6 +292,30 @@ class VenueService:
 
         # Soft delete
         await VenueRepository.soft_delete(db=db, venue=venue)
+
+    @staticmethod
+    async def upload_logo(
+        db: AsyncSession,
+        venue_id: UUID,
+        file: UploadFile,
+        current_user: User,
+    ) -> VenueResponse:
+        """Upload and set a logo for a venue (owner only)."""
+        venue = await VenueRepository.get_by_id(db=db, venue_id=venue_id)
+
+        if not venue:
+            raise ResourceNotFoundError(VENUE_RESOURCE, VenueError.VENUE_NOT_FOUND)
+
+        if venue.owner_id != current_user.id:
+            raise AuthorizationError(VenueError.NOT_VENUE_OWNER)
+
+        logo_url = await save_upload(file, VENUE_UPLOAD_SUBFOLDER)
+
+        updated_venue = await VenueRepository.update_logo_url(
+            db=db, venue=venue, logo_url=logo_url,
+        )
+
+        return VenueResponse.model_validate(updated_venue)
 
 
 # Singleton instance
