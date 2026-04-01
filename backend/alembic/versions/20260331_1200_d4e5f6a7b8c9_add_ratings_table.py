@@ -34,25 +34,40 @@ def upgrade() -> None:
             name="rating_score_range_check",
         ),
         sa.ForeignKeyConstraint(
-            ["booking_id"], ["bookings.id"], ondelete="RESTRICT",
+            ["booking_id"],
+            ["bookings.id"],
+            ondelete="RESTRICT",
         ),
         sa.ForeignKeyConstraint(
-            ["organization_id"], ["organizations.id"], ondelete="RESTRICT",
+            ["organization_id"],
+            ["organizations.id"],
+            ondelete="RESTRICT",
         ),
         sa.ForeignKeyConstraint(
-            ["venue_id"], ["venues.id"], ondelete="RESTRICT",
+            ["venue_id"],
+            ["venues.id"],
+            ondelete="RESTRICT",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("booking_id", name="rating_one_per_booking"),
     )
     op.create_index(
-        op.f("ix_ratings_booking_id"), "ratings", ["booking_id"], unique=True,
+        op.f("ix_ratings_booking_id"),
+        "ratings",
+        ["booking_id"],
+        unique=True,
     )
     op.create_index(
-        op.f("ix_ratings_organization_id"), "ratings", ["organization_id"], unique=False,
+        op.f("ix_ratings_organization_id"),
+        "ratings",
+        ["organization_id"],
+        unique=False,
     )
     op.create_index(
-        op.f("ix_ratings_venue_id"), "ratings", ["venue_id"], unique=False,
+        op.f("ix_ratings_venue_id"),
+        "ratings",
+        ["venue_id"],
+        unique=False,
     )
 
 

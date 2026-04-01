@@ -312,7 +312,9 @@ class VenueService:
         logo_url = await save_upload(file, VENUE_UPLOAD_SUBFOLDER)
 
         updated_venue = await VenueRepository.update_logo_url(
-            db=db, venue=venue, logo_url=logo_url,
+            db=db,
+            venue=venue,
+            logo_url=logo_url,
         )
 
         return VenueResponse.model_validate(updated_venue)

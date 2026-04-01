@@ -102,7 +102,9 @@ class OrganizationService:
         logo_url = await save_upload(file, ORG_UPLOAD_SUBFOLDER)
 
         updated_org = await OrganizationRepository.update_logo_url(
-            db=db, org=org, logo_url=logo_url,
+            db=db,
+            org=org,
+            logo_url=logo_url,
         )
 
         return OrganizationResponse.model_validate(updated_org)

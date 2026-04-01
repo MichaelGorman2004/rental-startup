@@ -239,7 +239,7 @@ class BookingRepository:
             )
         )
         result = await db.execute(query)
-        return result.scalar_one()
+        return int(result.scalar_one_or_none() or 0)
 
     @staticmethod
     async def sum_venue_booked_hours(
