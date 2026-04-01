@@ -1,7 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import type { Venue, VenueFilters, VenueListResponse } from '@/features/venues/types';
-import { getVenues, getVenue } from '../../api/endpoints/venues';
+import { VenueType } from '@/features/venues/types/venue.types';
+import { getVenues, getVenue, updateVenue, uploadVenueLogo } from '../../api/endpoints/venues';
 import { queryKeys } from '../keys';
 import { STALE_TIMES } from '../constants';
 
@@ -64,4 +65,47 @@ export function usePrefetchVenue() {
     },
     [queryClient],
   );
+}
+
+/** Payload shape for the venue update mutation (snake_case for backend). */
+interface UpdateVenueMutationInput {
+  id: string;
+  data: Partial<{
+    name: string;
+    type: VenueType;
+    capacity: number;
+    base_price_cents: number;
+    address_street: string;
+    address_city: string;
+    address_state: string;
+    address_zip: string;
+  }>;
+}
+
+/** Mutation hook for updating a venue profile. */
+export function useUpdateVenueMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: UpdateVenueMutationInput) => updateVenue(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.venues.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.all });
+    },
+  });
+}
+
+/** Mutation hook for uploading a venue logo. */
+export function useUploadVenueLogoMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ venueId, file }: { venueId: string; file: File }) => (
+      uploadVenueLogo(venueId, file)
+    ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.venues.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.all });
+    },
+  });
 }

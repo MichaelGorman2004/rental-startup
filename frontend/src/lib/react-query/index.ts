@@ -12,10 +12,13 @@ export {
   useVenuesQuery,
   useVenueDetailQuery,
   usePrefetchVenue,
+  useUpdateVenueMutation,
+  useUploadVenueLogoMutation,
   useCreateBookingMutation,
   useVenueBookingsQuery,
   useVenueStatsQuery,
   useBookingActionMutations,
   useMyOrganizationQuery,
   useUpdateOrganizationMutation,
+  useUploadOrgLogoMutation,
 } from './hooks';
