@@ -4,4 +4,5 @@ export { OrgProfileCard } from './components/OrgProfileCard';
 export { OrgProfileSkeleton } from './components/OrgProfileSkeleton';
 export { useOrgProfilePage } from './hooks/useOrgProfilePage';
 export { ORG_MESSAGES, ORG_VALIDATION } from './constants/organization-defaults';
+export { orgProfileSchema, ORG_VALIDATION_MESSAGES } from './constants/organization.schemas';
 export type { OrganizationProfile, OrgProfileFormValues } from './types/organization.types';

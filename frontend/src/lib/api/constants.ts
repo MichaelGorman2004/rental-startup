@@ -4,6 +4,9 @@ const API_BASE_URL_KEY = 'VITE_API_BASE_URL';
 /** Expected API path suffix for base URL validation. */
 const API_PATH_SUFFIX = '/api/v1';
 
+/** Clerk JWT token template name used for API authentication. */
+export const CLERK_TOKEN_TEMPLATE = 'venuelink';
+
 /** Request timeout in milliseconds (10 seconds). */
 export const REQUEST_TIMEOUT_MS = 10_000;
 

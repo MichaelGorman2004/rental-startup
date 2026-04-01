@@ -3,6 +3,7 @@ import {
 } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { Notifications } from '@mantine/notifications';
+import { ErrorBoundary } from './components';
 import { QueryProvider } from './providers/QueryProvider';
 import { ApiClientInitializer } from './providers/ApiClientInitializer';
 import { AppShell, RoleGuard } from './layout';
@@ -35,11 +36,11 @@ function App() {
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>
               {/* Public Routes */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/interest" element={<InterestPage />} />
-              <Route path="/demo/venues" element={<DemoBrowse />} />
-              <Route path="/demo/venues/:id" element={<DemoVenueDetail />} />
+              <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
+              <Route path="/signup" element={<ErrorBoundary><Signup /></ErrorBoundary>} />
+              <Route path="/interest" element={<ErrorBoundary><InterestPage /></ErrorBoundary>} />
+              <Route path="/demo/venues" element={<ErrorBoundary><DemoBrowse /></ErrorBoundary>} />
+              <Route path="/demo/venues/:id" element={<ErrorBoundary><DemoVenueDetail /></ErrorBoundary>} />
 
               {/* Root: Landing (signed out) or Dashboard shell (signed in) */}
               <Route
@@ -50,18 +51,18 @@ function App() {
                       <AppShell />
                     </SignedIn>
                     <SignedOut>
-                      <LandingPage />
+                      <ErrorBoundary><LandingPage /></ErrorBoundary>
                     </SignedOut>
                   </>
                 )}
               >
-                <Route index element={<DashboardPage />} />
-                <Route path="venues" element={<RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard>} />
-                <Route path="venues/:id" element={<RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard>} />
-                <Route path="venues/:id/book" element={<RoleGuard roles={['student_org']}><BookingForm /></RoleGuard>} />
-                <Route path="bookings" element={<RoleGuard roles={['student_org']}><BookingsPage /></RoleGuard>} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="admin" element={<RoleGuard roles={['venue_admin']}><AdminDashboard /></RoleGuard>} />
+                <Route index element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
+                <Route path="venues" element={<ErrorBoundary><RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard></ErrorBoundary>} />
+                <Route path="venues/:id" element={<ErrorBoundary><RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard></ErrorBoundary>} />
+                <Route path="venues/:id/book" element={<ErrorBoundary><RoleGuard roles={['student_org']}><BookingForm /></RoleGuard></ErrorBoundary>} />
+                <Route path="bookings" element={<ErrorBoundary><RoleGuard roles={['student_org']}><BookingsPage /></RoleGuard></ErrorBoundary>} />
+                <Route path="settings" element={<ErrorBoundary><SettingsPage /></ErrorBoundary>} />
+                <Route path="admin" element={<ErrorBoundary><RoleGuard roles={['venue_admin']}><AdminDashboard /></RoleGuard></ErrorBoundary>} />
               </Route>
             </Routes>
           </BrowserRouter>
