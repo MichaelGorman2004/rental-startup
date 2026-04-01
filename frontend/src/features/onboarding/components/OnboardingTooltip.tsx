@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 
 import {
-  Popover, Text, Button, Stack,
+  Popover, Text, Button, Stack, Box,
 } from '@mantine/core';
 
 import { useOnboardingTooltip } from '../hooks/useOnboardingTooltip';
@@ -32,7 +32,7 @@ export function OnboardingTooltip({
       width={260}
     >
       <Popover.Target>
-        <div onClick={dismiss} role="presentation">{children}</div>
+        <Box onClick={dismiss}>{children}</Box>
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap="xs">

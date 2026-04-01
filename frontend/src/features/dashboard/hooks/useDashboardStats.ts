@@ -5,6 +5,7 @@ import { getMyBookingSummary } from '@/lib/api/endpoints/bookings';
 import type { BookingSummary } from '@/lib/api/endpoints/bookings';
 import { queryKeys } from '@/lib/react-query/keys';
 import { STALE_TIMES } from '@/lib/react-query/constants';
+import { formatPrice } from '@/features/venues/utils';
 
 interface DashboardStat {
   label: string;
@@ -25,10 +26,6 @@ const STAT_LABELS = {
   BUDGET: 'Budget Used',
 } as const;
 
-function formatCents(cents: number): string {
-  return `$${(cents / 100).toLocaleString()}`;
-}
-
 function toStats(summary: BookingSummary): DashboardStat[] {
   return [
     {
@@ -43,7 +40,7 @@ function toStats(summary: BookingSummary): DashboardStat[] {
     },
     {
       label: STAT_LABELS.BUDGET,
-      value: formatCents(summary.budgetUsedCents),
+      value: formatPrice(summary.budgetUsedCents),
       trend: '',
     },
   ];

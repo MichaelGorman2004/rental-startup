@@ -38,7 +38,7 @@ class RatingResponse(BaseModel):
     booking_id: UUID
     organization_id: UUID
     venue_id: UUID
-    score: int = Field(..., ge=SCORE_MIN, le=SCORE_MAX)
+    score: int
     comment: str | None = None
     created_at: datetime
     organization_name: str = ""

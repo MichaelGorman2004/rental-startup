@@ -23,7 +23,6 @@ from app.modules.auth.router import router as auth_router
 from app.modules.bookings.router import router as bookings_router
 from app.modules.organizations.router import router as organizations_router
 from app.modules.prerelease.router import router as prerelease_router
-from app.modules.ratings.router import router as ratings_router
 from app.modules.venues.router import router as venues_router
 from app.modules.webhooks.router import router as webhooks_router
 
@@ -102,7 +101,6 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(bookings_router, prefix="/api/v1")
 app.include_router(organizations_router, prefix="/api/v1")
 app.include_router(prerelease_router, prefix="/api/v1")
-app.include_router(ratings_router, prefix="/api/v1")
 app.include_router(venues_router, prefix="/api/v1")
 app.include_router(webhooks_router, prefix="/webhooks")
 
@@ -114,7 +112,7 @@ uploads_path.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(uploads_path)), name="uploads")
 
 # CORS middleware configuration
-# Allows frontend to make API requests during development
+# Allows configured frontend origins with production-safe method/header restrictions
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,

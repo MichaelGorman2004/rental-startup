@@ -1,4 +1,6 @@
 import type { OrganizationProfile } from '@/features/organization';
+import { VenueType } from '@/features/venues/types/venue.types';
+import { VENUE_TYPE_LABELS } from '@/features/venues/constants/venue-types';
 
 /** UI messages for the settings feature. */
 export const SETTINGS_MESSAGES = {
@@ -51,6 +53,12 @@ export const VENUE_PROFILE_MESSAGES = {
   ERROR: 'Failed to load venue profile',
   NO_VENUE: 'No venue found for your account',
 } as const;
+
+/** Select options derived from VenueType enum with human-readable labels. */
+export const VENUE_TYPE_SELECT_OPTIONS = Object.values(VenueType).map((value) => ({
+  value,
+  label: VENUE_TYPE_LABELS[value],
+}));
 
 /** Validation limits for venue profile form. */
 export const VENUE_PROFILE_VALIDATION = {

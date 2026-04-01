@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { Stack } from '@mantine/core';
 
 import { useAdminDashboard } from '@/features/venue-admin/hooks';
@@ -8,7 +7,7 @@ import { StatsGrid, BookingCalendar, BookingsList } from '@/features/venue-admin
  * Dashboard content for venue admin users.
  * Reuses StatsGrid and BookingsList from venue-admin feature.
  */
-export const VenueDashboardContent = memo(() => {
+export function VenueDashboardContent() {
   const {
     stats, isStatsLoading, isStatsError,
     bookings, bookingsTotalPages, bookingsPage, setBookingsPage,
@@ -34,4 +33,4 @@ export const VenueDashboardContent = memo(() => {
       />
     </Stack>
   );
-});
+}

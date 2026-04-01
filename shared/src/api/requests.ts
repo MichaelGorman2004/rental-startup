@@ -69,7 +69,7 @@ export interface CreateBookingRequest {
   /** Special requests or notes (optional) */
   specialRequests?: string;
   /** Budget range in cents (optional) */
-  budgetCents?: number | null;
+  budgetCents?: number;
 }
 
 /**

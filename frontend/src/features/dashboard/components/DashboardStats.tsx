@@ -2,9 +2,7 @@ import { memo } from 'react';
 import { SimpleGrid, Skeleton } from '@mantine/core';
 import { StatCard } from './StatCard';
 import { useDashboardStats } from '../hooks/useDashboardStats';
-
-const SKELETON_COUNT = 3;
-const SKELETON_HEIGHT = 100;
+import { SKELETON_COUNT, SKELETON_HEIGHT } from '../constants/dashboard.constants';
 
 const OrgDashboardStats = memo(() => {
   const { stats, isLoading } = useDashboardStats();

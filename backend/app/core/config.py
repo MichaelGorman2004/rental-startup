@@ -1,7 +1,5 @@
 """Application configuration using Pydantic Settings."""
 
-import os
-
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -40,7 +38,7 @@ class Settings(BaseSettings):
     # Security settings
     # In production, SECRET_KEY must be set via environment variable.
     # Use: openssl rand -hex 32
-    SECRET_KEY: str = os.getenv("SECRET_KEY", _DEV_SECRET_KEY)
+    SECRET_KEY: str = _DEV_SECRET_KEY
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
@@ -48,6 +46,7 @@ class Settings(BaseSettings):
     CLERK_SECRET_KEY: str = ""
     CLERK_PUBLISHABLE_KEY: str = ""
     CLERK_WEBHOOK_SECRET: str = ""
+    CLERK_PEM_PUBLIC_KEY: str = ""
 
     # CORS origins (frontend URLs allowed to call this API)
     # Stored as a plain string to avoid pydantic-settings JSON-decoding issues.
@@ -92,7 +91,7 @@ class Settings(BaseSettings):
             )
             raise ValueError(msg)
 
-        if not os.getenv("CLERK_PEM_PUBLIC_KEY"):
+        if not self.CLERK_PEM_PUBLIC_KEY:
             msg = (
                 "CLERK_PEM_PUBLIC_KEY must be set in production. "
                 "Without it, JWT signatures are not verified."

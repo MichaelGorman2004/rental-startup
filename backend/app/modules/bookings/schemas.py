@@ -1,6 +1,7 @@
 """Pydantic schemas for booking management API."""
 
 from datetime import UTC, date, datetime, time
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -109,6 +110,6 @@ class BookingFilters(BaseModel):
 
     status: BookingStatus | None = None
     from_date: date | None = None
-    sort_by: str | None = None
+    sort_by: Literal["event_date"] | None = None
     page: int = Field(MIN_PAGE, ge=MIN_PAGE)
     page_size: int = Field(DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE)

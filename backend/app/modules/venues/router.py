@@ -15,7 +15,7 @@ from app.modules.auth.dependencies import get_current_user
 from app.modules.bookings.router import parse_booking_filters
 from app.modules.bookings.schemas import BookingFilters, BookingListResponse
 from app.modules.bookings.services import booking_service
-from app.modules.ratings.router import parse_rating_filters
+from app.modules.ratings.dependencies import parse_rating_filters
 from app.modules.ratings.schemas import RatingFilters, RatingListResponse
 from app.modules.ratings.services import rating_service
 from app.modules.users.models import User

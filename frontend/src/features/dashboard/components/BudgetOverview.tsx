@@ -2,17 +2,12 @@ import { memo } from 'react';
 import {
   Card, Text, Stack, Skeleton,
 } from '@mantine/core';
+import { formatPrice } from '@/features/venues/utils';
+import { BUDGET_LABEL, BUDGET_SUBTITLE } from '../constants/dashboard.constants';
 
 interface BudgetOverviewProps {
   budgetUsedCents: number;
   isLoading: boolean;
-}
-
-const BUDGET_LABEL = 'Budget Overview';
-const BUDGET_SUBTITLE = 'Total event spending to date';
-
-function formatCurrency(cents: number): string {
-  return `$${(cents / 100).toLocaleString()}`;
 }
 
 export const BudgetOverview = memo(({ budgetUsedCents, isLoading }: BudgetOverviewProps) => {
@@ -27,7 +22,7 @@ export const BudgetOverview = memo(({ budgetUsedCents, isLoading }: BudgetOvervi
           {BUDGET_LABEL}
         </Text>
         <Text fw={600} size="xl">
-          {formatCurrency(budgetUsedCents)}
+          {formatPrice(budgetUsedCents)}
         </Text>
         <Text size="xs" c="dimmed">
           {BUDGET_SUBTITLE}

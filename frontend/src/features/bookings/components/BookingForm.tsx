@@ -32,7 +32,7 @@ export function BookingForm() {
   const {
     venue, isLoading, isError, isNotFound, refetch,
     form, activeStep, handleNext, handleBack, isFirstStep, isLastStep,
-    estimatedCostCents, isSubmitting, isSuccess, isConflict, resetBookingError,
+    estimatedCostCents, isSubmitting, isSuccess, isBookingError, isConflict, resetBookingError,
     confirmation, handleSubmit,
   } = useBookingPage();
 
@@ -64,6 +64,18 @@ export function BookingForm() {
                     aria-label="Booking conflict error"
                   >
                     {BOOKING_MESSAGES.CONFLICT_ERROR}
+                  </Alert>
+                )}
+
+                {isBookingError && !isConflict && (
+                  <Alert
+                    color="red"
+                    icon={<WarningCircle size="1rem" />}
+                    withCloseButton
+                    onClose={resetBookingError}
+                    aria-label="Booking submission error"
+                  >
+                    {BOOKING_MESSAGES.SUBMIT_ERROR}
                   </Alert>
                 )}
 

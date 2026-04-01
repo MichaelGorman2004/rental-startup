@@ -1,7 +1,7 @@
 """Booking management API endpoints."""
 
 from datetime import date
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
@@ -25,23 +25,19 @@ from app.modules.users.models import User
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
-SORT_BY_EVENT_DATE = "event_date"
-ALLOWED_SORT_FIELDS = {SORT_BY_EVENT_DATE}
-
 
 def parse_booking_filters(
     booking_status: Annotated[BookingStatus | None, Query(alias="status")] = None,
     from_date: Annotated[date | None, Query()] = None,
-    sort_by: Annotated[str | None, Query()] = None,
+    sort_by: Annotated[Literal["event_date"] | None, Query()] = None,
     page: Annotated[int, Query(ge=MIN_PAGE)] = MIN_PAGE,
     page_size: Annotated[int, Query(ge=1, le=MAX_PAGE_SIZE)] = DEFAULT_PAGE_SIZE,
 ) -> BookingFilters:
     """Parse and validate booking filtering query parameters."""
-    validated_sort = sort_by if sort_by in ALLOWED_SORT_FIELDS else None
     return BookingFilters(
         status=booking_status,
         from_date=from_date,
-        sort_by=validated_sort,
+        sort_by=sort_by,
         page=page,
         page_size=page_size,
     )

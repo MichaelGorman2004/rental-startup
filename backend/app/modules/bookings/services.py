@@ -13,6 +13,7 @@ from app.core.exceptions import (
     ConflictError,
     ResourceNotFoundError,
 )
+from app.core.resource_names import BOOKING_RESOURCE, ORG_RESOURCE, VENUE_RESOURCE
 from app.modules.bookings.constants import BookingError
 from app.modules.bookings.models import Booking
 from app.modules.bookings.repository import BookingRepository
@@ -31,10 +32,6 @@ from app.modules.venues.repository import VenueRepository
 
 # Statuses that can be cancelled
 CANCELLABLE_STATUSES = {BookingStatus.pending, BookingStatus.confirmed}
-
-BOOKING_RESOURCE = "Booking"
-VENUE_RESOURCE = "Venue"
-ORG_RESOURCE = "Organization"
 
 
 async def _require_student_org(db: AsyncSession, user: User) -> Organization:

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useUploadOrgLogoMutation } from '@/lib/react-query';
 import { LOGO_UPLOAD_MESSAGES } from '@/components/LogoUpload/logo-upload.constants';
@@ -12,7 +12,7 @@ export function useOrgProfilePage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const logoMutation = useUploadOrgLogoMutation();
 
-  function handleLogoChange(file: File | null) {
+  const handleLogoChange = useCallback((file: File | null) => {
     setLogoFile(file);
     if (file && organization) {
       logoMutation.mutate(
@@ -28,7 +28,7 @@ export function useOrgProfilePage() {
         },
       );
     }
-  }
+  }, [logoMutation, organization]);
 
   return {
     organization,

@@ -32,6 +32,12 @@ export interface QuickAction {
 }
 
 /**
+ * User role in the application.
+ * Determines which dashboard content and quick actions are shown.
+ */
+export type UserRole = 'student_org' | 'venue_admin';
+
+/**
  * Organization data extracted from Clerk metadata.
  * Uses the shared OrganizationType enum.
  */

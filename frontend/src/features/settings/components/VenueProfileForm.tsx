@@ -2,20 +2,13 @@ import {
   Stack, TextInput, Textarea, NumberInput, Select, Button,
 } from '@mantine/core';
 import type { UseFormReturnType } from '@mantine/form';
-import { VenueType } from '@/features/venues/types/venue.types';
-import { VENUE_TYPE_LABELS } from '@/features/venues/constants/venue-types';
 import { LogoUpload } from '@/components/LogoUpload';
 import type { VenueProfileFormValues } from '../types/settings.types';
 import {
   VENUE_PROFILE_MESSAGES,
   VENUE_PROFILE_VALIDATION,
+  VENUE_TYPE_SELECT_OPTIONS,
 } from '../constants/settings-defaults';
-
-/** Select options derived from VenueType enum with human-readable labels. */
-const VENUE_TYPE_SELECT_OPTIONS = Object.values(VenueType).map((value) => ({
-  value,
-  label: VENUE_TYPE_LABELS[value],
-}));
 
 interface VenueProfileFormProps {
   form: UseFormReturnType<VenueProfileFormValues>;

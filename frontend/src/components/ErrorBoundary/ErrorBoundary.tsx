@@ -4,10 +4,13 @@ import {
   Card, Stack, Text, Button, Title,
 } from '@mantine/core';
 
+const MAX_RETRIES = 3;
+
 const ERROR_BOUNDARY_MESSAGES = {
   TITLE: 'Something went wrong',
   DESCRIPTION: 'An unexpected error occurred. Please try again.',
   RETRY_BUTTON: 'Try Again',
+  RETRY_EXHAUSTED: 'This error persists. Please refresh the page.',
 } as const;
 
 interface ErrorBoundaryProps {
@@ -17,30 +20,35 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
+  retryCount: number;
 }
 
 /** Reusable error boundary that catches render errors and shows a Mantine UI fallback. */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, retryCount: 0 };
   }
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
+  static getDerivedStateFromError(): Partial<ErrorBoundaryState> {
     return { hasError: true };
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // TODO: integrate production error reporting (e.g., Sentry) — console.error is dev-only
     // eslint-disable-next-line no-console
     console.error('[ErrorBoundary]', error, errorInfo);
   }
 
   private handleRetry = (): void => {
-    this.setState({ hasError: false });
+    this.setState((prev) => ({
+      hasError: false,
+      retryCount: prev.retryCount + 1,
+    }));
   };
 
   override render(): ReactNode {
-    const { hasError } = this.state;
+    const { hasError, retryCount } = this.state;
     const { children, fallback } = this.props;
 
     if (!hasError) {
@@ -51,20 +59,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return fallback;
     }
 
+    const retriesExhausted = retryCount >= MAX_RETRIES;
+
     return (
       <Card withBorder p="xl" m="md" radius="md">
         <Stack align="center" gap="md">
           <Title order={3}>{ERROR_BOUNDARY_MESSAGES.TITLE}</Title>
           <Text c="dimmed" ta="center">
-            {ERROR_BOUNDARY_MESSAGES.DESCRIPTION}
+            {retriesExhausted
+              ? ERROR_BOUNDARY_MESSAGES.RETRY_EXHAUSTED
+              : ERROR_BOUNDARY_MESSAGES.DESCRIPTION}
           </Text>
-          <Button
-            onClick={this.handleRetry}
-            variant="light"
-            aria-label={ERROR_BOUNDARY_MESSAGES.RETRY_BUTTON}
-          >
-            {ERROR_BOUNDARY_MESSAGES.RETRY_BUTTON}
-          </Button>
+          {!retriesExhausted && (
+            <Button
+              onClick={this.handleRetry}
+              variant="light"
+              aria-label={ERROR_BOUNDARY_MESSAGES.RETRY_BUTTON}
+            >
+              {ERROR_BOUNDARY_MESSAGES.RETRY_BUTTON}
+            </Button>
+          )}
         </Stack>
       </Card>
     );

@@ -1,3 +1,5 @@
+import type { VenueType } from '@venuelink/shared';
+
 /** Available settings tabs. */
 export enum SettingsTab {
   Account = 'account',
@@ -8,7 +10,7 @@ export enum SettingsTab {
 /** Form values for the venue profile edit form. */
 export interface VenueProfileFormValues {
   name: string;
-  type: string;
+  type: VenueType;
   description: string;
   capacity: number | undefined;
   basePriceCents: number | undefined;

@@ -1,6 +1,7 @@
 import type { BookingStatus } from '@/features/bookings/types';
 import type { CreateBookingRequest } from '@/features/bookings/types/booking.types';
-import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
+import type { AdminBookingView } from '@venuelink/shared';
+import type { VenueStats } from '@/features/venue-admin/types';
 import { apiClient } from '../client';
 import type { PaginatedApiResponse } from '../types';
 
@@ -74,7 +75,7 @@ interface VenueStatsApiResponse {
 }
 
 /** Transform a backend admin booking to frontend shape. */
-function toAdminBooking(raw: AdminBookingApiResponse): AdminBooking {
+function toAdminBooking(raw: AdminBookingApiResponse): AdminBookingView {
   return {
     id: raw.id,
     organizationName: raw.organization_name,
@@ -190,7 +191,7 @@ export async function createBooking(
 
 /** Paginated admin bookings response. */
 export interface AdminBookingsResponse {
-  items: AdminBooking[];
+  items: AdminBookingView[];
   total: number;
   page: number;
   pageSize: number;

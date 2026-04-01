@@ -25,6 +25,13 @@ from app.modules.venues.constants import (
 )
 
 
+def _validate_state_code(v: str | None) -> str | None:
+    """Ensure state code is uppercase if provided."""
+    if v is not None:
+        return v.upper()
+    return v
+
+
 class VenueBase(BaseModel):
     """Base venue schema with shared fields."""
 
@@ -78,9 +85,7 @@ class VenueBase(BaseModel):
     @classmethod
     def validate_state_code(cls, v: str | None) -> str | None:
         """Ensure state code is uppercase if provided."""
-        if v is not None:
-            return v.upper()
-        return v
+        return _validate_state_code(v)
 
 
 class VenueCreate(VenueBase):
@@ -122,9 +127,7 @@ class VenueUpdate(BaseModel):
     @classmethod
     def validate_state_code(cls, v: str | None) -> str | None:
         """Ensure state code is uppercase if provided."""
-        if v is not None:
-            return v.upper()
-        return v
+        return _validate_state_code(v)
 
 
 class VenueResponse(BaseModel):

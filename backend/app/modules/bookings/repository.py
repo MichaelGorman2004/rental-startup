@@ -1,15 +1,25 @@
 """Booking data access layer (Repository pattern)."""
 
 from datetime import date, time
+from typing import TypedDict
 from uuid import UUID
 
-from sqlalchemy import and_, case, extract, func, select
+from sqlalchemy import Interval, and_, case, extract, func, select, type_coerce
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants.enums import BookingStatus
 from app.modules.bookings.models import Booking
 from app.modules.bookings.schemas import BookingCreate, BookingFilters
 from app.modules.venues.models import Venue
+
+
+class OrgSummaryDict(TypedDict):
+    """Typed return value for BookingRepository.get_org_summary."""
+
+    upcoming_events_count: int
+    total_bookings: int
+    budget_used_cents: int
+
 
 # Statuses that count toward budget
 BUDGET_STATUSES = {BookingStatus.confirmed, BookingStatus.completed}
@@ -150,7 +160,7 @@ class BookingRepository:
         db: AsyncSession,
         org_id: UUID,
         today: date,
-    ) -> dict[str, int]:
+    ) -> OrgSummaryDict:
         """Get booking summary stats for an organization."""
         total_query = select(func.count()).where(
             Booking.organization_id == org_id,
@@ -224,7 +234,6 @@ class BookingRepository:
         month: int,
     ) -> int:
         """Sum total_cost_cents for confirmed/completed bookings this month."""
-        revenue_statuses = [BookingStatus.confirmed, BookingStatus.completed]
         query = (
             select(func.coalesce(func.sum(Venue.base_price_cents), 0))
             .select_from(Booking)
@@ -232,7 +241,7 @@ class BookingRepository:
             .where(
                 and_(
                     Booking.venue_id == venue_id,
-                    Booking.status.in_(revenue_statuses),
+                    Booking.status.in_(BUDGET_STATUSES),
                     extract("year", Booking.event_date) == year,
                     extract("month", Booking.event_date) == month,
                 )
@@ -249,26 +258,25 @@ class BookingRepository:
         month: int,
     ) -> float:
         """Sum booked hours for confirmed/completed bookings this month."""
-        revenue_statuses = [BookingStatus.confirmed, BookingStatus.completed]
+        duration_interval = type_coerce(
+            Booking.event_end_time - Booking.event_start_time,
+            Interval(),
+        )
         query = select(
-            Booking.event_start_time,
-            Booking.event_end_time,
+            func.coalesce(
+                func.sum(extract("epoch", duration_interval) / 3600.0),
+                0.0,
+            )
         ).where(
             and_(
                 Booking.venue_id == venue_id,
-                Booking.status.in_(revenue_statuses),
+                Booking.status.in_(BUDGET_STATUSES),
                 extract("year", Booking.event_date) == year,
                 extract("month", Booking.event_date) == month,
             )
         )
         result = await db.execute(query)
-        rows = result.all()
-        total_hours = 0.0
-        for start, end in rows:
-            start_secs = start.hour * 3600 + start.minute * 60
-            end_secs = end.hour * 3600 + end.minute * 60
-            total_hours += (end_secs - start_secs) / 3600.0
-        return total_hours
+        return float(result.scalar_one())
 
     @staticmethod
     async def update_status(

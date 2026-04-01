@@ -1,6 +1,3 @@
 export { AdminDashboard } from './components/AdminDashboard';
-export type {
-  VenueStats,
-  AdminBooking,
-  BookingAction,
-} from './types/venue-admin.types';
+export type { VenueStats, BookingAction } from './types/venue-admin.types';
+export type { AdminBookingView as AdminBooking } from '@venuelink/shared';

@@ -4,6 +4,7 @@ Provides a shared upload function that validates file type and size,
 generates a unique filename, and saves the file to the local uploads directory.
 """
 
+import asyncio
 import uuid
 from pathlib import Path
 
@@ -89,11 +90,10 @@ async def save_upload(file: UploadFile, subfolder: str) -> str:
     # Generate unique filename and build path
     filename = _generate_unique_filename(content_type)
     target_dir = Path(UPLOAD_DIR) / subfolder
-    target_dir.mkdir(parents=True, exist_ok=True)
-
     file_path = target_dir / filename
 
-    # Write file to disk
-    file_path.write_bytes(content)
+    # Perform blocking I/O off the async event loop
+    await asyncio.to_thread(target_dir.mkdir, parents=True, exist_ok=True)
+    await asyncio.to_thread(file_path.write_bytes, content)
 
     return f"/{UPLOAD_DIR}/{subfolder}/{filename}"

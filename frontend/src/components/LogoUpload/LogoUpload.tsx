@@ -67,7 +67,7 @@ export function LogoUpload({
           fit="contain"
           radius="md"
           aria-label={LOGO_UPLOAD_MESSAGES.ARIA_PREVIEW}
-          style={isUploading ? { opacity: 0.5 } : undefined}
+          opacity={isUploading ? 0.5 : undefined}
         />
       )}
       <Group gap="xs">

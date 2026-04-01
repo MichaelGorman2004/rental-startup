@@ -5,3 +5,6 @@ export { BookingsList } from './BookingsList';
 export { BookingCard } from './BookingCard';
 export { AccessDenied } from './AccessDenied';
 export { BookingCalendar } from './BookingCalendar';
+export { DayCell } from './DayCell';
+export type { DayCellProps } from './DayCell';
+export { SelectedDayBookings } from './SelectedDayBookings';

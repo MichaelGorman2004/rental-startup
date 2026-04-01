@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import {
   BrowserRouter, Routes, Route,
 } from 'react-router-dom';
@@ -24,6 +25,11 @@ if (!CLERK_PUBLISHABLE_KEY) {
   throw new Error('Missing Publishable Key: Please set VITE_CLERK_PUBLISHABLE_KEY in your .env');
 }
 
+/** Wraps a route element in an ErrorBoundary to catch render-time errors. */
+function withErrorBoundary(element: ReactNode): ReactNode {
+  return <ErrorBoundary>{element}</ErrorBoundary>;
+}
+
 /**
  * Root application component with routing configuration.
  */
@@ -36,11 +42,11 @@ function App() {
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>
               {/* Public Routes */}
-              <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
-              <Route path="/signup" element={<ErrorBoundary><Signup /></ErrorBoundary>} />
-              <Route path="/interest" element={<ErrorBoundary><InterestPage /></ErrorBoundary>} />
-              <Route path="/demo/venues" element={<ErrorBoundary><DemoBrowse /></ErrorBoundary>} />
-              <Route path="/demo/venues/:id" element={<ErrorBoundary><DemoVenueDetail /></ErrorBoundary>} />
+              <Route path="/login" element={withErrorBoundary(<Login />)} />
+              <Route path="/signup" element={withErrorBoundary(<Signup />)} />
+              <Route path="/interest" element={withErrorBoundary(<InterestPage />)} />
+              <Route path="/demo/venues" element={withErrorBoundary(<DemoBrowse />)} />
+              <Route path="/demo/venues/:id" element={withErrorBoundary(<DemoVenueDetail />)} />
 
               {/* Root: Landing (signed out) or Dashboard shell (signed in) */}
               <Route
@@ -51,18 +57,18 @@ function App() {
                       <AppShell />
                     </SignedIn>
                     <SignedOut>
-                      <ErrorBoundary><LandingPage /></ErrorBoundary>
+                      {withErrorBoundary(<LandingPage />)}
                     </SignedOut>
                   </>
                 )}
               >
-                <Route index element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
-                <Route path="venues" element={<ErrorBoundary><RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard></ErrorBoundary>} />
-                <Route path="venues/:id" element={<ErrorBoundary><RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard></ErrorBoundary>} />
-                <Route path="venues/:id/book" element={<ErrorBoundary><RoleGuard roles={['student_org']}><BookingForm /></RoleGuard></ErrorBoundary>} />
-                <Route path="bookings" element={<ErrorBoundary><RoleGuard roles={['student_org']}><BookingsPage /></RoleGuard></ErrorBoundary>} />
-                <Route path="settings" element={<ErrorBoundary><SettingsPage /></ErrorBoundary>} />
-                <Route path="admin" element={<ErrorBoundary><RoleGuard roles={['venue_admin']}><AdminDashboard /></RoleGuard></ErrorBoundary>} />
+                <Route index element={withErrorBoundary(<DashboardPage />)} />
+                <Route path="venues" element={withErrorBoundary(<RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard>)} />
+                <Route path="venues/:id" element={withErrorBoundary(<RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard>)} />
+                <Route path="venues/:id/book" element={withErrorBoundary(<RoleGuard roles={['student_org']}><BookingForm /></RoleGuard>)} />
+                <Route path="bookings" element={withErrorBoundary(<RoleGuard roles={['student_org']}><BookingsPage /></RoleGuard>)} />
+                <Route path="settings" element={withErrorBoundary(<SettingsPage />)} />
+                <Route path="admin" element={withErrorBoundary(<RoleGuard roles={['venue_admin']}><AdminDashboard /></RoleGuard>)} />
               </Route>
             </Routes>
           </BrowserRouter>

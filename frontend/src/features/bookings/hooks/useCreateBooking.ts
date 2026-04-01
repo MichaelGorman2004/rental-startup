@@ -9,6 +9,7 @@ export interface UseCreateBookingResult {
   mutate: ReturnType<typeof useMutation<Awaited<ReturnType<typeof createBooking>>, unknown, Parameters<typeof createBooking>[0]>>['mutate'];
   isPending: boolean;
   isSuccess: boolean;
+  isError: boolean;
   isConflict: boolean;
   data: Awaited<ReturnType<typeof createBooking>> | undefined;
   reset: () => void;
@@ -37,6 +38,7 @@ export function useCreateBooking(): UseCreateBookingResult {
     mutate: mutation.mutate,
     isPending: mutation.isPending,
     isSuccess: mutation.isSuccess,
+    isError: mutation.isError,
     isConflict,
     data: mutation.data,
     reset: mutation.reset,

@@ -1,98 +1,16 @@
 import {
-  Stack, Group, Text, ActionIcon, Paper, SimpleGrid, Badge, Title,
+  Stack, Group, Text, ActionIcon, SimpleGrid, Title,
 } from '@mantine/core';
 import { CaretLeft, CaretRight, CalendarBlank } from '@phosphor-icons/react';
 import dayjs from 'dayjs';
-import type { AdminBooking } from '../types';
+import type { AdminBookingView } from '@venuelink/shared';
 import { useBookingCalendar } from '../hooks/useBookingCalendar';
-import {
-  CALENDAR_DAY_LABELS, CALENDAR_MESSAGES, STATUS_BADGE_COLORS, STATUS_LABELS,
-} from '../constants';
+import { CALENDAR_DAY_LABELS, CALENDAR_MESSAGES } from '../constants';
+import { DayCell } from './DayCell';
+import { SelectedDayBookings } from './SelectedDayBookings';
 
 interface BookingCalendarProps {
-  bookings: AdminBooking[];
-}
-
-interface DayCellProps {
-  dateIso: string;
-  dayNumber: number;
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  isSelected: boolean;
-  bookingCount: number;
-  onSelect: (dateIso: string) => void;
-}
-
-function DayCell({
-  dateIso, dayNumber, isCurrentMonth, isToday, isSelected, bookingCount, onSelect,
-}: DayCellProps) {
-  return (
-    <Paper
-      p="xs"
-      radius="sm"
-      withBorder={isSelected}
-      bg={isSelected ? 'var(--mantine-color-blue-light)' : undefined}
-      opacity={isCurrentMonth ? 1 : 0.35}
-      style={{ cursor: 'pointer', minHeight: 48, position: 'relative' }}
-      onClick={() => onSelect(dateIso)}
-      aria-label={`${dayjs(dateIso).format('MMMM D, YYYY')}${bookingCount > 0 ? `, ${bookingCount} bookings` : ''}`}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onSelect(dateIso);
-      }}
-    >
-      <Text
-        size="sm"
-        fw={isToday ? 700 : 400}
-        c={isToday ? 'blue' : undefined}
-      >
-        {dayNumber}
-      </Text>
-      {bookingCount > 0 && (
-        <Badge size="xs" variant="dot" color="blue" mt={2}>
-          {bookingCount}
-        </Badge>
-      )}
-    </Paper>
-  );
-}
-
-function SelectedDayBookings({ bookings }: { bookings: AdminBooking[] }) {
-  if (bookings.length === 0) {
-    return (
-      <Text c="dimmed" size="sm" ta="center" py="md">
-        {CALENDAR_MESSAGES.NO_BOOKINGS_ON_DATE}
-      </Text>
-    );
-  }
-
-  return (
-    <Stack gap="xs">
-      {bookings.map((booking) => (
-        <Paper key={booking.id} p="sm" radius="sm" withBorder>
-          <Group justify="space-between" wrap="wrap">
-            <Stack gap={2}>
-              <Text fw={500} size="sm">{booking.eventName}</Text>
-              <Text size="xs" c="dimmed">{booking.organizationName}</Text>
-            </Stack>
-            <Group gap="xs">
-              <Text size="xs" c="dimmed">
-                {`${booking.eventStartTime} - ${booking.eventEndTime}`}
-              </Text>
-              <Badge
-                size="sm"
-                color={STATUS_BADGE_COLORS[booking.status]}
-                variant="light"
-              >
-                {STATUS_LABELS[booking.status]}
-              </Badge>
-            </Group>
-          </Group>
-        </Paper>
-      ))}
-    </Stack>
-  );
+  bookings: AdminBookingView[];
 }
 
 /** Monthly calendar grid showing booked time slots for venue admins. */

@@ -9,6 +9,7 @@ from app.core.constants.enums import UserRole
 from app.core.exceptions import AuthorizationError, ResourceNotFoundError
 from app.core.uploads import save_upload
 from app.modules.organizations.constants import OrgError
+from app.modules.organizations.models import Organization
 from app.modules.organizations.repository import OrganizationRepository
 from app.modules.organizations.schemas import (
     OrganizationResponse,
@@ -18,6 +19,20 @@ from app.modules.users.models import User
 
 ORG_RESOURCE = "Organization"
 ORG_UPLOAD_SUBFOLDER = "organizations"
+
+
+async def _require_org_owner(
+    db: AsyncSession,
+    org_id: UUID,
+    user_id: UUID,
+) -> Organization:
+    """Fetch org by ID, raise 404 if missing, raise 403 if not owner."""
+    org = await OrganizationRepository.get_by_id(db=db, org_id=org_id)
+    if not org:
+        raise ResourceNotFoundError(ORG_RESOURCE, OrgError.NOT_FOUND)
+    if org.owner_id != user_id:
+        raise AuthorizationError(OrgError.NOT_OWNER)
+    return org
 
 
 class OrganizationService:
@@ -30,14 +45,7 @@ class OrganizationService:
         current_user: User,
     ) -> OrganizationResponse:
         """Retrieve a single organization by ID (owner only)."""
-        org = await OrganizationRepository.get_by_id(db=db, org_id=org_id)
-
-        if not org:
-            raise ResourceNotFoundError(ORG_RESOURCE, OrgError.NOT_FOUND)
-
-        if org.owner_id != current_user.id:
-            raise AuthorizationError(OrgError.NOT_OWNER)
-
+        org = await _require_org_owner(db, org_id, current_user.id)
         return OrganizationResponse.model_validate(org)
 
     @staticmethod
@@ -67,13 +75,7 @@ class OrganizationService:
         current_user: User,
     ) -> OrganizationResponse:
         """Update an organization profile (owner only)."""
-        org = await OrganizationRepository.get_by_id(db=db, org_id=org_id)
-
-        if not org:
-            raise ResourceNotFoundError(ORG_RESOURCE, OrgError.NOT_FOUND)
-
-        if org.owner_id != current_user.id:
-            raise AuthorizationError(OrgError.NOT_OWNER)
+        org = await _require_org_owner(db, org_id, current_user.id)
 
         updated_org = await OrganizationRepository.update(
             db=db,
@@ -91,13 +93,7 @@ class OrganizationService:
         current_user: User,
     ) -> OrganizationResponse:
         """Upload and set a logo for an organization (owner only)."""
-        org = await OrganizationRepository.get_by_id(db=db, org_id=org_id)
-
-        if not org:
-            raise ResourceNotFoundError(ORG_RESOURCE, OrgError.NOT_FOUND)
-
-        if org.owner_id != current_user.id:
-            raise AuthorizationError(OrgError.NOT_OWNER)
+        org = await _require_org_owner(db, org_id, current_user.id)
 
         logo_url = await save_upload(file, ORG_UPLOAD_SUBFOLDER)
 

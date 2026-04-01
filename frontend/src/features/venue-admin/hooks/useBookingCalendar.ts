@@ -1,22 +1,22 @@
 import { useState, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
-import type { AdminBooking } from '../types';
+import type { AdminBookingView } from '@venuelink/shared';
 import { CALENDAR_DAYS_IN_WEEK } from '../constants';
 
 /** Map of ISO date string to bookings on that date. */
-export type BookingsByDate = Record<string, AdminBooking[]>;
+export type BookingsByDate = Record<string, AdminBookingView[]>;
 
 interface CalendarDay {
   date: dayjs.Dayjs;
   isCurrentMonth: boolean;
-  bookings: AdminBooking[];
+  bookings: AdminBookingView[];
 }
 
 interface UseBookingCalendarReturn {
   currentMonth: dayjs.Dayjs;
   calendarDays: CalendarDay[];
   selectedDate: string | null;
-  selectedBookings: AdminBooking[];
+  selectedBookings: AdminBookingView[];
   monthLabel: string;
   goToPreviousMonth: () => void;
   goToNextMonth: () => void;
@@ -25,7 +25,7 @@ interface UseBookingCalendarReturn {
   clearSelection: () => void;
 }
 
-function groupBookingsByDate(bookings: AdminBooking[]): BookingsByDate {
+function groupBookingsByDate(bookings: AdminBookingView[]): BookingsByDate {
   return bookings.reduce<BookingsByDate>((grouped, booking) => {
     const key = booking.eventDate;
     const existing = grouped[key] ?? [];
@@ -62,7 +62,7 @@ function buildCalendarDays(
  * Provides selection state for viewing bookings on a specific date.
  */
 export function useBookingCalendar(
-  bookings: AdminBooking[],
+  bookings: AdminBookingView[],
 ): UseBookingCalendarReturn {
   const [currentMonth, setCurrentMonth] = useState(() => dayjs().startOf('month'));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);

@@ -52,27 +52,9 @@ export interface BookingWithDetails extends Booking {
  *
  * Includes organization context for venue admin review.
  */
-export interface AdminBookingView {
-  /** UUID v4 identifier */
-  id: string;
+export interface AdminBookingView extends Pick<Booking, 'id' | 'eventName' | 'eventDate' | 'eventStartTime' | 'eventEndTime' | 'eventDurationMinutes' | 'guestCount' | 'status' | 'createdAt'> {
   /** Organization name for display */
   organizationName: string;
-  /** Event name/title */
-  eventName: string;
-  /** Event date in ISO 8601 format */
-  eventDate: string;
-  /** Event start time in HH:MM format */
-  eventStartTime: string;
-  /** Event end time in HH:MM format */
-  eventEndTime: string;
-  /** Event duration in minutes */
-  eventDurationMinutes: number;
-  /** Expected number of guests */
-  guestCount: number;
-  /** Current booking status */
-  status: BookingStatus;
-  /** ISO 8601 timestamp of creation */
-  createdAt: string;
 }
 
 /**
@@ -80,27 +62,11 @@ export interface AdminBookingView {
  *
  * Includes computed fields and formatted data for display.
  */
-export interface BookingConfirmation {
-  /** UUID v4 identifier */
-  id: string;
+export interface BookingConfirmation extends Pick<Booking, 'id' | 'eventName' | 'eventDate' | 'eventStartTime' | 'eventEndTime' | 'eventDurationMinutes' | 'guestCount' | 'status'> {
   /** Venue name for display */
   venueName: string;
-  /** Event name/title */
-  eventName: string;
-  /** Event date in ISO 8601 format */
-  eventDate: string;
-  /** Event start time in HH:MM format */
-  eventStartTime: string;
-  /** Event end time in HH:MM format */
-  eventEndTime: string;
-  /** Event duration in minutes */
-  eventDurationMinutes: number;
-  /** Expected number of guests */
-  guestCount: number;
   /** Estimated total cost in cents */
   estimatedCostCents: number;
-  /** Booking status (typically 'pending' after creation) */
-  status: BookingStatus;
 }
 
 /**

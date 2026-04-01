@@ -12,6 +12,7 @@ from app.core.exceptions import (
     ConflictError,
     ResourceNotFoundError,
 )
+from app.core.resource_names import BOOKING_RESOURCE, ORG_RESOURCE, VENUE_RESOURCE
 from app.modules.bookings.repository import BookingRepository
 from app.modules.organizations.repository import OrganizationRepository
 from app.modules.ratings.constants import RatingError
@@ -25,10 +26,6 @@ from app.modules.ratings.schemas import (
 )
 from app.modules.users.models import User
 from app.modules.venues.repository import VenueRepository
-
-BOOKING_RESOURCE = "Booking"
-VENUE_RESOURCE = "Venue"
-ORG_RESOURCE = "Organization"
 
 
 def _to_rating_response(rating: Rating) -> RatingResponse:
