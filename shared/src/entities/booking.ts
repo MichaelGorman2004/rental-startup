@@ -83,8 +83,6 @@ export interface AdminBookingView {
 export interface BookingConfirmation {
   /** UUID v4 identifier */
   id: string;
-  /** Human-readable reference number */
-  referenceNumber: string;
   /** Venue name for display */
   venueName: string;
   /** Event name/title */

@@ -15,7 +15,6 @@ export type { AdminBookingView, VenueStatsResponse } from '@venuelink/shared';
 export interface VenueStats {
   bookingsThisMonth: number;
   revenueCents: number;
-  averageRating: number | null;
   occupancyPercent: number;
 }
 
@@ -76,4 +75,7 @@ export interface BookingsListProps {
   onDecline: (id: string) => void;
   isPending: boolean;
   activeBookingId: string | null;
+  totalPages: number;
+  page: number;
+  onPageChange: (page: number) => void;
 }
