@@ -5,6 +5,7 @@ export {
   createVenue,
   updateVenue,
   deleteVenue,
+  uploadVenueLogo,
 } from './venues';
 
 export {
@@ -17,12 +18,13 @@ export {
   cancelBooking,
 } from './bookings';
 
-export type { MyBooking, MyBookingsResponse } from './bookings';
+export type { MyBooking, MyBookingsResponse, AdminBookingsResponse } from './bookings';
 
 export {
   getMyOrganization,
   getOrganization,
   updateOrganization,
+  uploadOrgLogo,
 } from './organizations';
 
 export type { OrganizationProfile, UpdateOrganizationData } from './organizations';
