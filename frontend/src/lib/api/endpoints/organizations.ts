@@ -98,3 +98,18 @@ export async function updateOrganization(
   );
   return toOrganizationProfile(data);
 }
+
+/** POST /organizations/:id/logo — Upload organization logo. */
+export async function uploadOrgLogo(
+  orgId: string,
+  file: File,
+): Promise<OrganizationProfile> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const { data } = await apiClient.post<OrganizationApiResponse>(
+    `/organizations/${orgId}/logo`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+  return toOrganizationProfile(data);
+}

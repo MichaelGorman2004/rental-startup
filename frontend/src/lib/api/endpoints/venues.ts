@@ -142,3 +142,18 @@ export async function updateVenue(
 export async function deleteVenue(id: string): Promise<void> {
   await apiClient.delete(`/venues/${id}`);
 }
+
+/** POST /venues/:id/logo — Upload venue logo. */
+export async function uploadVenueLogo(
+  venueId: string,
+  file: File,
+): Promise<Venue> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const { data } = await apiClient.post<VenueApiResponse>(
+    `/venues/${venueId}/logo`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+  return toVenue(data);
+}

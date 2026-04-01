@@ -79,3 +79,17 @@ class OrganizationRepository:
         await db.refresh(org)
 
         return org
+
+    @staticmethod
+    async def update_logo_url(
+        db: AsyncSession,
+        org: Organization,
+        logo_url: str,
+    ) -> Organization:
+        """Update the logo URL for an organization."""
+        org.logo_url = logo_url
+
+        await db.commit()
+        await db.refresh(org)
+
+        return org
