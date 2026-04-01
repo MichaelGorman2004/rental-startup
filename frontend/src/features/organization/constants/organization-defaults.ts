@@ -11,6 +11,10 @@ export const ORG_MESSAGES = {
   FORM_MEMBER_COUNT: 'Member Count',
   FORM_WEBSITE: 'Website URL',
 
+  FORM_TYPE: 'Organization Type',
+  FORM_UNIVERSITY: 'University',
+  LOCKED_FIELD_TOOLTIP: 'Contact support to change your organization type or university.',
+
   SAVE_BUTTON: 'Save Changes',
   SAVE_SUCCESS: 'Organization profile updated successfully',
   SAVE_ERROR: 'Failed to update organization profile',

@@ -1,16 +1,18 @@
 import {
   MagnifyingGlass,
   CalendarBlank,
-  CreditCard,
   GearSix,
+  ClipboardText,
+  Storefront,
+  CalendarCheck,
 } from '@phosphor-icons/react';
 import type { QuickAction } from '../types/dashboard.types';
 
 /**
- * Configuration for the quick actions grid on the dashboard.
- * Each action represents a primary navigation destination.
+ * Quick actions for student org users.
+ * Browse Venues, My Bookings, Settings (no dead Budget link).
  */
-export const QUICK_ACTIONS: QuickAction[] = [
+export const ORG_QUICK_ACTIONS: QuickAction[] = [
   {
     id: 'browse-venues',
     title: 'Browse Venues',
@@ -28,11 +30,42 @@ export const QUICK_ACTIONS: QuickAction[] = [
     color: 'copper',
   },
   {
-    id: 'budget-tracker',
-    title: 'Budget Tracker',
-    description: 'Monitor event spending',
-    route: '/budget',
-    icon: CreditCard,
+    id: 'settings',
+    title: 'Settings',
+    description: 'Account & preferences',
+    route: '/settings',
+    icon: GearSix,
+    color: 'copper',
+  },
+];
+
+/**
+ * Quick actions for venue admin users.
+ * Manage Bookings, Venue Profile, Calendar, Settings.
+ */
+export const VENUE_ADMIN_QUICK_ACTIONS: QuickAction[] = [
+  {
+    id: 'manage-bookings',
+    title: 'Manage Bookings',
+    description: 'Review booking requests',
+    route: '/venue-admin',
+    icon: ClipboardText,
+    color: 'copper',
+  },
+  {
+    id: 'venue-profile',
+    title: 'Venue Profile',
+    description: 'Edit venue details',
+    route: '/venue-admin/profile',
+    icon: Storefront,
+    color: 'copper',
+  },
+  {
+    id: 'calendar',
+    title: 'Calendar',
+    description: 'View booking calendar',
+    route: '/venue-admin/calendar',
+    icon: CalendarCheck,
     color: 'copper',
   },
   {
@@ -44,3 +77,6 @@ export const QUICK_ACTIONS: QuickAction[] = [
     color: 'copper',
   },
 ];
+
+/** @deprecated Use ORG_QUICK_ACTIONS or VENUE_ADMIN_QUICK_ACTIONS instead. */
+export const QUICK_ACTIONS: QuickAction[] = ORG_QUICK_ACTIONS;

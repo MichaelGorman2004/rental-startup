@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { initializeApiClient } from '../lib/api/client';
+import { CLERK_TOKEN_TEMPLATE } from '../lib/api/constants';
 
 /**
  * Attaches auth/retry/error interceptors to the Axios client once.
@@ -15,7 +16,7 @@ export function ApiClientInitializer({ children }: { children: React.ReactNode }
     initialized.current = true;
 
     initializeApiClient(
-      () => getToken({ template: 'venuelink' }),
+      () => getToken({ template: CLERK_TOKEN_TEMPLATE }),
       () => { signOut(); },
     );
   }, [getToken, signOut]);

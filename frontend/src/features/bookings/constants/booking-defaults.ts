@@ -21,9 +21,6 @@ export const MAX_SPECIAL_REQUESTS_LENGTH = 500;
 /** Number of steps in the booking wizard. */
 export const TOTAL_STEPS = 3;
 
-/** Mock API submission delay in milliseconds. */
-export const MOCK_SUBMISSION_DELAY_MS = 1500;
-
 /** Per-guest additional cost in cents ($5/guest). */
 export const PER_GUEST_COST_CENTS = 500;
 
@@ -134,4 +131,7 @@ export const BOOKING_MESSAGES = {
   VALIDATION_END_AFTER_START: 'End time must be after start time',
   VALIDATION_GUEST_COUNT_REQUIRED: 'Guest count is required',
   VALIDATION_GUEST_COUNT_MIN: `Minimum ${MIN_GROUP_SIZE} guests`,
+
+  CONFLICT_ERROR: 'This time slot is already booked. Please choose a different time.',
+  SUBMIT_ERROR: 'Something went wrong submitting your booking. Please try again.',
 } as const;

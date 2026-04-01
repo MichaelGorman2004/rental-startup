@@ -1,12 +1,19 @@
 """Booking business logic layer (Service pattern)."""
 
+from datetime import UTC, datetime
 from math import ceil
 from uuid import UUID
 
-from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants.enums import BookingStatus, UserRole
+from app.core.exceptions import (
+    AuthorizationError,
+    BusinessRuleError,
+    ConflictError,
+    ResourceNotFoundError,
+)
+from app.core.resource_names import BOOKING_RESOURCE, ORG_RESOURCE, VENUE_RESOURCE
 from app.modules.bookings.constants import BookingError
 from app.modules.bookings.models import Booking
 from app.modules.bookings.repository import BookingRepository
@@ -15,6 +22,7 @@ from app.modules.bookings.schemas import (
     BookingFilters,
     BookingListResponse,
     BookingResponse,
+    BookingSummaryResponse,
 )
 from app.modules.organizations.models import Organization
 from app.modules.organizations.repository import OrganizationRepository
@@ -29,30 +37,30 @@ CANCELLABLE_STATUSES = {BookingStatus.pending, BookingStatus.confirmed}
 async def _require_student_org(db: AsyncSession, user: User) -> Organization:
     """Verify user is student org and return their organization."""
     if user.role != UserRole.student_org:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, BookingError.STUDENT_ORG_REQUIRED)
+        raise AuthorizationError(BookingError.STUDENT_ORG_REQUIRED)
     org = await OrganizationRepository.get_by_owner_id(db, user.id)
     if not org:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, BookingError.NO_ORGANIZATION)
+        raise ResourceNotFoundError(ORG_RESOURCE, BookingError.NO_ORGANIZATION)
     return org
 
 
 async def _require_venue_owner(db: AsyncSession, user: User, venue_id: UUID) -> Venue:
     """Verify user is venue admin and owns the venue."""
     if user.role != UserRole.venue_admin:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, BookingError.VENUE_ADMIN_REQUIRED)
+        raise AuthorizationError(BookingError.VENUE_ADMIN_REQUIRED)
     venue = await VenueRepository.get_by_id(db, venue_id)
     if not venue:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, BookingError.VENUE_NOT_FOUND)
+        raise ResourceNotFoundError(VENUE_RESOURCE, BookingError.VENUE_NOT_FOUND)
     if venue.owner_id != user.id:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, BookingError.NOT_VENUE_OWNER)
+        raise AuthorizationError(BookingError.NOT_VENUE_OWNER)
     return venue
 
 
-async def _get_booking_or_404(db: AsyncSession, booking_id: UUID) -> Booking:
-    """Retrieve booking or raise 404."""
+async def _get_booking_or_raise(db: AsyncSession, booking_id: UUID) -> Booking:
+    """Retrieve booking or raise ResourceNotFoundError."""
     booking = await BookingRepository.get_by_id(db, booking_id)
     if not booking:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, BookingError.NOT_FOUND)
+        raise ResourceNotFoundError(BOOKING_RESOURCE, BookingError.NOT_FOUND)
     return booking
 
 
@@ -82,6 +90,17 @@ class BookingService:
     """Service layer for booking business logic."""
 
     @staticmethod
+    async def get_my_summary(
+        db: AsyncSession,
+        current_user: User,
+    ) -> BookingSummaryResponse:
+        """Get booking summary stats for the current user's org."""
+        org = await _require_student_org(db, current_user)
+        today = datetime.now(tz=UTC).date()
+        stats = await BookingRepository.get_org_summary(db, org.id, today)
+        return BookingSummaryResponse(**stats)
+
+    @staticmethod
     async def list_my_bookings(
         db: AsyncSession,
         current_user: User,
@@ -107,11 +126,11 @@ class BookingService:
     ) -> BookingResponse:
         """Cancel a booking (org owner only, pending/confirmed only)."""
         org = await _require_student_org(db, current_user)
-        booking = await _get_booking_or_404(db, booking_id)
+        booking = await _get_booking_or_raise(db, booking_id)
         if org.id != booking.organization_id:
-            raise HTTPException(status.HTTP_403_FORBIDDEN, BookingError.NOT_ORG_OWNER)
+            raise AuthorizationError(BookingError.NOT_ORG_OWNER)
         if booking.status not in CANCELLABLE_STATUSES:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.CANNOT_CANCEL_STATUS)
+            raise BusinessRuleError(BookingError.CANNOT_CANCEL_STATUS)
         updated = await BookingRepository.update_status(db, booking, BookingStatus.cancelled)
         return _to_booking_response(updated)
 
@@ -125,7 +144,7 @@ class BookingService:
         org = await _require_student_org(db, current_user)
         venue = await VenueRepository.get_by_id(db, booking_data.venue_id)
         if not venue:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, BookingError.VENUE_NOT_FOUND)
+            raise ResourceNotFoundError(VENUE_RESOURCE, BookingError.VENUE_NOT_FOUND)
         has_conflict = await BookingRepository.has_time_conflict(
             db,
             booking_data.venue_id,
@@ -134,7 +153,7 @@ class BookingService:
             booking_data.event_end_time,
         )
         if has_conflict:
-            raise HTTPException(status.HTTP_409_CONFLICT, BookingError.TIME_CONFLICT)
+            raise ConflictError(BookingError.TIME_CONFLICT)
         booking = await BookingRepository.create(db, booking_data, org.id)
         return _to_booking_response(booking)
 
@@ -145,10 +164,10 @@ class BookingService:
         current_user: User,
     ) -> BookingResponse:
         """Accept a pending booking (venue owner only)."""
-        booking = await _get_booking_or_404(db, booking_id)
+        booking = await _get_booking_or_raise(db, booking_id)
         await _require_venue_owner(db, current_user, booking.venue_id)
         if booking.status != BookingStatus.pending:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.CANNOT_ACCEPT_STATUS)
+            raise BusinessRuleError(BookingError.CANNOT_ACCEPT_STATUS)
         updated = await BookingRepository.update_status(db, booking, BookingStatus.confirmed)
         return _to_booking_response(updated)
 
@@ -159,10 +178,10 @@ class BookingService:
         current_user: User,
     ) -> BookingResponse:
         """Decline a pending booking (venue owner only)."""
-        booking = await _get_booking_or_404(db, booking_id)
+        booking = await _get_booking_or_raise(db, booking_id)
         await _require_venue_owner(db, current_user, booking.venue_id)
         if booking.status != BookingStatus.pending:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, BookingError.CANNOT_DECLINE_STATUS)
+            raise BusinessRuleError(BookingError.CANNOT_DECLINE_STATUS)
         updated = await BookingRepository.update_status(db, booking, BookingStatus.rejected)
         return _to_booking_response(updated)
 

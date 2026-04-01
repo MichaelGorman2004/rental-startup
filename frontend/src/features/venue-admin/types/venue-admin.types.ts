@@ -5,42 +5,22 @@
  * This file maintains backward compatibility during migration.
  */
 
-import type { BookingStatus } from '@venuelink/shared';
+import type { AdminBookingView } from '@venuelink/shared';
 
 // Re-export shared types
 export { BookingStatus } from '@venuelink/shared';
-export type { AdminBookingView, VenueStatsResponse } from '@venuelink/shared';
+export type {
+  AdminBookingView,
+  VenueStatsResponse,
+  BookingActionPayload,
+  BookingActionType as BookingAction,
+} from '@venuelink/shared';
 
 /** Venue performance stats displayed on the admin dashboard. */
 export interface VenueStats {
   bookingsThisMonth: number;
   revenueCents: number;
-  averageRating: number | null;
   occupancyPercent: number;
-}
-
-/** A booking request visible to venue admins. */
-export interface AdminBooking {
-  id: string;
-  organizationName: string;
-  eventName: string;
-  eventDate: string;
-  eventStartTime: string;
-  eventEndTime: string;
-  eventDurationMinutes: number;
-  guestCount: number;
-  status: BookingStatus;
-  createdAt: string;
-}
-
-/** Possible actions a venue admin can take on a booking. */
-export type BookingAction = 'accept' | 'decline';
-
-/** Payload for a booking accept/decline mutation. */
-export interface ActionPayload {
-  bookingId: string;
-  action: BookingAction;
-  venueId: string;
 }
 
 /** Props for the StatCard component. */
@@ -61,7 +41,7 @@ export interface StatsGridProps {
 
 /** Props for the BookingCard component. */
 export interface BookingCardProps {
-  booking: AdminBooking;
+  booking: AdminBookingView;
   onAccept: (id: string) => void;
   onDecline: (id: string) => void;
   isActionPending: boolean;
@@ -69,11 +49,14 @@ export interface BookingCardProps {
 
 /** Props for the BookingsList component. */
 export interface BookingsListProps {
-  bookings: AdminBooking[];
+  bookings: AdminBookingView[];
   isLoading: boolean;
   isError: boolean;
   onAccept: (id: string) => void;
   onDecline: (id: string) => void;
   isPending: boolean;
   activeBookingId: string | null;
+  totalPages: number;
+  page: number;
+  onPageChange: (page: number) => void;
 }

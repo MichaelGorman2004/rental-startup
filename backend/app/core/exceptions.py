@@ -34,3 +34,10 @@ class BusinessRuleError(VenueLinkError):
 
     def __init__(self, message: str) -> None:
         super().__init__(message, "BUSINESS_RULE_VIOLATION")
+
+
+class ConflictError(VenueLinkError):
+    """Raised when an action conflicts with existing state."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message, "CONFLICT")

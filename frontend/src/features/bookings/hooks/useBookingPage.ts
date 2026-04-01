@@ -49,6 +49,9 @@ export function useBookingPage() {
     estimatedCostCents,
     isSubmitting: createBooking.isPending,
     isSuccess: createBooking.isSuccess,
+    isBookingError: createBooking.isError,
+    isConflict: createBooking.isConflict,
+    resetBookingError: createBooking.reset,
     confirmation: createBooking.data ?? null,
     handleSubmit,
   };

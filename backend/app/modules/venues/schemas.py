@@ -25,6 +25,13 @@ from app.modules.venues.constants import (
 )
 
 
+def _validate_state_code(v: str | None) -> str | None:
+    """Ensure state code is uppercase if provided."""
+    if v is not None:
+        return v.upper()
+    return v
+
+
 class VenueBase(BaseModel):
     """Base venue schema with shared fields."""
 
@@ -78,9 +85,7 @@ class VenueBase(BaseModel):
     @classmethod
     def validate_state_code(cls, v: str | None) -> str | None:
         """Ensure state code is uppercase if provided."""
-        if v is not None:
-            return v.upper()
-        return v
+        return _validate_state_code(v)
 
 
 class VenueCreate(VenueBase):
@@ -122,9 +127,7 @@ class VenueUpdate(BaseModel):
     @classmethod
     def validate_state_code(cls, v: str | None) -> str | None:
         """Ensure state code is uppercase if provided."""
-        if v is not None:
-            return v.upper()
-        return v
+        return _validate_state_code(v)
 
 
 class VenueResponse(BaseModel):
@@ -145,6 +148,7 @@ class VenueResponse(BaseModel):
     address_city: str | None = None
     address_state: str | None = None
     address_zip: str | None = None
+    logo_url: str | None = None
     created_at: datetime
     updated_at: datetime
     deleted_at: datetime | None = None
@@ -160,6 +164,16 @@ class VenueListResponse(BaseModel):
     page: int = Field(..., ge=MIN_PAGE, description="Current page number")
     page_size: int = Field(..., ge=1, le=MAX_PAGE_SIZE, description="Items per page")
     total_pages: int = Field(..., description="Total number of pages")
+
+
+class VenueStatsResponse(BaseModel):
+    """Schema for venue dashboard statistics."""
+
+    bookings_this_month: int = Field(..., ge=0, serialization_alias="bookingsThisMonth")
+    revenue_cents: int = Field(..., ge=0, serialization_alias="revenueCents")
+    occupancy_percent: float = Field(..., ge=0, le=100, serialization_alias="occupancyPercent")
+
+    model_config = {"populate_by_name": True}
 
 
 class VenueFilters(BaseModel):

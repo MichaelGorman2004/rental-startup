@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import {
-  Stack, Text, Title, Skeleton, ThemeIcon,
+  Stack, Text, Title, Skeleton, ThemeIcon, Pagination,
 } from '@mantine/core';
 import { Tray } from '@phosphor-icons/react';
 import type { BookingsListProps } from '../types';
@@ -41,6 +41,7 @@ function BookingsEmptyState() {
 export const BookingsList = memo(({
   bookings, isLoading, isError,
   onAccept, onDecline, isPending, activeBookingId,
+  totalPages, page, onPageChange,
 }: BookingsListProps) => {
   if (isLoading) return <BookingsLoadingSkeleton />;
 
@@ -64,6 +65,19 @@ export const BookingsList = memo(({
           ))}
         </Stack>
       )}
+      {totalPages > 1 ? (
+        <Stack align="center" gap="xs">
+          <Pagination
+            total={totalPages}
+            value={page}
+            onChange={onPageChange}
+            aria-label="Admin bookings pagination"
+          />
+          <Text size="sm" c="dimmed">
+            {ADMIN_MESSAGES.BOOKINGS_PAGE_INFO(page, totalPages)}
+          </Text>
+        </Stack>
+      ) : null}
     </Stack>
   );
 });

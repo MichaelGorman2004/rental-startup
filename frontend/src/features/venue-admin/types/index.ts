@@ -1,10 +1,10 @@
 export type {
   VenueStats,
-  AdminBooking,
   BookingAction,
-  ActionPayload,
+  BookingActionPayload as ActionPayload,
   StatCardProps,
   StatsGridProps,
   BookingCardProps,
   BookingsListProps,
 } from './venue-admin.types';
+export type { AdminBookingView as AdminBooking } from '@venuelink/shared';

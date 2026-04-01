@@ -37,6 +37,7 @@ ADDRESS_STREET_MAX_LENGTH = 255
 ADDRESS_CITY_MAX_LENGTH = 100
 ADDRESS_STATE_MAX_LENGTH = 2  # Two-letter state code (e.g., "CA", "NY")
 ADDRESS_ZIP_MAX_LENGTH = 10  # ZIP+4 format (e.g., "94720-1234")
+LOGO_URL_MAX_LENGTH = 500
 
 
 class Venue(BaseModel, UUIDMixin, TimestampMixin, SoftDeleteMixin):
@@ -113,6 +114,11 @@ class Venue(BaseModel, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     address_zip: Mapped[str | None] = mapped_column(
         String(ADDRESS_ZIP_MAX_LENGTH),
+        nullable=True,
+    )
+
+    logo_url: Mapped[str | None] = mapped_column(
+        String(LOGO_URL_MAX_LENGTH),
         nullable=True,
     )
 

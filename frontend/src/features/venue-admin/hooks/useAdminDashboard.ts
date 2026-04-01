@@ -10,7 +10,7 @@ import { useBookingActions } from './useBookingActions';
  */
 export function useAdminDashboard() {
   const { user } = useUser();
-  const isVenueAdmin = user?.unsafeMetadata?.['role'] === 'venue_admin';
+  const isVenueAdmin = user?.publicMetadata?.['role'] === 'venue_admin';
 
   const myVenue = useMyVenue();
   const { venueId } = myVenue;
@@ -28,6 +28,9 @@ export function useAdminDashboard() {
     isStatsLoading: stats.isLoading,
     isStatsError: stats.isError,
     bookings: bookings.bookings,
+    bookingsTotalPages: bookings.totalPages,
+    bookingsPage: bookings.page,
+    setBookingsPage: bookings.setPage,
     isBookingsLoading: bookings.isLoading,
     isBookingsError: bookings.isError,
     refetchBookings: bookings.refetch,

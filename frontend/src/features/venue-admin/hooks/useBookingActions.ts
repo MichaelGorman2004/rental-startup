@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AdminBookingView } from '@venuelink/shared';
 import { acceptBooking, declineBooking } from '@/lib/api/endpoints';
 import { BookingStatus } from '../../bookings';
-import type { AdminBooking, BookingAction, ActionPayload } from '../types';
+import type { BookingAction, ActionPayload } from '../types';
 import { ADMIN_QUERY_KEYS } from '../constants';
 
 /** Map action type to the resulting booking status. */
@@ -31,8 +32,8 @@ export function useBookingActions(venueId: string | null) {
     mutationFn: performBookingAction,
     onMutate: async (payload) => {
       await queryClient.cancelQueries({ queryKey: bookingsKey });
-      const previous = queryClient.getQueryData<AdminBooking[]>(bookingsKey);
-      queryClient.setQueryData<AdminBooking[]>(
+      const previous = queryClient.getQueryData<AdminBookingView[]>(bookingsKey);
+      queryClient.setQueryData<AdminBookingView[]>(
         bookingsKey,
         (old) => (old ?? []).map((b) => (
           b.id === payload.bookingId

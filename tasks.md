@@ -1426,6 +1426,8 @@ export const VALIDATION_RULES = {
 - ✅ Error messages in constants (no hardcoded strings)
 - ✅ Components memoized (prevent unnecessary re-renders)
 
+**Status**: ✅ COMPLETED - Date: 2026-02-23
+
 ---
 
 ## Task 17: My Bookings Page (Student Org)
@@ -1911,7 +1913,185 @@ class BookingError:
 - [ ] Test status update authorization failures
 - [ ] Test double-booking conflict detection
 
-**Status**: ⬜ Not Started
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 22: Org vs Venue Role Separation (Dashboard/UI)
+
+**ID**: `VL-022`
+**Title**: Dashboard Conditional Rendering by Role with Real API Data
+**Priority**: 🟡 High
+**Estimated Effort**: 8 hours
+**Dependencies**: `VL-006`, `VL-011`, `VL-021`
+
+### Description
+Dashboard conditionally renders different content based on user role. Org users see org stats, upcoming events, and budget overview. Venue admins see venue stats and recent bookings. Quick actions filtered by role. All stats wired to real backend endpoints.
+
+### Deliverables
+- [x] Dashboard conditionally renders by role (`DashboardPage.tsx`)
+- [x] Quick actions filtered by role (`QuickActionsGrid.tsx`)
+- [x] Org dashboard stats wired to real data (`GET /bookings/me/summary`)
+- [x] Venue dashboard stats wired to real data (`GET /venues/:id/stats`)
+- [x] Upcoming events use real API (`GET /bookings/me?status=confirmed&from_date=...`)
+- [x] Budget overview widget on org dashboard
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 23: Venue Admin Backend — Stats, Ratings, Pagination, Calendar
+
+**ID**: `VL-023`
+**Title**: Venue Stats Endpoint, Rating System, Pagination & Calendar UI
+**Priority**: 🟡 High
+**Estimated Effort**: 12 hours
+**Dependencies**: `VL-007`, `VL-021`
+
+### Description
+Build venue stats endpoint, full rating/review system with model and migration, add pagination UI to booking lists, and create a calendar scheduling view for venue admins.
+
+### Deliverables
+- [x] `GET /api/v1/venues/:id/stats` endpoint (bookings, revenue, occupancy)
+- [x] Rating model, `POST /bookings/:id/rate`, `GET /venues/:id/ratings` endpoints
+- [x] Alembic migration for ratings table
+- [x] Pagination controls on BookingsPage and AdminDashboard
+- [x] Calendar/scheduling view for venue admins (BookingCalendar component)
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 24: Onboarding Tooltips & Profile Completeness
+
+**ID**: `VL-024`
+**Title**: Post-Signup Tooltip Walkthrough and Profile Completeness Indicator
+**Priority**: 🟢 Medium
+**Estimated Effort**: 4 hours
+**Dependencies**: `VL-019`
+
+### Description
+Guide users to complete their profile after signup with dismissible tooltips. Show profile completeness percentage on settings page.
+
+### Deliverables
+- [x] Post-signup tooltip for orgs (localStorage dismissal)
+- [x] Post-signup tooltip for venues (localStorage dismissal)
+- [x] Profile completeness indicator (progress bar on OrganizationTab)
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 25: Venue Profile Settings Tab & Logo Upload
+
+**ID**: `VL-025`
+**Title**: Venue Profile Editing in Settings with Logo Upload
+**Priority**: 🟡 High
+**Estimated Effort**: 8 hours
+**Dependencies**: `VL-019`, `VL-007`
+
+### Description
+Venue admins can edit their venue details in Settings. Logo upload for both venues and orgs with backend file upload endpoints.
+
+### Deliverables
+- [x] Venue Profile tab in Settings for venue_admin role
+- [x] Editable form with Zod validation (name, type, capacity, price, address)
+- [x] Logo upload component (reusable, with preview)
+- [x] `POST /organizations/:id/logo` and `POST /venues/:id/logo` endpoints
+- [x] `logo_url` added to Venue model with migration
+- [x] Static file serving at `/uploads`
+
+**Status**: ✅ COMPLETED - Date: 2026-04-01, Branch: touchups
+
+---
+
+## Task 26: Clerk Metadata & Shared Type Fixes
+
+**ID**: `VL-026`
+**Title**: Standardize Clerk Metadata and Fix Shared Package Types
+**Priority**: 🟡 High
+**Estimated Effort**: 3 hours
+**Dependencies**: `VL-003`, `VL-012`
+
+### Description
+Standardize all metadata reads to `publicMetadata`, fix shared `CreateBookingRequest` fields, consolidate duplicate types, remove dead stubs.
+
+### Deliverables
+- [x] All `unsafeMetadata` reads → `publicMetadata` (3 hooks)
+- [x] Standardized `orgName` metadata key (removed `org_name` fallback)
+- [x] `CreateBookingRequest` updated to `eventStartTime` + `eventEndTime`
+- [x] Duplicate `CreateBookingRequest` consolidated to shared package
+- [x] `VenueStatsResponse.averageRating` stub removed
+- [x] `BookingConfirmation.referenceNumber` removed
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 27: Backend Auth & Security Hardening
+
+**ID**: `VL-027`
+**Title**: Production Security Checks, Exception Standardization, CORS
+**Priority**: 🔴 Critical
+**Estimated Effort**: 4 hours
+**Dependencies**: `VL-003`
+
+### Description
+Harden backend security for production readiness. Standardize all services on custom exceptions, add production startup validation, tighten CORS.
+
+### Deliverables
+- [x] `SECRET_KEY` loaded from env var, fails in production if missing/default
+- [x] `CLERK_PEM_PUBLIC_KEY` required in production
+- [x] All services use custom exceptions (no HTTPException in services)
+- [x] `GET /organizations/:id` restricted to owner only
+- [x] `GET /venues/:id` documented as intentionally public
+- [x] CORS restricted to specific methods and headers
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 28: Frontend Code Quality & Polish
+
+**ID**: `VL-028`
+**Title**: Error Boundaries, Form Validation, Conflict Handling
+**Priority**: 🟡 High
+**Estimated Effort**: 5 hours
+**Dependencies**: `VL-004`
+
+### Description
+Add React error boundaries to all routes, Zod validation to org profile form, extract token template constant, add booking conflict pre-check UX.
+
+### Deliverables
+- [x] React error boundaries wrapping all feature routes
+- [x] Zod validation for org profile (phone, URL, member count)
+- [x] Token template magic string extracted to constant
+- [x] Locked org type/university fields with tooltip
+- [x] Booking conflict 409 error shown inline in form
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
+
+---
+
+## Task 29: Cleanup & Tech Debt
+
+**ID**: `VL-029`
+**Title**: Remove Mock Data, Dead Code, and Unused Exports
+**Priority**: 🟢 Medium
+**Estimated Effort**: 2 hours
+**Dependencies**: `VL-022`, `VL-023`
+
+### Description
+Remove all mock data that has been replaced by real API endpoints. Clean up dead code and unused imports.
+
+### Deliverables
+- [x] Removed `MOCK_VENUE_STATS`, `MOCK_ADMIN_BOOKINGS`, `MOCK_EVENTS`
+- [x] Removed `MOCK_SUBMISSION_DELAY_MS`
+- [x] Kept `MOCK_VENUES` (still used by demo/landing)
+- [x] Cleaned commented-out API code in useUpcomingEvents
+- [x] Verified no remaining dead unsafeMetadata references
+
+**Status**: ✅ COMPLETED - Date: 2026-03-31, Branch: touchups
 
 ---
 
@@ -1919,9 +2099,9 @@ class BookingError:
 
 | Priority | Tasks |
 |----------|-------|
-| 🔴 Critical | VL-001 ✅, VL-002 ✅, VL-003 ✅, VL-004 ✅, VL-005 ✅, VL-016 ✅ |
-| 🟡 High | VL-006 ✅, VL-007 ✅, VL-008 ✅, VL-009 ✅, VL-010 ✅, VL-011 ✅, VL-012 ✅, VL-013 ✅, VL-014 ✅, VL-017 ✅, VL-018 ✅, VL-019 ✅, VL-021 |
-| 🟢 Medium | VL-015 ✅, VL-020 |
+| 🔴 Critical | VL-001 ✅, VL-002 ✅, VL-003 ✅, VL-004 ✅, VL-005 ✅, VL-016 ✅, VL-027 ✅ |
+| 🟡 High | VL-006 ✅, VL-007 ✅, VL-008 ✅, VL-009 ✅, VL-010 ✅, VL-011 ✅, VL-012 ✅, VL-013 ✅, VL-014 ✅, VL-017 ✅, VL-018 ✅, VL-019 ✅, VL-021 ✅, VL-022 ✅, VL-023 ✅, VL-025 ✅, VL-026 ✅, VL-028 ✅ |
+| 🟢 Medium | VL-015 ✅, VL-020, VL-024 ✅, VL-029 ✅ |
 
 ## Dependency Graph
 

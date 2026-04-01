@@ -62,5 +62,6 @@ export const queryKeys = {
   dashboard: {
     all: ['dashboard'] as const,
     events: () => [...queryKeys.dashboard.all, 'events'] as const,
+    summary: () => [...queryKeys.dashboard.all, 'summary'] as const,
   },
 } as const;

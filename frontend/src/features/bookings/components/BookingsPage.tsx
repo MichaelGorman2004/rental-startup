@@ -1,7 +1,7 @@
 import {
-  Container, Stack, Title, Text, Modal, Group, Button,
+  Container, Stack, Title, Text, Modal, Group, Button, Pagination,
 } from '@mantine/core';
-import { MY_BOOKINGS_MESSAGES } from '../constants/bookings-page-defaults';
+import { MY_BOOKINGS_MESSAGES, BOOKINGS_PAGINATION } from '../constants/bookings-page-defaults';
 import { useBookingsPage } from '../hooks/useBookingsPage';
 import { BookingsFilterBar } from './BookingsFilterBar';
 import { BookingHistoryCard } from './BookingHistoryCard';
@@ -11,7 +11,8 @@ import { BookingsPageSkeleton } from './BookingsPageSkeleton';
 /** My Bookings page listing the user's organization bookings. */
 export function BookingsPage() {
   const {
-    bookings, statusFilter, handleStatusChange,
+    bookings, totalPages, page, setPage,
+    statusFilter, handleStatusChange,
     isLoading, isError,
     openCancelModal, cancelTarget, closeCancelModal, confirmCancel, isCancelling,
   } = useBookingsPage();
@@ -33,6 +34,20 @@ export function BookingsPage() {
         {bookings.map((booking) => (
           <BookingHistoryCard key={booking.id} booking={booking} onCancel={openCancelModal} />
         ))}
+
+        {totalPages > 1 ? (
+          <Stack align="center" gap="xs">
+            <Pagination
+              total={totalPages}
+              value={page}
+              onChange={setPage}
+              aria-label="Bookings pagination"
+            />
+            <Text size="sm" c="dimmed">
+              {BOOKINGS_PAGINATION.PAGE_INFO(page, totalPages)}
+            </Text>
+          </Stack>
+        ) : null}
       </Stack>
 
       <Modal
