@@ -78,7 +78,7 @@ function SelectedDayBookings({ bookings }: { bookings: AdminBooking[] }) {
             </Stack>
             <Group gap="xs">
               <Text size="xs" c="dimmed">
-                {booking.eventStartTime} - {booking.eventEndTime}
+                {`${booking.eventStartTime} - ${booking.eventEndTime}`}
               </Text>
               <Badge
                 size="sm"

@@ -1,8 +1,11 @@
 import type { Control } from 'react-hook-form';
 import {
-  Container, Stack, Grid, Title, Text, Stepper, Group, Button, Alert,
+  Container, Stack, Grid, Title, Text,
+  Stepper, Group, Button, Alert,
 } from '@mantine/core';
-import { ArrowLeft, ArrowRight, PaperPlaneTilt, WarningCircle } from '@phosphor-icons/react';
+import {
+  ArrowLeft, ArrowRight, PaperPlaneTilt, WarningCircle,
+} from '@phosphor-icons/react';
 import { useBookingPage } from '../hooks';
 import type { BookingFormValues } from '../types';
 import {

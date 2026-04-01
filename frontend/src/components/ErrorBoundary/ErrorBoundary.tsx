@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { Card, Stack, Text, Button, Title } from '@mantine/core';
+import {
+  Card, Stack, Text, Button, Title,
+} from '@mantine/core';
 
 const ERROR_BOUNDARY_MESSAGES = {
   TITLE: 'Something went wrong',
@@ -38,12 +40,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   override render(): ReactNode {
-    if (!this.state.hasError) {
-      return this.props.children;
+    const { hasError } = this.state;
+    const { children, fallback } = this.props;
+
+    if (!hasError) {
+      return children;
     }
 
-    if (this.props.fallback) {
-      return this.props.fallback;
+    if (fallback) {
+      return fallback;
     }
 
     return (

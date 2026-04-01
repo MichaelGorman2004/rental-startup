@@ -29,10 +29,9 @@ export function useCreateBooking(): UseCreateBookingResult {
     },
   });
 
-  const isConflict =
-    mutation.isError &&
-    isApiError(mutation.error) &&
-    mutation.error.code === ApiErrorCode.ConflictError;
+  const isConflict = mutation.isError
+    && isApiError(mutation.error)
+    && mutation.error.code === ApiErrorCode.ConflictError;
 
   return {
     mutate: mutation.mutate,

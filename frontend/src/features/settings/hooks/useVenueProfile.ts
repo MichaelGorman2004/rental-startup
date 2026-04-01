@@ -102,7 +102,14 @@ export function useVenueProfile() {
   }
 
   return {
-    venue, isLoading, isError, form, handleSubmit, isPending: mutation.isPending,
-    logoFile, handleLogoChange, isUploadingLogo: logoMutation.isPending,
+    venue,
+    isLoading,
+    isError,
+    form,
+    handleSubmit,
+    isPending: mutation.isPending,
+    logoFile,
+    handleLogoChange,
+    isUploadingLogo: logoMutation.isPending,
   };
 }

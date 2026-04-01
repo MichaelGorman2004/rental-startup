@@ -31,7 +31,14 @@ export function useOrgProfilePage() {
   }
 
   return {
-    organization, isLoading, isError, form, handleSubmit, isPending,
-    logoFile, handleLogoChange, isUploadingLogo: logoMutation.isPending,
+    organization,
+    isLoading,
+    isError,
+    form,
+    handleSubmit,
+    isPending,
+    logoFile,
+    handleLogoChange,
+    isUploadingLogo: logoMutation.isPending,
   };
 }

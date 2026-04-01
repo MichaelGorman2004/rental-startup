@@ -1,9 +1,12 @@
-/** Accepted MIME types for logo uploads. */
+/** Accepted MIME types for logo uploads (array for FileButton accept prop). */
 export const LOGO_ACCEPTED_MIME_TYPES = [
   'image/png',
   'image/jpeg',
   'image/webp',
 ] as const;
+
+/** Set for O(1) MIME type validation lookups. */
+export const LOGO_ACCEPTED_MIME_SET: ReadonlySet<string> = new Set(LOGO_ACCEPTED_MIME_TYPES);
 
 /** Human-readable accepted file extensions for display. */
 export const LOGO_ACCEPTED_EXTENSIONS = '.png, .jpg, .webp';

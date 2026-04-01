@@ -26,13 +26,11 @@ interface UseBookingCalendarReturn {
 }
 
 function groupBookingsByDate(bookings: AdminBooking[]): BookingsByDate {
-  const grouped: BookingsByDate = {};
-  for (const booking of bookings) {
+  return bookings.reduce<BookingsByDate>((grouped, booking) => {
     const key = booking.eventDate;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(booking);
-  }
-  return grouped;
+    const existing = grouped[key] ?? [];
+    return { ...grouped, [key]: [...existing, booking] };
+  }, {});
 }
 
 function buildCalendarDays(
@@ -47,16 +45,15 @@ function buildCalendarDays(
   const rows = Math.ceil(totalCells / CALENDAR_DAYS_IN_WEEK);
   const totalDays = rows * CALENDAR_DAYS_IN_WEEK;
 
-  const days: CalendarDay[] = [];
-  for (let i = 0; i < totalDays; i++) {
+  const days: CalendarDay[] = Array.from({ length: totalDays }, (_, i) => {
     const date = gridStart.add(i, 'day');
     const iso = date.format('YYYY-MM-DD');
-    days.push({
+    return {
       date,
       isCurrentMonth: date.month() === month.month(),
       bookings: bookingsByDate[iso] ?? [],
-    });
-  }
+    };
+  });
   return days;
 }
 

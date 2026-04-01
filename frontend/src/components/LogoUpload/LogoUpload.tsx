@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button, FileButton, Group, Image, Loader, Stack, Text,
 } from '@mantine/core';
@@ -6,6 +6,7 @@ import { notifications } from '@mantine/notifications';
 import type { LogoUploadProps } from './LogoUpload.types';
 import {
   LOGO_ACCEPTED_MIME_TYPES,
+  LOGO_ACCEPTED_MIME_SET,
   LOGO_MAX_FILE_SIZE_BYTES,
   LOGO_UPLOAD_MESSAGES,
   LOGO_ACCEPTED_EXTENSIONS,
@@ -16,20 +17,22 @@ function validateFile(file: File): string | null {
   if (file.size > LOGO_MAX_FILE_SIZE_BYTES) {
     return LOGO_UPLOAD_MESSAGES.FILE_TOO_LARGE;
   }
-  if (!LOGO_ACCEPTED_MIME_TYPES.includes(file.type as typeof LOGO_ACCEPTED_MIME_TYPES[number])) {
+  if (!LOGO_ACCEPTED_MIME_SET.has(file.type)) {
     return LOGO_UPLOAD_MESSAGES.INVALID_TYPE;
   }
   return null;
 }
 
 /** Reusable logo upload component with image preview and upload state. */
-export function LogoUpload({ value, onChange, currentLogoUrl, disabled, isUploading }: LogoUploadProps) {
+export function LogoUpload({
+  value, onChange, currentLogoUrl, disabled, isUploading,
+}: LogoUploadProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!value) {
       setPreviewUrl(null);
-      return;
+      return undefined;
     }
     const objectUrl = URL.createObjectURL(value);
     setPreviewUrl(objectUrl);
@@ -38,7 +41,7 @@ export function LogoUpload({ value, onChange, currentLogoUrl, disabled, isUpload
 
   const displayUrl = previewUrl ?? currentLogoUrl ?? null;
 
-  function handleFileSelect(file: File | null) {
+  const handleFileSelect = useCallback((file: File | null) => {
     if (!file) return;
     const error = validateFile(file);
     if (error) {
@@ -46,11 +49,11 @@ export function LogoUpload({ value, onChange, currentLogoUrl, disabled, isUpload
       return;
     }
     onChange(file);
-  }
+  }, [onChange]);
 
-  function handleRemove() {
+  const handleRemove = useCallback(() => {
     onChange(null);
-  }
+  }, [onChange]);
 
   return (
     <Stack gap="xs">

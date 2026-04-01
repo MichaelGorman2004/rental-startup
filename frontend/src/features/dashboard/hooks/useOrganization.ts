@@ -18,19 +18,19 @@ export function useOrganization(): UseOrganizationReturn {
   const organization = useMemo((): OrganizationData | null => {
     if (!user?.publicMetadata) return null;
 
-    const metadata = user.publicMetadata as Record<string, unknown>;
-    const orgName = metadata['orgName'];
+    const {
+      orgName, org_type: rawType, org_id: orgId, university,
+    } = user.publicMetadata;
 
     if (!orgName) return null;
 
-    const rawType = metadata['org_type'];
     const orgType = isOrganizationType(rawType) ? rawType : OrganizationType.Club;
 
     return {
-      id: (metadata['org_id'] as string) ?? '',
-      name: orgName as string,
+      id: String(orgId ?? ''),
+      name: String(orgName),
       type: orgType,
-      university: (metadata['university'] as string) ?? '',
+      university: String(university ?? ''),
     };
   }, [user?.publicMetadata]);
 

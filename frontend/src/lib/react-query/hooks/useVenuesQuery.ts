@@ -1,8 +1,12 @@
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import {
+  useQuery, useQueryClient, useMutation,
+} from '@tanstack/react-query';
 import { useCallback } from 'react';
 import type { Venue, VenueFilters, VenueListResponse } from '@/features/venues/types';
 import { VenueType } from '@/features/venues/types/venue.types';
-import { getVenues, getVenue, updateVenue, uploadVenueLogo } from '../../api/endpoints/venues';
+import {
+  getVenues, getVenue, updateVenue, uploadVenueLogo,
+} from '../../api/endpoints/venues';
 import { queryKeys } from '../keys';
 import { STALE_TIMES } from '../constants';
 

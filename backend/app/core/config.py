@@ -6,7 +6,7 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Default secret key used only in non-production environments
-_DEV_SECRET_KEY = "dev-secret-key-change-in-production"
+_DEV_SECRET_KEY = "dev-secret-key-change-in-production"  # noqa: S105
 
 # Environment value that triggers production-level validation
 PRODUCTION_ENV = "production"
@@ -86,16 +86,18 @@ class Settings(BaseSettings):
             return self
 
         if not self.SECRET_KEY or self.SECRET_KEY == _DEV_SECRET_KEY:
-            raise ValueError(
+            msg = (
                 "SECRET_KEY must be set to a secure value in production. "
                 "Generate one with: openssl rand -hex 32"
             )
+            raise ValueError(msg)
 
         if not os.getenv("CLERK_PEM_PUBLIC_KEY"):
-            raise ValueError(
+            msg = (
                 "CLERK_PEM_PUBLIC_KEY must be set in production. "
                 "Without it, JWT signatures are not verified."
             )
+            raise ValueError(msg)
 
         return self
 
