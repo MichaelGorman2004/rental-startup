@@ -33,6 +33,10 @@ export const useSignupForm = () => {
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
+        // Role and orgName are written to unsafeMetadata at signup.
+        // The Clerk webhook (user.created) reads these values and promotes
+        // role to publicMetadata via the Clerk Backend API, so all post-signup
+        // reads should use publicMetadata.
         unsafeMetadata: { role: data.role, orgName: data.orgName },
       });
 

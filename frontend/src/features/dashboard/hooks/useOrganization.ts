@@ -19,7 +19,7 @@ export function useOrganization(): UseOrganizationReturn {
     if (!user?.publicMetadata) return null;
 
     const metadata = user.publicMetadata as Record<string, unknown>;
-    const orgName = metadata['org_name'] ?? metadata['orgName'];
+    const orgName = metadata['orgName'];
 
     if (!orgName) return null;
 
