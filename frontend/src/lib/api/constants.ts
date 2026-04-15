@@ -45,6 +45,21 @@ export const ERROR_MESSAGES = {
 } as const;
 
 /**
+ * Resolve the backend origin (scheme + host, no path) from VITE_API_BASE_URL.
+ * Used to prefix relative upload URLs (e.g. /uploads/...) so they resolve to
+ * the backend in production where frontend and backend are on different domains.
+ */
+export function getApiOrigin(): string {
+  const baseUrl = import.meta.env[API_BASE_URL_KEY] as string | undefined;
+  if (!baseUrl) return '';
+  try {
+    return new URL(baseUrl).origin;
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Resolve and validate the API base URL from environment variables.
  * Ensures the URL ends with the expected API version path.
  */

@@ -1,5 +1,6 @@
 import type { OrganizationType } from '@venuelink/shared';
 import { apiClient } from '../client';
+import { getApiOrigin } from '../constants';
 
 /** Payload for creating a new organization. */
 export interface CreateOrganizationData {
@@ -67,7 +68,7 @@ function toOrganizationProfile(raw: OrganizationApiResponse): OrganizationProfil
     contactPhone: raw.contact_phone ?? undefined,
     memberCount: raw.member_count ?? undefined,
     websiteUrl: raw.website_url ?? undefined,
-    logoUrl: raw.logo_url ?? undefined,
+    logoUrl: raw.logo_url ? `${getApiOrigin()}${raw.logo_url}` : undefined,
     createdAt: raw.created_at,
     updatedAt: raw.updated_at,
   };

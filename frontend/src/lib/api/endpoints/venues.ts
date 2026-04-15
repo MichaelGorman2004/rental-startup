@@ -1,6 +1,7 @@
 import type { Venue, VenueListResponse } from '@/features/venues/types';
 import { VenueType } from '@/features/venues/types/venue.types';
 import { apiClient } from '../client';
+import { getApiOrigin } from '../constants';
 import type { PaginatedApiResponse } from '../types';
 
 /** Backend snake_case venue shape. */
@@ -67,7 +68,9 @@ function toVenue(raw: VenueApiResponse): Venue {
     createdAt: raw.created_at,
     updatedAt: raw.updated_at,
     deletedAt: raw.deleted_at,
-    logoUrl: raw.logo_url,
+    logoUrl: raw.logo_url
+      ? `${getApiOrigin()}${raw.logo_url}`
+      : null,
   };
 }
 
