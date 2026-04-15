@@ -5,7 +5,6 @@ access - they call repository methods. This makes them fully testable without
 mocking the database.
 """
 
-import asyncio
 from datetime import UTC, datetime
 from math import ceil
 from uuid import UUID
@@ -238,11 +237,11 @@ class VenueService:
         now = datetime.now(UTC)
         year, month = now.year, now.month
 
-        bookings_count, revenue, booked_hours = await asyncio.gather(
-            BookingRepository.count_venue_bookings_this_month(db, venue_id, year, month),
-            BookingRepository.sum_venue_revenue_cents(db, venue_id, year, month),
-            BookingRepository.sum_venue_booked_hours(db, venue_id, year, month),
+        bookings_count = await BookingRepository.count_venue_bookings_this_month(
+            db, venue_id, year, month
         )
+        revenue = await BookingRepository.sum_venue_revenue_cents(db, venue_id, year, month)
+        booked_hours = await BookingRepository.sum_venue_booked_hours(db, venue_id, year, month)
         occupancy = min(
             booked_hours / TOTAL_AVAILABLE_HOURS_PER_MONTH * MAX_OCCUPANCY_PERCENT,
             MAX_OCCUPANCY_PERCENT,

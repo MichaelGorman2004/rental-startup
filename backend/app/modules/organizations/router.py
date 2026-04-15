@@ -3,7 +3,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, UploadFile, status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database.session import get_db
@@ -99,7 +99,7 @@ async def update_organization(
 )
 async def upload_organization_logo(
     org_id: UUID,
-    file: UploadFile,
+    file: Annotated[UploadFile, File()],
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> OrganizationResponse:
