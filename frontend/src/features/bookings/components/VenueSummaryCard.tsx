@@ -41,7 +41,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <Users size="1rem" />
+            <Users size={16} />
           </ThemeIcon>
           <Text size="sm">
             {formatCapacity(venue.capacity)}
@@ -52,7 +52,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <CurrencyDollar size="1rem" />
+            <CurrencyDollar size={16} />
           </ThemeIcon>
           <Text size="sm">
             {formatPrice(venue.basePriceCents)}
@@ -62,7 +62,7 @@ export const VenueSummaryCard = memo(({ venue }: VenueSummaryCardProps) => {
 
         <Group gap="sm">
           <ThemeIcon size="sm" variant="transparent" c="dimmed">
-            <MapPin size="1rem" />
+            <MapPin size={16} />
           </ThemeIcon>
           <Text size="sm" c="dimmed">
             {formatAddress(venue.addressStreet, venue.addressCity, venue.addressState)}

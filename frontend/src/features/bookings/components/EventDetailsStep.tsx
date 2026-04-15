@@ -43,7 +43,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           label={BOOKING_MESSAGES.EVENT_DATE_LABEL}
           description={BOOKING_MESSAGES.EVENT_DATE_DESCRIPTION}
           placeholder={BOOKING_MESSAGES.EVENT_DATE_PLACEHOLDER}
-          leftSection={<Calendar size="1rem" />}
+          leftSection={<Calendar size={16} />}
           minDate={getMinBookingDate()}
           maxDate={getMaxBookingDate()}
           error={errors.eventDate?.message}
@@ -61,7 +61,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
             onChange={(e) => field.onChange(e.currentTarget.value)}
             label={BOOKING_MESSAGES.EVENT_START_TIME_LABEL}
             description={BOOKING_MESSAGES.EVENT_START_TIME_DESCRIPTION}
-            leftSection={<Clock size="1rem" />}
+            leftSection={<Clock size={16} />}
             error={errors.eventStartTime?.message}
             withAsterisk
           />
@@ -76,7 +76,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
             onChange={(e) => field.onChange(e.currentTarget.value)}
             label={BOOKING_MESSAGES.EVENT_END_TIME_LABEL}
             description={BOOKING_MESSAGES.EVENT_END_TIME_DESCRIPTION}
-            leftSection={<Clock size="1rem" />}
+            leftSection={<Clock size={16} />}
             error={errors.eventEndTime?.message}
             withAsterisk
           />
@@ -99,7 +99,7 @@ export const EventDetailsStep = memo(({ control, errors, maxCapacity }: EventDet
           }}
           label={BOOKING_MESSAGES.GUEST_COUNT_LABEL}
           description={`${MIN_GROUP_SIZE} – ${maxCapacity} guests`}
-          leftSection={<Users size="1rem" />}
+          leftSection={<Users size={16} />}
           min={MIN_GROUP_SIZE}
           max={maxCapacity}
           error={errors.guestCount?.message}

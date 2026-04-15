@@ -97,6 +97,22 @@ async def conflict_handler(_request: Request, exc: ConflictError) -> JSONRespons
     return JSONResponse(status_code=409, content={"error": exc.message, "code": exc.code})
 
 
+@app.exception_handler(Exception)
+async def generic_exception_handler(_request: Request, _exc: Exception) -> JSONResponse:
+    """Catch-all for unhandled exceptions.
+
+    Starlette's ServerErrorMiddleware (outermost layer) bypasses CORSMiddleware
+    when it handles uncaught exceptions, so cross-origin clients never see
+    CORS headers on 500 responses — Safari reports this as "access control checks".
+    Registering a handler here keeps the response inside ExceptionMiddleware,
+    which sits inside CORSMiddleware, so CORS headers are always present.
+    """
+    return JSONResponse(
+        status_code=500,
+        content={"error": "An unexpected error occurred.", "code": "INTERNAL_ERROR"},
+    )
+
+
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(bookings_router, prefix="/api/v1")
 app.include_router(organizations_router, prefix="/api/v1")

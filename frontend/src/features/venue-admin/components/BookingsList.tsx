@@ -27,7 +27,7 @@ function BookingsEmptyState() {
   return (
     <Stack align="center" gap="sm" py="xl">
       <ThemeIcon size={48} radius="xl" variant="light" color="gray">
-        <Tray size="1.5rem" />
+        <Tray size={24} />
       </ThemeIcon>
       <Text fw={500}>{ADMIN_MESSAGES.BOOKINGS_EMPTY}</Text>
       <Text size="sm" c="dimmed" ta="center" maw={300}>

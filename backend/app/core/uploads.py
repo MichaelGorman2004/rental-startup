@@ -93,7 +93,11 @@ async def save_upload(file: UploadFile, subfolder: str) -> str:
     file_path = target_dir / filename
 
     # Perform blocking I/O off the async event loop
-    await asyncio.to_thread(target_dir.mkdir, parents=True, exist_ok=True)
-    await asyncio.to_thread(file_path.write_bytes, content)
+    try:
+        await asyncio.to_thread(target_dir.mkdir, parents=True, exist_ok=True)
+        await asyncio.to_thread(file_path.write_bytes, content)
+    except OSError as exc:
+        msg = "Failed to save the uploaded file. Please try again."
+        raise BusinessRuleError(msg) from exc
 
     return f"/{UPLOAD_DIR}/{subfolder}/{filename}"

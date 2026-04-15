@@ -2,16 +2,18 @@ import { type ReactNode } from 'react';
 import {
   BrowserRouter, Routes, Route,
 } from 'react-router-dom';
-import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
+import { ClerkProvider, useAuth } from '@clerk/clerk-react';
+import { Center, Loader } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { ErrorBoundary } from './components';
 import { QueryProvider } from './providers/QueryProvider';
 import { ApiClientInitializer } from './providers/ApiClientInitializer';
 import { AppShell, RoleGuard } from './layout';
+import { OrgSetupGate } from './features/organization';
 import { DashboardPage } from './features/dashboard';
 import { VenueBrowse, VenueDetail } from './features/venues';
 import { BookingForm, BookingsPage } from './features/bookings';
-import { AdminDashboard } from './features/venue-admin';
+import { AdminDashboard, VenueSetupGate } from './features/venue-admin';
 import { SettingsPage } from './features/settings';
 import { LandingPage } from './features/landing';
 import { DemoBrowse, DemoVenueDetail } from './features/demo';
@@ -28,6 +30,36 @@ if (!CLERK_PUBLISHABLE_KEY) {
 /** Wraps a route element in an ErrorBoundary to catch render-time errors. */
 function withErrorBoundary(element: ReactNode): ReactNode {
   return <ErrorBoundary>{element}</ErrorBoundary>;
+}
+
+/**
+ * Root gate for the "/" path.
+ * Subscribes directly to useAuth() so it re-renders immediately when Clerk
+ * resolves the session — including after signup/login navigates here before
+ * Clerk's React context has fully propagated.
+ */
+function RootRoute() {
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <Center mih="100vh">
+        <Loader aria-label="Loading" />
+      </Center>
+    );
+  }
+
+  if (!isSignedIn) {
+    return withErrorBoundary(<LandingPage />);
+  }
+
+  return (
+    <OrgSetupGate>
+      <VenueSetupGate>
+        <AppShell />
+      </VenueSetupGate>
+    </OrgSetupGate>
+  );
 }
 
 /**
@@ -49,19 +81,7 @@ function App() {
               <Route path="/demo/venues/:id" element={withErrorBoundary(<DemoVenueDetail />)} />
 
               {/* Root: Landing (signed out) or Dashboard shell (signed in) */}
-              <Route
-                path="/"
-                element={(
-                  <>
-                    <SignedIn>
-                      <AppShell />
-                    </SignedIn>
-                    <SignedOut>
-                      {withErrorBoundary(<LandingPage />)}
-                    </SignedOut>
-                  </>
-                )}
-              >
+              <Route path="/" element={<RootRoute />}>
                 <Route index element={withErrorBoundary(<DashboardPage />)} />
                 <Route path="venues" element={withErrorBoundary(<RoleGuard roles={['student_org']}><VenueBrowse /></RoleGuard>)} />
                 <Route path="venues/:id" element={withErrorBoundary(<RoleGuard roles={['student_org']}><VenueDetail /></RoleGuard>)} />

@@ -20,7 +20,7 @@ export const VenueSearchBar = memo(({ value, onChange, onClear }: VenueSearchBar
     <TextInput
       size="lg"
       placeholder={VENUE_MESSAGES.SEARCH_PLACEHOLDER}
-      leftSection={<MagnifyingGlass size="1.25rem" />}
+      leftSection={<MagnifyingGlass size={20} />}
       rightSection={value ? <CloseButton size="sm" onClick={onClear} aria-label="Clear search" /> : null}
       value={value}
       onChange={handleChange}

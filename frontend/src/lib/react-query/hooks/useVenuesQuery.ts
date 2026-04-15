@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import type { Venue, VenueFilters, VenueListResponse } from '@/features/venues/types';
 import { VenueType } from '@/features/venues/types/venue.types';
 import {
-  getVenues, getVenue, updateVenue, uploadVenueLogo,
+  getVenues, getVenue, createVenue, updateVenue, uploadVenueLogo,
 } from '../../api/endpoints/venues';
 import { queryKeys } from '../keys';
 import { STALE_TIMES } from '../constants';
@@ -84,6 +84,18 @@ interface UpdateVenueMutationInput {
     address_state: string;
     address_zip: string;
   }>;
+}
+
+/** Mutation hook for creating a new venue (onboarding — only name required). */
+export function useCreateVenueMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (name: string) => createVenue({ name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.venues.all });
+    },
+  });
 }
 
 /** Mutation hook for updating a venue profile. */

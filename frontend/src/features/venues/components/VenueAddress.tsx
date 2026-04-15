@@ -28,7 +28,7 @@ export const VenueAddress = memo(({
       <Group justify="space-between" align="flex-start">
         <Group gap="md">
           <ThemeIcon size="lg" radius="md" variant="light" color="gray">
-            <MapPin size="1.25rem" />
+            <MapPin size={20} />
           </ThemeIcon>
           <div>
             <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.ADDRESS_LABEL}</Text>
@@ -44,7 +44,7 @@ export const VenueAddress = memo(({
           aria-label={VENUE_DETAIL_MESSAGES.OPEN_IN_MAPS}
         >
           <Group gap="xs">
-            <ArrowSquareOut size="0.875rem" />
+            <ArrowSquareOut size={14} />
             {VENUE_DETAIL_MESSAGES.OPEN_IN_MAPS}
           </Group>
         </Anchor>

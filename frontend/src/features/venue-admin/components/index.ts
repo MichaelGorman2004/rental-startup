@@ -1,4 +1,7 @@
 export { AdminDashboard } from './AdminDashboard';
+export { VenueSetupGate } from './VenueSetupGate';
+export { VenueSetupPage } from './VenueSetupPage';
+export { VenueSetupForm } from './VenueSetupForm';
 export { StatsGrid } from './StatsGrid';
 export { StatCard } from './StatCard';
 export { BookingsList } from './BookingsList';

@@ -7,7 +7,7 @@ import { VENUE_MESSAGES } from '../constants/venue-defaults';
 export const VenueEmptyState = memo(() => (
   <Stack align="center" gap="md" py="xl">
     <ThemeIcon size="xl" radius="xl" variant="light" color="gray">
-      <Storefront size="1.5rem" />
+      <Storefront size={24} />
     </ThemeIcon>
     <Stack align="center" gap="xs">
       <Text fw={600}>{VENUE_MESSAGES.NO_RESULTS_TITLE}</Text>

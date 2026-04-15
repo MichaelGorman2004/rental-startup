@@ -3,16 +3,39 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database.session import get_db
 from app.modules.auth.dependencies import get_current_user
-from app.modules.organizations.schemas import OrganizationResponse, OrganizationUpdate
+from app.modules.organizations.schemas import (
+    OrganizationCreate,
+    OrganizationResponse,
+    OrganizationUpdate,
+)
 from app.modules.organizations.services import organization_service
 from app.modules.users.models import User
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
+
+
+@router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+    response_model=OrganizationResponse,
+    summary="Create organization profile",
+)
+async def create_organization(
+    create_data: OrganizationCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> OrganizationResponse:
+    """Create a new organization for the current user (student_org only)."""
+    return await organization_service.create_org(
+        db=db,
+        create_data=create_data,
+        current_user=current_user,
+    )
 
 
 @router.get(

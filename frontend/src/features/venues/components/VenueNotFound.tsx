@@ -17,7 +17,7 @@ export const VenueNotFound = memo(({ backPath = '/venues' }: { backPath?: string
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size="xl" radius="xl" variant="light" color="red">
-        <Buildings size="1.5rem" />
+        <Buildings size={24} />
       </ThemeIcon>
       <Stack align="center" gap="xs">
         <Text fw={600}>{VENUE_DETAIL_MESSAGES.NOT_FOUND_TITLE}</Text>

@@ -34,7 +34,7 @@ export function FeaturedVenues() {
             component={Link}
             to="/demo/venues"
             variant="subtle"
-            rightSection={<ArrowRight size="1rem" />}
+            rightSection={<ArrowRight size={16} />}
             aria-label={FEATURED.CTA}
           >
             {FEATURED.CTA}

@@ -21,6 +21,7 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-01-15T00:00:00Z',
     updatedAt: '2026-01-15T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
   {
     id: '2',
@@ -36,6 +37,7 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-01-20T00:00:00Z',
     updatedAt: '2026-01-20T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
   {
     id: '3',
@@ -51,6 +53,7 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-01-25T00:00:00Z',
     updatedAt: '2026-01-25T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
   {
     id: '4',
@@ -66,6 +69,7 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-02-01T00:00:00Z',
     updatedAt: '2026-02-01T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
   {
     id: '5',
@@ -81,6 +85,7 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-02-05T00:00:00Z',
     updatedAt: '2026-02-05T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
   {
     id: '6',
@@ -96,5 +101,6 @@ export const MOCK_VENUES: Venue[] = [
     createdAt: '2026-02-10T00:00:00Z',
     updatedAt: '2026-02-10T00:00:00Z',
     deletedAt: null,
+    logoUrl: null,
   },
 ];

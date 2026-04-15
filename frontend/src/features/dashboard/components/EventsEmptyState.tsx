@@ -13,7 +13,7 @@ export const EventsEmptyState = memo(() => {
 
   return (
     <Stack align="center" py="xl" gap="md">
-      <CalendarX size="3rem" color="gray" />
+      <CalendarX size={48} color="gray" />
       <Text fw={500}>{DASHBOARD_CONSTANTS.MESSAGES.NO_EVENTS}</Text>
       <Text size="sm" c="dimmed">{DASHBOARD_CONSTANTS.MESSAGES.NO_EVENTS_SUBTITLE}</Text>
       <Button onClick={handleBrowseClick}>Browse Venues</Button>

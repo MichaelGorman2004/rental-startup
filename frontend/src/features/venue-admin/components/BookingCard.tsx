@@ -47,17 +47,17 @@ export const BookingCard = memo(({
 
         <Group gap="lg">
           <Group gap="xs">
-            <Box c="dimmed"><Calendar size="0.875rem" /></Box>
+            <Box c="dimmed"><Calendar size={14} /></Box>
             <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><Clock size="0.875rem" /></Box>
+            <Box c="dimmed"><Clock size={14} /></Box>
             <Text size="sm">
               {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
             </Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><Users size="0.875rem" /></Box>
+            <Box c="dimmed"><Users size={14} /></Box>
             <Text size="sm">
               {booking.guestCount}
               {' '}
@@ -72,7 +72,7 @@ export const BookingCard = memo(({
               size="xs"
               color="green"
               variant="light"
-              leftSection={<Check size="0.875rem" />}
+              leftSection={<Check size={14} />}
               onClick={handleAccept}
               loading={isActionPending}
               aria-label={`${ADMIN_MESSAGES.ACTION_ACCEPT} ${booking.eventName}`}
@@ -83,7 +83,7 @@ export const BookingCard = memo(({
               size="xs"
               color="red"
               variant="light"
-              leftSection={<X size="0.875rem" />}
+              leftSection={<X size={14} />}
               onClick={handleDecline}
               loading={isActionPending}
               aria-label={`${ADMIN_MESSAGES.ACTION_DECLINE} ${booking.eventName}`}

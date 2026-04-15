@@ -1,5 +1,25 @@
 export { STATUS_BADGE_COLORS, STATUS_LABELS } from '@/lib/constants';
 
+/** UI messages for the venue setup (onboarding) flow. */
+export const VENUE_SETUP_MESSAGES = {
+  PAGE_TITLE: 'Set up your venue',
+  PAGE_SUBTITLE: 'Give your venue a name to get started. You can add more details later.',
+
+  FORM_NAME: 'Venue Name',
+  FORM_NAME_PLACEHOLDER: 'e.g. The Corner Pub',
+
+  SUBMIT_BUTTON: 'Continue',
+  SUBMIT_ERROR: 'Failed to create venue. Please try again.',
+
+  VALIDATION_NAME_REQUIRED: 'Venue name is required',
+} as const;
+
+/** Validation limits for the venue setup form. */
+export const VENUE_SETUP_VALIDATION = {
+  NAME_MIN: 2,
+  NAME_MAX: 100,
+} as const;
+
 /** Auto-refresh interval for venue stats in milliseconds (60 seconds). */
 export const STATS_REFETCH_INTERVAL_MS = 60 * 1000;
 

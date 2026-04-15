@@ -23,6 +23,7 @@ export function VenueProfileTab() {
       logoFile={logoFile}
       onLogoChange={handleLogoChange}
       isUploadingLogo={isUploadingLogo}
+      currentLogoUrl={venue.logoUrl ?? undefined}
     />
   );
 }

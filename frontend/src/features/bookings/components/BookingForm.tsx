@@ -58,7 +58,7 @@ export function BookingForm() {
                 {isConflict && (
                   <Alert
                     color="red"
-                    icon={<WarningCircle size="1rem" />}
+                    icon={<WarningCircle size={16} />}
                     withCloseButton
                     onClose={resetBookingError}
                     aria-label="Booking conflict error"
@@ -70,7 +70,7 @@ export function BookingForm() {
                 {isBookingError && !isConflict && (
                   <Alert
                     color="red"
-                    icon={<WarningCircle size="1rem" />}
+                    icon={<WarningCircle size={16} />}
                     withCloseButton
                     onClose={resetBookingError}
                     aria-label="Booking submission error"
@@ -108,7 +108,7 @@ export function BookingForm() {
                 <Group justify="space-between">
                   <Button
                     variant="subtle"
-                    leftSection={<ArrowLeft size="1rem" />}
+                    leftSection={<ArrowLeft size={16} />}
                     onClick={handleBack}
                     disabled={isFirstStep}
                   >
@@ -117,7 +117,7 @@ export function BookingForm() {
 
                   {isLastStep ? (
                     <Button
-                      leftSection={<PaperPlaneTilt size="1rem" />}
+                      leftSection={<PaperPlaneTilt size={16} />}
                       onClick={handleSubmit}
                       loading={isSubmitting}
                     >
@@ -125,7 +125,7 @@ export function BookingForm() {
                     </Button>
                   ) : (
                     <Button
-                      rightSection={<ArrowRight size="1rem" />}
+                      rightSection={<ArrowRight size={16} />}
                       onClick={handleNext}
                     >
                       {BOOKING_MESSAGES.NEXT}

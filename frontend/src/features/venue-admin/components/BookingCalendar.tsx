@@ -26,7 +26,7 @@ export function BookingCalendar({ bookings }: BookingCalendarProps) {
     <Stack gap="md">
       <Group justify="space-between">
         <Group gap="xs">
-          <CalendarBlank size="1.25rem" />
+          <CalendarBlank size={20} />
           <Title order={4}>{CALENDAR_MESSAGES.SECTION_TITLE}</Title>
         </Group>
         <Group gap="xs">
@@ -36,14 +36,14 @@ export function BookingCalendar({ bookings }: BookingCalendarProps) {
             aria-label={CALENDAR_MESSAGES.GO_TO_TODAY}
             size="sm"
           >
-            <CalendarBlank size="1rem" />
+            <CalendarBlank size={16} />
           </ActionIcon>
           <ActionIcon
             variant="subtle"
             onClick={goToPreviousMonth}
             aria-label={CALENDAR_MESSAGES.PREVIOUS_MONTH}
           >
-            <CaretLeft size="1rem" />
+            <CaretLeft size={16} />
           </ActionIcon>
           <Text fw={500} size="sm" miw={120} ta="center">
             {monthLabel}
@@ -53,7 +53,7 @@ export function BookingCalendar({ bookings }: BookingCalendarProps) {
             onClick={goToNextMonth}
             aria-label={CALENDAR_MESSAGES.NEXT_MONTH}
           >
-            <CaretRight size="1rem" />
+            <CaretRight size={16} />
           </ActionIcon>
         </Group>
       </Group>

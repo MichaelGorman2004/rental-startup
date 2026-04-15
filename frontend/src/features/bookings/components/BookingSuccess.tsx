@@ -29,7 +29,7 @@ export const BookingSuccess = memo(({ booking }: BookingSuccessProps) => {
   return (
     <Stack gap="xl" align="center" py="xl">
       <ThemeIcon size={80} radius="xl" variant="light" color="green">
-        <CheckCircle size="2.5rem" />
+        <CheckCircle size={40} />
       </ThemeIcon>
 
       <Stack gap="xs" align="center">
@@ -42,22 +42,22 @@ export const BookingSuccess = memo(({ booking }: BookingSuccessProps) => {
       <Card withBorder p="lg" w="100%" maw={420}>
         <Stack gap="sm">
           <Group gap="xs">
-            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
+            <Box c="dimmed"><CalendarBlank size={16} /></Box>
             <Text size="sm" fw={500}>{booking.eventName}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><CalendarBlank size="1rem" /></Box>
+            <Box c="dimmed"><CalendarBlank size={16} /></Box>
             <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><Clock size="1rem" /></Box>
+            <Box c="dimmed"><Clock size={16} /></Box>
             <Text size="sm">
               {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
             </Text>
           </Group>
           {booking.venueName ? (
             <Group gap="xs">
-              <Box c="dimmed"><Storefront size="1rem" /></Box>
+              <Box c="dimmed"><Storefront size={16} /></Box>
               <Text size="sm" c="dimmed">{booking.venueName}</Text>
             </Group>
           ) : null}
@@ -67,14 +67,14 @@ export const BookingSuccess = memo(({ booking }: BookingSuccessProps) => {
       <Group gap="md">
         <Button
           variant="filled"
-          leftSection={<CalendarBlank size="1rem" />}
+          leftSection={<CalendarBlank size={16} />}
           onClick={handleViewBookings}
         >
           {BOOKING_MESSAGES.VIEW_BOOKINGS}
         </Button>
         <Button
           variant="light"
-          leftSection={<Storefront size="1rem" />}
+          leftSection={<Storefront size={16} />}
           onClick={handleBrowseVenues}
         >
           {BOOKING_MESSAGES.BROWSE_VENUES}

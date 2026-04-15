@@ -88,11 +88,33 @@ class VenueBase(BaseModel):
         return _validate_state_code(v)
 
 
-class VenueCreate(VenueBase):
+class VenueCreate(BaseModel):
     """Schema for creating a new venue.
 
-    Inherits all fields from VenueBase. Owner is set from authenticated user.
+    Only ``name`` is required; all other fields are optional to support
+    minimal onboarding (venue admins can fill in details later via PATCH).
+    Owner is set from the authenticated user.
     """
+
+    name: str = Field(
+        ...,
+        min_length=NAME_MIN_LENGTH,
+        max_length=NAME_MAX_LENGTH,
+        description="Venue name (e.g., 'The Corner Pub')",
+    )
+    type: VenueType | None = None
+    capacity: int | None = Field(None, ge=CAPACITY_MIN, le=CAPACITY_MAX)
+    base_price_cents: int | None = Field(None, ge=BASE_PRICE_MIN_CENTS, le=BASE_PRICE_MAX_CENTS)
+    address_street: str | None = Field(None, max_length=255)
+    address_city: str | None = Field(None, max_length=100)
+    address_state: str | None = Field(None, min_length=2, max_length=2)
+    address_zip: str | None = Field(None, max_length=10)
+
+    @field_validator("address_state")
+    @classmethod
+    def validate_state_code(cls, v: str | None) -> str | None:
+        """Ensure state code is uppercase if provided."""
+        return _validate_state_code(v)
 
 
 class VenueUpdate(BaseModel):

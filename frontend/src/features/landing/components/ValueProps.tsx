@@ -41,7 +41,7 @@ function PropCard({ prop, index, isVisible }: PropCardProps) {
     >
       <Stack gap="sm">
         <ThemeIcon size={40} radius="md" variant="light" color="copper">
-          <Icon size="1.2rem" />
+          <Icon size={19} />
         </ThemeIcon>
         <Text fw={600}>{prop.title}</Text>
         <Text size="sm" c="dimmed" lh={1.6}>{prop.description}</Text>

@@ -10,7 +10,7 @@ interface VenueErrorStateProps {
 /** Error state displayed when venue fetching fails. */
 export const VenueErrorState = memo(({ onRetry }: VenueErrorStateProps) => (
   <Stack align="center" gap="md" py="xl">
-    <Alert icon={<WarningCircle size="1rem" />} color="red" variant="light">
+    <Alert icon={<WarningCircle size={16} />} color="red" variant="light">
       {VENUE_MESSAGES.ERROR_LOADING}
     </Alert>
     <Button variant="light" onClick={onRetry}>{VENUE_MESSAGES.RETRY}</Button>

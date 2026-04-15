@@ -67,11 +67,11 @@ interface AdminBookingApiResponse {
   created_at: string;
 }
 
-/** Backend snake_case venue stats shape. */
+/** Backend venue stats shape — uses camelCase aliases (serialization_alias in Pydantic). */
 interface VenueStatsApiResponse {
-  bookings_this_month: number;
-  revenue_cents: number;
-  occupancy_percent: number;
+  bookingsThisMonth: number;
+  revenueCents: number;
+  occupancyPercent: number;
 }
 
 /** Transform a backend admin booking to frontend shape. */
@@ -93,9 +93,9 @@ function toAdminBooking(raw: AdminBookingApiResponse): AdminBookingView {
 /** Transform backend venue stats to frontend shape. */
 function toVenueStats(raw: VenueStatsApiResponse): VenueStats {
   return {
-    bookingsThisMonth: raw.bookings_this_month,
-    revenueCents: raw.revenue_cents,
-    occupancyPercent: raw.occupancy_percent,
+    bookingsThisMonth: raw.bookingsThisMonth,
+    revenueCents: raw.revenueCents,
+    occupancyPercent: raw.occupancyPercent,
   };
 }
 

@@ -20,16 +20,23 @@ interface VenueProfileFormProps {
   onLogoChange: (file: File | null) => void;
   /** Whether a logo upload is currently in progress. */
   isUploadingLogo?: boolean;
+  /** Existing logo URL to display before a new file is selected. */
+  currentLogoUrl?: string;
 }
 
 /** Venue profile edit form with all editable venue fields. */
 export function VenueProfileForm({
-  form, onSubmit, isPending, logoFile, onLogoChange, isUploadingLogo,
+  form, onSubmit, isPending, logoFile, onLogoChange, isUploadingLogo, currentLogoUrl,
 }: VenueProfileFormProps) {
   return (
     <form onSubmit={onSubmit}>
       <Stack gap="md">
-        <LogoUpload value={logoFile} onChange={onLogoChange} isUploading={isUploadingLogo} />
+        <LogoUpload
+          value={logoFile}
+          onChange={onLogoChange}
+          currentLogoUrl={currentLogoUrl}
+          isUploading={isUploadingLogo}
+        />
         <TextInput
           label={VENUE_PROFILE_MESSAGES.FORM_NAME}
           maxLength={VENUE_PROFILE_VALIDATION.NAME_MAX}

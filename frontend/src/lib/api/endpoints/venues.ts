@@ -18,18 +18,19 @@ interface VenueApiResponse {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  logo_url: string | null;
 }
 
-/** Request body for creating a venue (snake_case for backend). */
+/** Request body for creating a venue (snake_case for backend). Only name is required. */
 interface CreateVenuePayload {
   name: string;
-  type: VenueType;
-  capacity: number;
-  base_price_cents: number;
-  address_street: string;
-  address_city: string;
-  address_state: string;
-  address_zip: string;
+  type?: VenueType | null;
+  capacity?: number | null;
+  base_price_cents?: number | null;
+  address_street?: string | null;
+  address_city?: string | null;
+  address_state?: string | null;
+  address_zip?: string | null;
 }
 
 /** Request body for updating a venue (all fields optional). */
@@ -66,6 +67,7 @@ function toVenue(raw: VenueApiResponse): Venue {
     createdAt: raw.created_at,
     updatedAt: raw.updated_at,
     deletedAt: raw.deleted_at,
+    logoUrl: raw.logo_url,
   };
 }
 
@@ -153,7 +155,6 @@ export async function uploadVenueLogo(
   const { data } = await apiClient.post<VenueApiResponse>(
     `/venues/${venueId}/logo`,
     formData,
-    { headers: { 'Content-Type': 'multipart/form-data' } },
   );
   return toVenue(data);
 }

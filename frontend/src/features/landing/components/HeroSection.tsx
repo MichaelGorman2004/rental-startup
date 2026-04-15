@@ -28,7 +28,7 @@ export function HeroSection() {
             component={Link}
             to="/demo/venues"
             size="lg"
-            rightSection={<ArrowRight size="1.1rem" />}
+            rightSection={<ArrowRight size={18} />}
             aria-label={HERO.CTA_PRIMARY}
           >
             {HERO.CTA_PRIMARY}

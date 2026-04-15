@@ -1,3 +1,24 @@
+/** UI messages for the organization setup (onboarding) flow. */
+export const ORG_SETUP_MESSAGES = {
+  PAGE_TITLE: 'Set up your organization',
+  PAGE_SUBTITLE: 'Complete your profile to start booking venues.',
+
+  FORM_NAME: 'Organization Name',
+  FORM_TYPE: 'Organization Type',
+  FORM_UNIVERSITY: 'University',
+
+  SUBMIT_BUTTON: 'Continue',
+  SUBMIT_SUCCESS: 'Organization created successfully',
+  SUBMIT_ERROR: 'Failed to create organization. Please try again.',
+
+  TYPE_PLACEHOLDER: 'Select type',
+  UNIVERSITY_PLACEHOLDER: 'e.g. Ohio State University',
+
+  VALIDATION_NAME_REQUIRED: 'Organization name is required',
+  VALIDATION_TYPE_REQUIRED: 'Organization type is required',
+  VALIDATION_UNIVERSITY_REQUIRED: 'University is required',
+} as const;
+
 /** UI messages for the organization profile feature. */
 export const ORG_MESSAGES = {
   PAGE_TITLE: 'Organization Profile',

@@ -40,7 +40,7 @@ export function CTAFooter() {
               component={Link}
               to="/signup"
               size="lg"
-              rightSection={<ArrowRight size="1.1rem" />}
+              rightSection={<ArrowRight size={18} />}
               aria-label={CTA_FOOTER.CTA}
             >
               {CTA_FOOTER.CTA}

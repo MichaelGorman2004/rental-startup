@@ -14,7 +14,7 @@ export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) =>
     return (
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         <StatCard
-          icon={<ChartBar size="1.25rem" />}
+          icon={<ChartBar size={20} />}
           label="Stats"
           value="Failed to load"
           color="red"
@@ -37,19 +37,19 @@ export const StatsGrid = memo(({ stats, isLoading, isError }: StatsGridProps) =>
   return (
     <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
       <StatCard
-        icon={<CalendarBlank size="1.25rem" />}
+        icon={<CalendarBlank size={20} />}
         label={ADMIN_MESSAGES.STATS_BOOKINGS}
         value={stats.bookingsThisMonth.toString()}
         color="copper"
       />
       <StatCard
-        icon={<CurrencyDollar size="1.25rem" />}
+        icon={<CurrencyDollar size={20} />}
         label={ADMIN_MESSAGES.STATS_REVENUE}
         value={formatPrice(stats.revenueCents)}
         color="green"
       />
       <StatCard
-        icon={<ChartBar size="1.25rem" />}
+        icon={<ChartBar size={20} />}
         label={ADMIN_MESSAGES.STATS_OCCUPANCY}
         value={`${stats.occupancyPercent}%`}
         color="cyan"

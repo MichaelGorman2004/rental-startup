@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import {
   SquaresFour, Buildings, CalendarBlank, GearSix,
-  ChartBar,
 } from '@phosphor-icons/react';
 
 import {
@@ -30,9 +29,6 @@ const NAV_ITEMS: readonly NavItem[] = [
   },
   {
     label: 'Bookings', icon: CalendarBlank, route: '/bookings', roles: ['student_org'],
-  },
-  {
-    label: 'Venue Admin', icon: ChartBar, route: '/admin', roles: ['venue_admin'],
   },
   { label: 'Settings', icon: GearSix, route: '/settings' },
 ];
@@ -82,7 +78,7 @@ export function Sidebar() {
           <NavLink
             key={item.route}
             label={item.label}
-            leftSection={<item.icon size="1.125rem" />}
+            leftSection={<item.icon size={18} />}
             active={item.route === '/' ? location.pathname === '/' : location.pathname.startsWith(item.route)}
             onClick={handleNavClick(item.route)}
             classNames={{ root: classes['link'], label: classes['linkLabel'] }}

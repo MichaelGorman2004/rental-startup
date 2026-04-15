@@ -18,7 +18,6 @@ const NAV_ITEMS: readonly NavItem[] = [
   { label: 'Dashboard', route: '/' },
   { label: 'Venues', route: '/venues', roles: ['student_org'] },
   { label: 'Bookings', route: '/bookings', roles: ['student_org'] },
-  { label: 'Admin', route: '/admin', roles: ['venue_admin'] },
   { label: 'Settings', route: '/settings' },
 ];
 

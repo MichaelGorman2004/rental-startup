@@ -6,12 +6,13 @@ from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants.enums import UserRole
-from app.core.exceptions import AuthorizationError, ResourceNotFoundError
+from app.core.exceptions import AuthorizationError, ConflictError, ResourceNotFoundError
 from app.core.uploads import save_upload
 from app.modules.organizations.constants import OrgError
 from app.modules.organizations.models import Organization
 from app.modules.organizations.repository import OrganizationRepository
 from app.modules.organizations.schemas import (
+    OrganizationCreate,
     OrganizationResponse,
     OrganizationUpdate,
 )
@@ -37,6 +38,29 @@ async def _require_org_owner(
 
 class OrganizationService:
     """Service layer for organization business logic."""
+
+    @staticmethod
+    async def create_org(
+        db: AsyncSession,
+        create_data: OrganizationCreate,
+        current_user: User,
+    ) -> OrganizationResponse:
+        """Create a new organization for the current user (student_org only)."""
+        if current_user.role != UserRole.student_org:
+            raise AuthorizationError(OrgError.STUDENT_ORG_REQUIRED)
+
+        existing = await OrganizationRepository.get_by_owner_id(db, current_user.id)
+        if existing:
+            raise ConflictError(OrgError.ALREADY_HAS_ORGANIZATION)
+
+        org = await OrganizationRepository.create(
+            db=db,
+            name=create_data.name,
+            owner_id=current_user.id,
+            org_type=create_data.type,
+            university=create_data.university,
+        )
+        return OrganizationResponse.model_validate(org)
 
     @staticmethod
     async def get_org_by_id(

@@ -39,7 +39,7 @@ function StepCard({ step, index, isVisible }: StepCardProps) {
       <Stack gap="md" align="center" ta="center">
         <StepNumber step={index + 1} isVisible={isVisible} />
         <ThemeIcon size={48} radius="xl" variant="light" color="copper">
-          <Icon size="1.4rem" />
+          <Icon size={22} />
         </ThemeIcon>
         <Text fw={600} size="lg">{step.title}</Text>
         <Text size="sm" c="dimmed" lh={1.6}>{step.description}</Text>
