@@ -51,8 +51,6 @@ export interface VenueStatsResponse {
   bookingsThisMonth: number;
   /** Total revenue in cents */
   revenueCents: number;
-  /** Average rating (null if no reviews) */
-  averageRating: number | null;
   /** Occupancy percentage (0-100) */
   occupancyPercent: number;
 }

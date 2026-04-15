@@ -2,6 +2,9 @@ export {
   useVenuesQuery,
   useVenueDetailQuery,
   usePrefetchVenue,
+  useCreateVenueMutation,
+  useUpdateVenueMutation,
+  useUploadVenueLogoMutation,
 } from './useVenuesQuery';
 
 export {
@@ -13,5 +16,8 @@ export {
 
 export {
   useMyOrganizationQuery,
+  useOrgStatusQuery,
   useUpdateOrganizationMutation,
+  useCreateOrganizationMutation,
+  useUploadOrgLogoMutation,
 } from './useOrganizationsQuery';

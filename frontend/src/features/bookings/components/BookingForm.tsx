@@ -1,8 +1,11 @@
 import type { Control } from 'react-hook-form';
 import {
-  Container, Stack, Grid, Title, Text, Stepper, Group, Button,
+  Container, Stack, Grid, Title, Text,
+  Stepper, Group, Button, Alert,
 } from '@mantine/core';
-import { ArrowLeft, ArrowRight, PaperPlaneTilt } from '@phosphor-icons/react';
+import {
+  ArrowLeft, ArrowRight, PaperPlaneTilt, WarningCircle,
+} from '@phosphor-icons/react';
 import { useBookingPage } from '../hooks';
 import type { BookingFormValues } from '../types';
 import {
@@ -29,7 +32,8 @@ export function BookingForm() {
   const {
     venue, isLoading, isError, isNotFound, refetch,
     form, activeStep, handleNext, handleBack, isFirstStep, isLastStep,
-    estimatedCostCents, isSubmitting, isSuccess, confirmation, handleSubmit,
+    estimatedCostCents, isSubmitting, isSuccess, isBookingError, isConflict, resetBookingError,
+    confirmation, handleSubmit,
   } = useBookingPage();
 
   if (isError) return <Container size="md" py="xl"><VenueErrorState onRetry={refetch} /></Container>;
@@ -51,6 +55,30 @@ export function BookingForm() {
           <Grid gutter="xl">
             <Grid.Col span={{ base: 12, md: 8 }}>
               <Stack gap="lg">
+                {isConflict && (
+                  <Alert
+                    color="red"
+                    icon={<WarningCircle size={16} />}
+                    withCloseButton
+                    onClose={resetBookingError}
+                    aria-label="Booking conflict error"
+                  >
+                    {BOOKING_MESSAGES.CONFLICT_ERROR}
+                  </Alert>
+                )}
+
+                {isBookingError && !isConflict && (
+                  <Alert
+                    color="red"
+                    icon={<WarningCircle size={16} />}
+                    withCloseButton
+                    onClose={resetBookingError}
+                    aria-label="Booking submission error"
+                  >
+                    {BOOKING_MESSAGES.SUBMIT_ERROR}
+                  </Alert>
+                )}
+
                 <Stepper active={activeStep} size="sm">
                   {BOOKING_STEP_LABELS.map((label, index) => (
                     <Stepper.Step
@@ -80,7 +108,7 @@ export function BookingForm() {
                 <Group justify="space-between">
                   <Button
                     variant="subtle"
-                    leftSection={<ArrowLeft size="1rem" />}
+                    leftSection={<ArrowLeft size={16} />}
                     onClick={handleBack}
                     disabled={isFirstStep}
                   >
@@ -89,7 +117,7 @@ export function BookingForm() {
 
                   {isLastStep ? (
                     <Button
-                      leftSection={<PaperPlaneTilt size="1rem" />}
+                      leftSection={<PaperPlaneTilt size={16} />}
                       onClick={handleSubmit}
                       loading={isSubmitting}
                     >
@@ -97,7 +125,7 @@ export function BookingForm() {
                     </Button>
                   ) : (
                     <Button
-                      rightSection={<ArrowRight size="1rem" />}
+                      rightSection={<ArrowRight size={16} />}
                       onClick={handleNext}
                     >
                       {BOOKING_MESSAGES.NEXT}

@@ -9,7 +9,8 @@ import { OrgProfileSkeleton } from './OrgProfileSkeleton';
 /** Organization profile page with form editing. */
 export function OrgProfilePage() {
   const {
-    isLoading, isError, form, handleSubmit, isPending,
+    organization, isLoading, isError, form, handleSubmit, isPending,
+    logoFile, handleLogoChange, isUploadingLogo,
   } = useOrgProfilePage();
 
   if (isLoading) return <OrgProfileSkeleton />;
@@ -20,7 +21,15 @@ export function OrgProfilePage() {
       <Stack gap="lg">
         <Title order={2}>{ORG_MESSAGES.PAGE_TITLE}</Title>
         <Text c="dimmed">{ORG_MESSAGES.PAGE_SUBTITLE}</Text>
-        <OrgProfileForm form={form} onSubmit={handleSubmit} isPending={isPending} />
+        <OrgProfileForm
+          form={form}
+          onSubmit={handleSubmit}
+          isPending={isPending}
+          organization={organization}
+          logoFile={logoFile}
+          onLogoChange={handleLogoChange}
+          isUploadingLogo={isUploadingLogo}
+        />
       </Stack>
     </Container>
   );

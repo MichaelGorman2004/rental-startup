@@ -37,7 +37,7 @@ export const UpcomingEvents = memo(() => {
     return (
       <Stack gap="md">
         <SectionLabel />
-        <Alert color="red" icon={<WarningCircle size="1rem" />}>
+        <Alert color="red" icon={<WarningCircle size={16} />}>
           <Group justify="space-between">
             {DASHBOARD_CONSTANTS.MESSAGES.ERROR_LOADING}
             <Button size="xs" onClick={handleRetry}>

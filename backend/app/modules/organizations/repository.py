@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.constants.enums import OrganizationType
 from app.modules.organizations.models import Organization
 from app.modules.organizations.schemas import OrganizationUpdate
 
@@ -17,17 +18,18 @@ class OrganizationRepository:
         db: AsyncSession,
         name: str,
         owner_id: UUID,
+        org_type: OrganizationType | None = None,
+        university: str | None = None,
     ) -> Organization:
         """
-        Create a new organization with minimal required fields.
-
-        Used during signup when only name is provided. Users can
-        complete their profile (type, university, etc.) later.
+        Create a new organization.
 
         Args:
             db: Database session.
             name: Organization name.
             owner_id: Owner user ID.
+            org_type: Organization classification (optional).
+            university: University name (optional).
 
         Returns:
             Created organization.
@@ -35,6 +37,8 @@ class OrganizationRepository:
         org = Organization(
             name=name,
             owner_id=owner_id,
+            type=org_type,
+            university=university,
         )
 
         db.add(org)
@@ -74,6 +78,20 @@ class OrganizationRepository:
 
         for field, value in update_dict.items():
             setattr(org, field, value)
+
+        await db.commit()
+        await db.refresh(org)
+
+        return org
+
+    @staticmethod
+    async def update_logo_url(
+        db: AsyncSession,
+        org: Organization,
+        logo_url: str,
+    ) -> Organization:
+        """Update the logo URL for an organization."""
+        org.logo_url = logo_url
 
         await db.commit()
         await db.refresh(org)

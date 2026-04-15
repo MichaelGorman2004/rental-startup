@@ -50,6 +50,8 @@ export interface Venue {
   updatedAt: string;
   /** ISO 8601 timestamp of soft delete (null if active) */
   deletedAt: string | null;
+  /** URL of the venue logo image, or null if not set */
+  logoUrl: string | null;
 }
 
 /**

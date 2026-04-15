@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CreateBookingRequest } from '@/features/bookings/types';
-import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
+import type { VenueStats } from '@/features/venue-admin/types';
 import type { MyBooking } from '../../api/endpoints/bookings';
 import {
   createBooking,
@@ -32,10 +32,10 @@ export function useCreateBookingMutation() {
  * Query hook for venue admin booking list.
  * Fetches bookings for a specific venue with 2-min stale time.
  */
-export function useVenueBookingsQuery(venueId: string) {
-  return useQuery<AdminBooking[]>({
-    queryKey: queryKeys.admin.bookings(venueId),
-    queryFn: () => getVenueBookings(venueId),
+export function useVenueBookingsQuery(venueId: string, page: number = 1, pageSize: number = 20) {
+  return useQuery({
+    queryKey: [...queryKeys.admin.bookings(venueId), page],
+    queryFn: () => getVenueBookings(venueId, { page, page_size: pageSize }),
     staleTime: STALE_TIMES.BOOKINGS,
     enabled: Boolean(venueId),
   });

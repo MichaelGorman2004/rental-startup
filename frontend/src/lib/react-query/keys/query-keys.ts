@@ -21,6 +21,7 @@ export const queryKeys = {
     ] as const,
     details: () => [...queryKeys.venues.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.venues.details(), id] as const,
+    me: () => [...queryKeys.venues.all, 'me'] as const,
   },
 
   /** Booking-related query keys. */
@@ -62,5 +63,6 @@ export const queryKeys = {
   dashboard: {
     all: ['dashboard'] as const,
     events: () => [...queryKeys.dashboard.all, 'events'] as const,
+    summary: () => [...queryKeys.dashboard.all, 'summary'] as const,
   },
 } as const;

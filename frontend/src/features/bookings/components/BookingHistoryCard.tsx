@@ -38,17 +38,17 @@ export const BookingHistoryCard = memo(({ booking, onCancel }: BookingHistoryCar
 
         <Group gap="lg">
           <Group gap="xs">
-            <Box c="dimmed"><Calendar size="0.875rem" /></Box>
+            <Box c="dimmed"><Calendar size={14} /></Box>
             <Text size="sm">{formatBookingDate(new Date(`${booking.eventDate}T00:00:00Z`))}</Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><Clock size="0.875rem" /></Box>
+            <Box c="dimmed"><Clock size={14} /></Box>
             <Text size="sm">
               {formatTimeRange(booking.eventStartTime, booking.eventEndTime)}
             </Text>
           </Group>
           <Group gap="xs">
-            <Box c="dimmed"><Users size="0.875rem" /></Box>
+            <Box c="dimmed"><Users size={14} /></Box>
             <Text size="sm">
               {`${booking.guestCount} ${MY_BOOKINGS_MESSAGES.GUESTS_LABEL}`}
             </Text>

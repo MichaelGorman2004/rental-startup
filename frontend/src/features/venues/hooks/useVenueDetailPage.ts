@@ -25,7 +25,7 @@ export function useVenueDetailPage() {
     venue, isLoading, isError, isNotFound, refetch,
   } = useVenueDetail(id);
 
-  const isStudentOrg = user?.unsafeMetadata?.['role'] === 'student_org';
+  const isStudentOrg = user?.publicMetadata?.['role'] === 'student_org';
   const breadcrumbs = useMemo(() => buildBreadcrumbs(venue?.name), [venue?.name]);
 
   return {

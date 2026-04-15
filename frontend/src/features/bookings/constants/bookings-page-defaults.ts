@@ -34,3 +34,11 @@ export const BOOKING_STATUS_FILTERS = [
 
 /** Number of skeleton cards for loading state. */
 export const BOOKINGS_PAGE_SKELETON_COUNT = 3;
+
+/** Default number of bookings per page. */
+export const BOOKINGS_PAGE_SIZE = 20;
+
+/** Pagination messages. */
+export const BOOKINGS_PAGINATION = {
+  PAGE_INFO: (page: number, totalPages: number) => `Page ${page} of ${totalPages}`,
+} as const;

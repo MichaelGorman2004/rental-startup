@@ -14,7 +14,7 @@ export const AccessDenied = memo(() => {
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size={64} radius="xl" variant="light" color="red">
-        <ShieldSlash size="2rem" />
+        <ShieldSlash size={32} />
       </ThemeIcon>
       <Title order={3}>{ADMIN_MESSAGES.ACCESS_DENIED_TITLE}</Title>
       <Text c="dimmed" ta="center" maw={400}>

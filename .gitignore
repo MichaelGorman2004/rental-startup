@@ -53,6 +53,9 @@ htmlcov/
 tmp/
 temp/
 
+# Remotion video project
+remotion/
+
 .playwright/
 .playwright-report/
 .playwright-test-results/

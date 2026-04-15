@@ -33,13 +33,5 @@ export interface ValidatedBookingData {
   budgetCents: number | null;
 }
 
-/** API request body for creating a booking. */
-export interface CreateBookingRequest {
-  venueId: string;
-  eventName: string;
-  eventDate: string;
-  eventStartTime: string;
-  eventEndTime: string;
-  guestCount: number;
-  specialRequests: string;
-}
+/** Re-export CreateBookingRequest from shared as single source of truth. */
+export type { CreateBookingRequest } from '@venuelink/shared';

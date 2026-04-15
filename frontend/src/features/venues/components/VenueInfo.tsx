@@ -18,7 +18,7 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
     <Card withBorder>
       <Group gap="md">
         <ThemeIcon size="lg" radius="md" variant="light" color="copper">
-          <Users size="1.25rem" />
+          <Users size={20} />
         </ThemeIcon>
         <div>
           <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.CAPACITY_LABEL}</Text>
@@ -33,7 +33,7 @@ export const VenueInfo = memo(({ capacity, basePriceCents }: VenueInfoProps) => 
     <Card withBorder>
       <Group gap="md">
         <ThemeIcon size="lg" radius="md" variant="light" color="green">
-          <CurrencyDollar size="1.25rem" />
+          <CurrencyDollar size={20} />
         </ThemeIcon>
         <div>
           <Text size="sm" c="dimmed">{VENUE_DETAIL_MESSAGES.PRICE_LABEL}</Text>

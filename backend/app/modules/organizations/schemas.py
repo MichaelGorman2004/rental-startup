@@ -30,6 +30,18 @@ class OrganizationBase(BaseModel):
     university: str = Field(..., max_length=255)
 
 
+class OrganizationCreate(BaseModel):
+    """Schema for creating a new organization during onboarding."""
+
+    name: str = Field(
+        ...,
+        min_length=NAME_MIN_LENGTH,
+        max_length=NAME_MAX_LENGTH,
+    )
+    type: OrganizationType
+    university: str = Field(..., max_length=255)
+
+
 class OrganizationUpdate(BaseModel):
     """Schema for updating an organization profile. All fields optional."""
 

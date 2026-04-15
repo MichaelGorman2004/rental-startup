@@ -1,13 +1,17 @@
 import {
   Stack, Title, Text, Container,
 } from '@mantine/core';
+
 import { QuickActionsGrid } from './QuickActionsGrid';
-import { UpcomingEvents } from './UpcomingEvents';
-import { DashboardStats } from './DashboardStats';
-import { DASHBOARD_CONSTANTS } from '../constants/dashboard.constants';
+import { VenueDashboardContent } from './VenueDashboardContent';
+import { OrgDashboardContent } from './OrgDashboardContent';
+import { useUserRole } from '../hooks/useUserRole';
+import { DASHBOARD_CONSTANTS, VENUE_ADMIN_SUBTITLE } from '../constants/dashboard.constants';
 import classes from './DashboardPage.module.css';
 
 export function DashboardPage() {
+  const userRole = useUserRole();
+
   return (
     <Container size={1080} py="xl" px="xl">
       <Stack gap="xl" className={classes['pageEnter']}>
@@ -15,11 +19,15 @@ export function DashboardPage() {
           <Title order={2} className={classes['greeting']}>
             {DASHBOARD_CONSTANTS.MESSAGES.GREETING}
           </Title>
-          <Text size="sm" c="dimmed">{DASHBOARD_CONSTANTS.MESSAGES.SUBTITLE}</Text>
+          <Text size="sm" c="dimmed">
+            {userRole === 'venue_admin'
+              ? VENUE_ADMIN_SUBTITLE
+              : DASHBOARD_CONSTANTS.MESSAGES.SUBTITLE}
+          </Text>
         </Stack>
-        <DashboardStats />
-        <QuickActionsGrid />
-        <UpcomingEvents />
+        {userRole === 'student_org' && <OrgDashboardContent />}
+        {userRole === 'venue_admin' && <VenueDashboardContent />}
+        <QuickActionsGrid userRole={userRole} />
       </Stack>
     </Container>
   );

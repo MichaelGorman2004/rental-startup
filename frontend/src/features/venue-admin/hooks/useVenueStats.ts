@@ -1,26 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
+
+import { getVenueStats } from '@/lib/api/endpoints/bookings';
 import type { VenueStats } from '../types';
 import {
   ADMIN_QUERY_KEYS,
   STATS_STALE_TIME_MS,
   STATS_REFETCH_INTERVAL_MS,
-  MOCK_VENUE_STATS,
 } from '../constants';
-
-/** Simulate fetching venue stats. Replace with GET /api/v1/venues/:id/stats. */
-async function fetchVenueStats(): Promise<VenueStats> {
-  await new Promise((resolve) => { setTimeout(resolve, 500); });
-  return MOCK_VENUE_STATS;
-}
 
 /**
  * Fetches venue performance stats with auto-refresh.
- * Polls every 60 seconds for near-real-time data.
+ * Calls GET /venues/:id/stats. Polls every 60 seconds.
  */
 export function useVenueStats(venueId: string | null) {
-  const query = useQuery({
+  const query = useQuery<VenueStats>({
     queryKey: ADMIN_QUERY_KEYS.STATS(venueId),
-    queryFn: fetchVenueStats,
+    queryFn: () => getVenueStats(venueId!),
     staleTime: STATS_STALE_TIME_MS,
     refetchInterval: STATS_REFETCH_INTERVAL_MS,
     enabled: Boolean(venueId),

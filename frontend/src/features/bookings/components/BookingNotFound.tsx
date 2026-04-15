@@ -14,7 +14,7 @@ export const BookingNotFound = memo(() => {
   return (
     <Stack align="center" gap="md" py="xl">
       <ThemeIcon size={64} radius="xl" variant="light" color="red">
-        <Warning size="2rem" />
+        <Warning size={32} />
       </ThemeIcon>
       <Title order={3}>{BOOKING_MESSAGES.VENUE_NOT_FOUND}</Title>
       <Text c="dimmed" ta="center" maw={400}>{BOOKING_MESSAGES.VENUE_NOT_FOUND_SUBTITLE}</Text>

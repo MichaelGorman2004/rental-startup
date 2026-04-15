@@ -7,14 +7,16 @@ import { SettingsTab } from '../types/settings.types';
 import { useSettingsPage } from '../hooks/useSettingsPage';
 import { AccountTab } from './AccountTab';
 import { OrganizationTab } from './OrganizationTab';
+import { VenueProfileTab } from './VenueProfileTab';
 import { SignOutButton } from './SignOutButton';
 
-/** Settings page with Account and Organization tabs. */
+/** Settings page with role-based tabs. */
 export function SettingsPage() {
   const { activeTab, setActiveTab, handleSignOut } = useSettingsPage();
   const { user } = useUser();
   const role = (user?.publicMetadata as Record<string, string> | undefined)?.['role'];
   const isStudentOrg = role === 'student_org';
+  const isVenueAdmin = role === 'venue_admin';
 
   return (
     <Container size="sm" py="xl">
@@ -29,6 +31,11 @@ export function SettingsPage() {
                 {SETTINGS_MESSAGES.TAB_ORGANIZATION}
               </Tabs.Tab>
             )}
+            {isVenueAdmin && (
+              <Tabs.Tab value={SettingsTab.VenueProfile}>
+                {SETTINGS_MESSAGES.TAB_VENUE_PROFILE}
+              </Tabs.Tab>
+            )}
           </Tabs.List>
 
           <Tabs.Panel value={SettingsTab.Account} pt="md">
@@ -38,6 +45,12 @@ export function SettingsPage() {
           {isStudentOrg && (
             <Tabs.Panel value={SettingsTab.Organization} pt="md">
               <OrganizationTab />
+            </Tabs.Panel>
+          )}
+
+          {isVenueAdmin && (
+            <Tabs.Panel value={SettingsTab.VenueProfile} pt="md">
+              <VenueProfileTab />
             </Tabs.Panel>
           )}
         </Tabs>

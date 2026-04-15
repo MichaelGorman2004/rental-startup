@@ -1,7 +1,24 @@
-import { BookingStatus } from '../../bookings';
-import type { AdminBooking, VenueStats } from '../types';
-
 export { STATUS_BADGE_COLORS, STATUS_LABELS } from '@/lib/constants';
+
+/** UI messages for the venue setup (onboarding) flow. */
+export const VENUE_SETUP_MESSAGES = {
+  PAGE_TITLE: 'Set up your venue',
+  PAGE_SUBTITLE: 'Give your venue a name to get started. You can add more details later.',
+
+  FORM_NAME: 'Venue Name',
+  FORM_NAME_PLACEHOLDER: 'e.g. The Corner Pub',
+
+  SUBMIT_BUTTON: 'Continue',
+  SUBMIT_ERROR: 'Failed to create venue. Please try again.',
+
+  VALIDATION_NAME_REQUIRED: 'Venue name is required',
+} as const;
+
+/** Validation limits for the venue setup form. */
+export const VENUE_SETUP_VALIDATION = {
+  NAME_MIN: 2,
+  NAME_MAX: 100,
+} as const;
 
 /** Auto-refresh interval for venue stats in milliseconds (60 seconds). */
 export const STATS_REFETCH_INTERVAL_MS = 60 * 1000;
@@ -13,13 +30,13 @@ export const STATS_STALE_TIME_MS = 60 * 1000;
 export const BOOKINGS_STALE_TIME_MS = 2 * 60 * 1000;
 
 /** Number of skeleton cards for stats loading state. */
-export const STATS_SKELETON_COUNT = 4;
+export const STATS_SKELETON_COUNT = 3;
 
 /** Number of skeleton cards for bookings loading state. */
 export const BOOKINGS_SKELETON_COUNT = 3;
 
-/** Mock mutation delay in milliseconds. */
-export const MOCK_ACTION_DELAY_MS = 800;
+/** Default number of admin bookings per page. */
+export const ADMIN_BOOKINGS_PAGE_SIZE = 20;
 
 /** Query key hierarchy for venue admin caches. */
 export const ADMIN_QUERY_KEYS = {
@@ -34,14 +51,13 @@ export const ADMIN_MESSAGES = {
 
   STATS_BOOKINGS: 'Bookings This Month',
   STATS_REVENUE: 'Revenue',
-  STATS_RATING: 'Avg Rating',
-  STATS_RATING_NONE: 'No reviews yet',
   STATS_OCCUPANCY: 'Occupancy',
 
   BOOKINGS_TITLE: 'Recent Bookings',
   BOOKINGS_EMPTY: 'No booking requests yet',
   BOOKINGS_EMPTY_SUBTITLE: 'When organizations request your venue, they will appear here.',
   BOOKINGS_ERROR: 'Failed to load bookings',
+  BOOKINGS_PAGE_INFO: (page: number, totalPages: number) => `Page ${page} of ${totalPages}`,
 
   ACTION_ACCEPT: 'Accept',
   ACTION_DECLINE: 'Decline',
@@ -55,62 +71,19 @@ export const ADMIN_MESSAGES = {
   BACK_TO_HOME: 'Go to Dashboard',
 } as const;
 
-/** Mock stats data for development. */
-export const MOCK_VENUE_STATS: VenueStats = {
-  bookingsThisMonth: 12,
-  revenueCents: 540000,
-  averageRating: 4.7,
-  occupancyPercent: 78,
-};
+/** Number of columns in the calendar grid. */
+export const CALENDAR_DAYS_IN_WEEK = 7;
 
-/** Mock bookings data for development. */
-export const MOCK_ADMIN_BOOKINGS: AdminBooking[] = [
-  {
-    id: 'b1',
-    organizationName: 'Alpha Phi Omega',
-    eventName: 'Spring Social',
-    eventDate: '2026-03-15',
-    eventStartTime: '19:00',
-    eventEndTime: '22:00',
-    eventDurationMinutes: 180,
-    guestCount: 85,
-    status: BookingStatus.Pending,
-    createdAt: '2026-02-20T10:00:00Z',
-  },
-  {
-    id: 'b2',
-    organizationName: 'Student Gov Association',
-    eventName: 'Leadership Banquet',
-    eventDate: '2026-03-22',
-    eventStartTime: '18:30',
-    eventEndTime: '21:30',
-    eventDurationMinutes: 180,
-    guestCount: 120,
-    status: BookingStatus.Pending,
-    createdAt: '2026-02-19T14:30:00Z',
-  },
-  {
-    id: 'b3',
-    organizationName: 'Delta Sigma Theta',
-    eventName: 'Charity Gala',
-    eventDate: '2026-03-08',
-    eventStartTime: '20:00',
-    eventEndTime: '23:00',
-    eventDurationMinutes: 180,
-    guestCount: 65,
-    status: BookingStatus.Confirmed,
-    createdAt: '2026-02-18T09:00:00Z',
-  },
-  {
-    id: 'b4',
-    organizationName: 'Engineering Club',
-    eventName: 'Tech Mixer',
-    eventDate: '2026-03-01',
-    eventStartTime: '17:00',
-    eventEndTime: '19:00',
-    eventDurationMinutes: 120,
-    guestCount: 45,
-    status: BookingStatus.Completed,
-    createdAt: '2026-02-10T11:00:00Z',
-  },
-];
+/** Short day labels for the calendar header row. */
+export const CALENDAR_DAY_LABELS = [
+  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
+] as const;
+
+/** UI messages for the booking calendar section. */
+export const CALENDAR_MESSAGES = {
+  SECTION_TITLE: 'Booking Calendar',
+  PREVIOUS_MONTH: 'Go to previous month',
+  NEXT_MONTH: 'Go to next month',
+  GO_TO_TODAY: 'Go to today',
+  NO_BOOKINGS_ON_DATE: 'No bookings on this date',
+} as const;

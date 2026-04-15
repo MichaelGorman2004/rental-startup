@@ -46,30 +46,30 @@ export const BookingSummary = memo(({
       <Divider label={BOOKING_MESSAGES.EVENT_SECTION} labelPosition="left" />
       <Stack gap="sm">
         <SummaryRow
-          icon={<Notepad size="1rem" />}
+          icon={<Notepad size={16} />}
           label="Event Name"
           value={formValues.eventName}
         />
         <SummaryRow
-          icon={<Calendar size="1rem" />}
+          icon={<Calendar size={16} />}
           label="Date"
           value={formValues.eventDate ? formatBookingDate(formValues.eventDate) : '—'}
         />
         <SummaryRow
-          icon={<Clock size="1rem" />}
+          icon={<Clock size={16} />}
           label="Time"
           value={formValues.eventStartTime && formValues.eventEndTime
             ? formatTimeRange(formValues.eventStartTime, formValues.eventEndTime)
             : '—'}
         />
         <SummaryRow
-          icon={<Users size="1rem" />}
+          icon={<Users size={16} />}
           label="Guests"
           value={formValues.guestCount?.toString() ?? '—'}
         />
         {formValues.specialRequests ? (
           <SummaryRow
-            icon={<Notepad size="1rem" />}
+            icon={<Notepad size={16} />}
             label="Special Requests"
             value={formValues.specialRequests}
           />
@@ -90,7 +90,7 @@ export const BookingSummary = memo(({
           <Text size="xs" c="dimmed">{BOOKING_MESSAGES.COST_NOTE}</Text>
           <Group gap="xs" mt="xs">
             <ThemeIcon size="sm" variant="transparent" c="dimmed">
-              <Receipt size="1rem" />
+              <Receipt size={16} />
             </ThemeIcon>
             <Text size="xl" fw={700} c="copper">
               {formatPrice(estimatedCostCents)}

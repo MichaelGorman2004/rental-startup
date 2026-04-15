@@ -1,6 +1,13 @@
 import type { OrganizationType } from '@venuelink/shared';
 import { apiClient } from '../client';
 
+/** Payload for creating a new organization. */
+export interface CreateOrganizationData {
+  name: string;
+  type: OrganizationType;
+  university: string;
+}
+
 /** Backend snake_case organization shape. */
 interface OrganizationApiResponse {
   id: string;
@@ -66,6 +73,21 @@ function toOrganizationProfile(raw: OrganizationApiResponse): OrganizationProfil
   };
 }
 
+/** POST /organizations — Create a new organization (student_org onboarding). */
+export async function createOrganization(
+  payload: CreateOrganizationData,
+): Promise<OrganizationProfile> {
+  const { data } = await apiClient.post<OrganizationApiResponse>(
+    '/organizations',
+    {
+      name: payload.name,
+      type: payload.type,
+      university: payload.university,
+    },
+  );
+  return toOrganizationProfile(data);
+}
+
 /** GET /organizations/me — Get current user's organization. */
 export async function getMyOrganization(): Promise<OrganizationProfile> {
   const { data } = await apiClient.get<OrganizationApiResponse>('/organizations/me');
@@ -95,6 +117,20 @@ export async function updateOrganization(
       member_count: payload.memberCount,
       website_url: payload.websiteUrl,
     },
+  );
+  return toOrganizationProfile(data);
+}
+
+/** POST /organizations/:id/logo — Upload organization logo. */
+export async function uploadOrgLogo(
+  orgId: string,
+  file: File,
+): Promise<OrganizationProfile> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const { data } = await apiClient.post<OrganizationApiResponse>(
+    `/organizations/${orgId}/logo`,
+    formData,
   );
   return toOrganizationProfile(data);
 }

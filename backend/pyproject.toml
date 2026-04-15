@@ -40,6 +40,7 @@ httpx = "^0.26.0"
 python-dotenv = "^1.0.1"
 # Webhook signature verification (Clerk uses Svix)
 svix = "^1.21.0"
+python-multipart = "^0.0.22"
 
 [tool.poetry.group.dev.dependencies]
 # Fast Python linter (replaces flake8, isort, pylint)

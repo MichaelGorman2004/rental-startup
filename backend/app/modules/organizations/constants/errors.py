@@ -10,3 +10,4 @@ class OrgError(str, Enum):
     NOT_OWNER = "You do not own this organization."
     STUDENT_ORG_REQUIRED = "Only student organization users can perform this action."
     NO_ORGANIZATION = "You do not have an organization."
+    ALREADY_HAS_ORGANIZATION = "You already have an organization."

@@ -19,7 +19,7 @@ const MY_VENUE_STALE_TIME_MS = 5 * 60 * 1000;
 export function useMyVenue() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
-  const isVenueAdmin = user?.unsafeMetadata?.['role'] === 'venue_admin';
+  const isVenueAdmin = user?.publicMetadata?.['role'] === 'venue_admin';
 
   const query = useQuery<Venue | null, ApiError>({
     queryKey: MY_VENUE_QUERY_KEY,

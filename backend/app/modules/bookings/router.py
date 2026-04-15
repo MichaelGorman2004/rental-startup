@@ -1,6 +1,7 @@
 """Booking management API endpoints."""
 
-from typing import Annotated
+from datetime import date
+from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
@@ -15,8 +16,11 @@ from app.modules.bookings.schemas import (
     BookingFilters,
     BookingListResponse,
     BookingResponse,
+    BookingSummaryResponse,
 )
 from app.modules.bookings.services import booking_service
+from app.modules.ratings.schemas import RatingCreate, RatingResponse
+from app.modules.ratings.services import rating_service
 from app.modules.users.models import User
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
@@ -24,14 +28,34 @@ router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 def parse_booking_filters(
     booking_status: Annotated[BookingStatus | None, Query(alias="status")] = None,
+    from_date: Annotated[date | None, Query()] = None,
+    sort_by: Annotated[Literal["event_date"] | None, Query()] = None,
     page: Annotated[int, Query(ge=MIN_PAGE)] = MIN_PAGE,
     page_size: Annotated[int, Query(ge=1, le=MAX_PAGE_SIZE)] = DEFAULT_PAGE_SIZE,
 ) -> BookingFilters:
     """Parse and validate booking filtering query parameters."""
     return BookingFilters(
         status=booking_status,
+        from_date=from_date,
+        sort_by=sort_by,
         page=page,
         page_size=page_size,
+    )
+
+
+@router.get(
+    "/me/summary",
+    response_model=BookingSummaryResponse,
+    summary="Get booking summary for my organization",
+)
+async def get_my_summary(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> BookingSummaryResponse:
+    """Get booking summary stats for the current user's org."""
+    return await booking_service.get_my_summary(
+        db=db,
+        current_user=current_user,
     )
 
 
@@ -122,5 +146,26 @@ async def decline_booking(
     return await booking_service.decline_booking(
         db=db,
         booking_id=booking_id,
+        current_user=current_user,
+    )
+
+
+@router.post(
+    "/{booking_id}/rate",
+    status_code=status.HTTP_201_CREATED,
+    response_model=RatingResponse,
+    summary="Rate a completed booking",
+)
+async def rate_booking(
+    booking_id: UUID,
+    rating_data: RatingCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> RatingResponse:
+    """Rate a completed booking (org owner only)."""
+    return await rating_service.create_rating(
+        db=db,
+        booking_id=booking_id,
+        rating_data=rating_data,
         current_user=current_user,
     )

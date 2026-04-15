@@ -4,6 +4,7 @@ import {
 import { useAdminDashboard } from '../hooks';
 import { ADMIN_MESSAGES } from '../constants';
 import { StatsGrid } from './StatsGrid';
+import { BookingCalendar } from './BookingCalendar';
 import { BookingsList } from './BookingsList';
 import { AccessDenied } from './AccessDenied';
 
@@ -11,7 +12,8 @@ import { AccessDenied } from './AccessDenied';
 export function AdminDashboard() {
   const {
     isVenueAdmin, stats, isStatsLoading, isStatsError,
-    bookings, isBookingsLoading, isBookingsError,
+    bookings, bookingsTotalPages, bookingsPage, setBookingsPage,
+    isBookingsLoading, isBookingsError,
     handleAccept, handleDecline, isPending, activeBookingId,
   } = useAdminDashboard();
 
@@ -33,6 +35,8 @@ export function AdminDashboard() {
 
         <StatsGrid stats={stats} isLoading={isStatsLoading} isError={isStatsError} />
 
+        <BookingCalendar bookings={bookings} />
+
         <BookingsList
           bookings={bookings}
           isLoading={isBookingsLoading}
@@ -41,6 +45,9 @@ export function AdminDashboard() {
           onDecline={handleDecline}
           isPending={isPending}
           activeBookingId={activeBookingId}
+          totalPages={bookingsTotalPages}
+          page={bookingsPage}
+          onPageChange={setBookingsPage}
         />
       </Stack>
     </Container>

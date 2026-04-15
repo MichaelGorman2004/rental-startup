@@ -52,7 +52,11 @@ export function attachAuthInterceptor(
       config.headers.set(HEADERS.AUTHORIZATION, `Bearer ${token}`);
     }
 
-    config.headers.set(HEADERS.CONTENT_TYPE, CONTENT_TYPES.JSON);
+    // Don't override Content-Type for FormData — the browser must set it
+    // automatically so it includes the multipart boundary.
+    if (!(config.data instanceof FormData)) {
+      config.headers.set(HEADERS.CONTENT_TYPE, CONTENT_TYPES.JSON);
+    }
     config.headers.set(HEADERS.ACCEPT, CONTENT_TYPES.JSON);
 
     return config;

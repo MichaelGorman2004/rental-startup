@@ -50,7 +50,14 @@ async def get_current_user(
 
         # Extract core fields
         sub = payload_dict.get("sub")
-        email = payload_dict.get("email")
+        # Clerk puts the email at "email" in the default session token and in
+        # most templates, but some custom templates use a different key.
+        # Fall back through common alternatives before failing.
+        email = (
+            payload_dict.get("email")
+            or payload_dict.get("primary_email_address")
+            or payload_dict.get("email_address")
+        )
         role_str = payload_dict.get(ROLE_CLAIM_KEY)
         if not role_str and "public_metadata" in payload_dict:
             role_str = payload_dict["public_metadata"].get(ROLE_CLAIM_KEY)

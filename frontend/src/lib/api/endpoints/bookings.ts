@@ -1,6 +1,7 @@
 import type { BookingStatus } from '@/features/bookings/types';
 import type { CreateBookingRequest } from '@/features/bookings/types/booking.types';
-import type { AdminBooking, VenueStats } from '@/features/venue-admin/types';
+import type { AdminBookingView } from '@venuelink/shared';
+import type { VenueStats } from '@/features/venue-admin/types';
 import { apiClient } from '../client';
 import type { PaginatedApiResponse } from '../types';
 
@@ -66,16 +67,15 @@ interface AdminBookingApiResponse {
   created_at: string;
 }
 
-/** Backend snake_case venue stats shape. */
+/** Backend venue stats shape — uses camelCase aliases (serialization_alias in Pydantic). */
 interface VenueStatsApiResponse {
-  bookings_this_month: number;
-  revenue_cents: number;
-  average_rating: number | null;
-  occupancy_percent: number;
+  bookingsThisMonth: number;
+  revenueCents: number;
+  occupancyPercent: number;
 }
 
 /** Transform a backend admin booking to frontend shape. */
-function toAdminBooking(raw: AdminBookingApiResponse): AdminBooking {
+function toAdminBooking(raw: AdminBookingApiResponse): AdminBookingView {
   return {
     id: raw.id,
     organizationName: raw.organization_name,
@@ -93,10 +93,9 @@ function toAdminBooking(raw: AdminBookingApiResponse): AdminBooking {
 /** Transform backend venue stats to frontend shape. */
 function toVenueStats(raw: VenueStatsApiResponse): VenueStats {
   return {
-    bookingsThisMonth: raw.bookings_this_month,
-    revenueCents: raw.revenue_cents,
-    averageRating: raw.average_rating,
-    occupancyPercent: raw.occupancy_percent,
+    bookingsThisMonth: raw.bookingsThisMonth,
+    revenueCents: raw.revenueCents,
+    occupancyPercent: raw.occupancyPercent,
   };
 }
 
@@ -121,6 +120,56 @@ function toMyBooking(raw: MyBookingApiResponse): MyBooking {
   };
 }
 
+/** Backend snake_case shape for booking summary. */
+interface BookingSummaryApiResponse {
+  upcoming_events_count: number;
+  total_bookings: number;
+  budget_used_cents: number;
+}
+
+/** Frontend shape for booking summary stats. */
+export interface BookingSummary {
+  upcomingEventsCount: number;
+  totalBookings: number;
+  budgetUsedCents: number;
+}
+
+/** Transform backend summary to frontend shape. */
+function toBookingSummary(raw: BookingSummaryApiResponse): BookingSummary {
+  return {
+    upcomingEventsCount: raw.upcoming_events_count,
+    totalBookings: raw.total_bookings,
+    budgetUsedCents: raw.budget_used_cents,
+  };
+}
+
+/** GET /bookings/me/summary — Get booking summary for the current user's org. */
+export async function getMyBookingSummary(): Promise<BookingSummary> {
+  const { data } = await apiClient.get<BookingSummaryApiResponse>(
+    '/bookings/me/summary',
+  );
+  return toBookingSummary(data);
+}
+
+/** GET /bookings/me — List upcoming confirmed bookings for the current user's org. */
+export async function getUpcomingBookings(params?: {
+  status?: string;
+  from_date?: string;
+  sort_by?: string;
+}): Promise<MyBookingsResponse> {
+  const { data } = await apiClient.get<PaginatedApiResponse<MyBookingApiResponse>>(
+    '/bookings/me',
+    { params },
+  );
+  return {
+    items: data.items.map(toMyBooking),
+    total: data.total,
+    page: data.page,
+    pageSize: data.page_size,
+    totalPages: data.total_pages,
+  };
+}
+
 /** POST /bookings — Create a new booking request. */
 export async function createBooking(
   request: CreateBookingRequest,
@@ -140,14 +189,31 @@ export async function createBooking(
   return toMyBooking(data);
 }
 
+/** Paginated admin bookings response. */
+export interface AdminBookingsResponse {
+  items: AdminBookingView[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 /** GET /venues/:id/bookings — List bookings for a venue (admin). */
 export async function getVenueBookings(
   venueId: string,
-): Promise<AdminBooking[]> {
+  params?: { page?: number; page_size?: number },
+): Promise<AdminBookingsResponse> {
   const { data } = await apiClient.get<PaginatedApiResponse<AdminBookingApiResponse>>(
     `/venues/${venueId}/bookings`,
+    { params },
   );
-  return data.items.map(toAdminBooking);
+  return {
+    items: data.items.map(toAdminBooking),
+    total: data.total,
+    page: data.page,
+    pageSize: data.page_size,
+    totalPages: data.total_pages,
+  };
 }
 
 /** GET /venues/:id/stats — Get venue performance stats (admin). */

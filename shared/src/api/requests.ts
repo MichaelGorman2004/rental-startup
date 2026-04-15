@@ -61,13 +61,15 @@ export interface CreateBookingRequest {
   /** Event date in ISO 8601 format (YYYY-MM-DD) */
   eventDate: string;
   /** Event start time in HH:MM format */
-  eventTime: string;
+  eventStartTime: string;
+  /** Event end time in HH:MM format */
+  eventEndTime: string;
   /** Expected number of guests */
   guestCount: number;
   /** Special requests or notes (optional) */
   specialRequests?: string;
   /** Budget range in cents (optional) */
-  budgetCents?: number | null;
+  budgetCents?: number;
 }
 
 /**

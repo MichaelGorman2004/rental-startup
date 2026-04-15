@@ -27,6 +27,7 @@ from app.core.database import BaseModel
 # This is critical for autogenerate to detect schema changes
 from app.modules.bookings.models import Booking  # noqa: F401
 from app.modules.organizations.models import Organization  # noqa: F401
+from app.modules.ratings.models import Rating  # noqa: F401
 from app.modules.users.models import User  # noqa: F401
 from app.modules.venues.models import Venue  # noqa: F401
 

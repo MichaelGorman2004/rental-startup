@@ -24,7 +24,7 @@ export const AdditionalInfoStep = memo(({ control }: AdditionalInfoStepProps) =>
           label={BOOKING_MESSAGES.SPECIAL_REQUESTS_LABEL}
           placeholder={BOOKING_MESSAGES.SPECIAL_REQUESTS_PLACEHOLDER}
           description={BOOKING_MESSAGES.SPECIAL_REQUESTS_DESCRIPTION}
-          leftSection={<Notepad size="1rem" />}
+          leftSection={<Notepad size={16} />}
           maxLength={MAX_SPECIAL_REQUESTS_LENGTH}
           minRows={4}
           autosize
@@ -41,7 +41,7 @@ export const AdditionalInfoStep = memo(({ control }: AdditionalInfoStepProps) =>
           label={BOOKING_MESSAGES.BUDGET_LABEL}
           placeholder={BOOKING_MESSAGES.BUDGET_PLACEHOLDER}
           description={BOOKING_MESSAGES.BUDGET_DESCRIPTION}
-          leftSection={<Wallet size="1rem" />}
+          leftSection={<Wallet size={16} />}
           data={[...BUDGET_OPTIONS]}
           clearable
         />

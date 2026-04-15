@@ -28,7 +28,7 @@ function DemoBookingCTA() {
         <Button
           size="lg"
           fullWidth
-          leftSection={<SignIn size="1.25rem" />}
+          leftSection={<SignIn size={20} />}
           onClick={handleSignup}
           aria-label="Sign up to book"
         >

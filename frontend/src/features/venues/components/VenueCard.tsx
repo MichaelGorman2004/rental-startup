@@ -35,7 +35,7 @@ export const VenueCard = memo(({ venue, basePath = '/venues' }: VenueCardProps) 
       </Group>
       <Group gap="lg">
         <Group gap="xs">
-          <Users size="1rem" />
+          <Users size={16} />
           <Text size="sm" c="dimmed">
             {formatCapacity(venue.capacity)}
             {' '}
@@ -49,7 +49,7 @@ export const VenueCard = memo(({ venue, basePath = '/venues' }: VenueCardProps) 
         </Text>
       </Group>
       <Group gap="xs">
-        <MapPin size="1rem" />
+        <MapPin size={16} />
         <Text size="sm" c="dimmed" lineClamp={1}>
           {formatAddress(venue.addressStreet, venue.addressCity, venue.addressState)}
         </Text>

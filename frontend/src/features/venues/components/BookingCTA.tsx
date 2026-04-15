@@ -30,7 +30,7 @@ export const BookingCTA = memo(({ venueId, isStudentOrg }: BookingCTAProps) => {
             <Button
               size="lg"
               fullWidth
-              leftSection={<CalendarPlus size="1.25rem" />}
+              leftSection={<CalendarPlus size={20} />}
               onClick={handleBooking}
               disabled={!isStudentOrg}
               aria-label={VENUE_DETAIL_MESSAGES.REQUEST_BOOKING}
