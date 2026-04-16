@@ -1,3 +1,4 @@
+import { VENUE_CAPACITY_MAX } from '@venuelink/shared';
 import type { Venue, VenueListResponse } from '@/features/venues/types';
 import { VenueType } from '@/features/venues/types/venue.types';
 import { apiClient } from '../client';
@@ -58,7 +59,7 @@ function toVenue(raw: VenueApiResponse): Venue {
     id: raw.id,
     name: raw.name,
     type: raw.type ?? VenueType.EventSpace,
-    capacity: raw.capacity ?? 0,
+    capacity: raw.capacity ?? VENUE_CAPACITY_MAX,
     basePriceCents: raw.base_price_cents ?? 0,
     addressStreet: raw.address_street ?? '',
     addressCity: raw.address_city ?? '',
